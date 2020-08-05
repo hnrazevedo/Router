@@ -1,0 +1,57 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "81d0427dfc302853aaef20908f34ad74",
+    "packages": [
+        {
+            "name": "hnrazevedo/validator",
+            "version": "v0.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hnrazevedo/Validator.git",
+                "reference": "53c825ae4a2cfe2f9906a355a7949c54c665d2f7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hnrazevedo/Validator/zipball/53c825ae4a2cfe2f9906a355a7949c54c665d2f7",
+                "reference": "53c825ae4a2cfe2f9906a355a7949c54c665d2f7",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "HnrAzevedo\\Validator\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Henri Mateus Santos de Azevedo",
+                    "email": "hnr.azevedo@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Tools for developing personal projects",
+            "time": "2020-08-05T20:12:18+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "php": ">=7.4"
+    },
+    "platform-dev": []
+}
