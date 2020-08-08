@@ -135,36 +135,41 @@ class Router{
         return self::getInstance();
     }
 
+    public function byName(string $route_name)
+    {
+        $currentProtocol = $this->getProtocol();
+
+        if(!array_key_exists($route_name,$this->routers)){
+            throw new Exception('Page not found.'.$route_name,404);
+        }
+
+        $route = $this->routers[$route_name];
+
+        if($route['protocol']!==$currentProtocol){
+            throw new Exception('Page not found.'.$route_name,404);
+        }
+
+        if(!empty($route['filters'])){
+            if(is_array($route['filters'])){
+                foreach($route['filters'] as $filter){
+                    $this->filter->filtering($filter);
+                }
+            }else{
+                $this->filter->filtering($route['filters']);
+            }
+        }
+
+        $this->Controller($route['role']);
+        return true;
+    }
+
     public function dispatch(?string $route_name = null): bool
     {
-		$currentProtocol = $this->getProtocol();
-        $context = [];
-
-		if(!empty($route_name)){
-
-			if(!array_key_exists($route_name,$this->routers)){
-                throw new Exception('Page not found.'.$route_name,404);
-            }
-
-			$route = $this->routers[$route_name];
-
-			if($route['protocol']!==$currentProtocol){
-                throw new Exception('Page not found.'.$route_name,404);
-            }
-
-			if(!empty($route['filters'])){
-	            if(is_array($route['filters'])){
-	                foreach($route['filters'] as $filter){
-	                    $this->filter->filtering($filter);
-	                }
-	            }else{
-	                $this->filter->filtering($route['filters']);
-	            }
-	        }
-
-            $this->Controller($route['role']);
-			return true;
+        if(!is_null($route_name)){
+            return $this->byName($route_name);
         }
+
+		$currentProtocol = $this->getProtocol();
 
         foreach(array_reverse($this->routers) as $r => $route){
             if(is_array($route['protocol'])){
@@ -289,7 +294,7 @@ class Router{
         $d = explode(':',$controll);
 
         if(count($d) != 2){
-            throw new Exception("Controller {$controller} badly set.");
+            throw new Exception("Controller {$controll} badly set.");
         }
 
         if(!class_exists('Controllers\\' . ucfirst($d[0]))){

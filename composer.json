@@ -10,7 +10,7 @@
     ],
     "require": {
         "php": ">=7.4",
-        "hnrazevedo/validator": "^0.0.2"
+        "hnrazevedo/validator": "^1.0"
     },
     "license":"MIT",
     "autoload": {
