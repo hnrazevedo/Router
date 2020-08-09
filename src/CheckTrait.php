@@ -24,7 +24,35 @@ trait CheckTrait{
         $filters = (is_array($route['filters'])) ? $route['filters'] : [ $route['filters'] ];
 
         foreach($filters as $filter){
+            if(is_null($filter)){
+                continue;
+            }
             $this->filter->filtering($filter);
+        }
+    }
+
+    protected function check_config()
+    {
+        if(!defined('ROUTER_CONFIG')){
+            throw new Exception("Information for loading routes has not been defined.");
+        }
+    }
+
+    protected function check_role()
+    {
+        if(!array_key_exists('role', $this->getData()['POST'])){
+            throw new Exception('O servidor não conseguiu identificar a finalidade deste formulário.');
+        }
+    }
+
+    protected function hasProtocol(array $route, string $currentProtocol)
+    {
+        $protocols = ( is_array($route['protocol']) ) ? $route['protocol'] : [ $route['protocol'] ];
+
+        foreach($protocols as $protocol){
+            if($protocol !== $currentProtocol){
+                parent::continue;
+            }
         }
     }
 

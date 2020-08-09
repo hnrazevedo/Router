@@ -2,8 +2,6 @@
 
 namespace HnrAzevedo\Router;
 
-use HnrAzevedo\Validator\Validator;
-
 use Exception;
 
 class Router{
@@ -25,31 +23,15 @@ class Router{
 
     public static function create(): Router
     {
-        if(!defined('ROUTER_CONFIG')){
-            throw new Exception("Information for loading routes has not been defined.");
-        }
-        
-        self::import(ROUTER_CONFIG['path']);
+        self::getInstance()->check_config();
+        self::getInstance()->import(ROUTER_CONFIG['path']);
         return self::getInstance();
     }
 
     public static function getInstance(): Router
     {
-        if(is_null(self::$instance)){
-            self::$instance = new self();
-        }
+        self::$instance = (is_null(self::$instance)) ? new self() : self::$instance;
         return self::$instance;
-    }
-
-    private static function import(string $path): Router
-    {
-        foreach (scandir($path) as $routeFile) {
-            if(pathinfo($path.DIRECTORY_SEPARATOR.$routeFile, PATHINFO_EXTENSION) === 'php'){
-                require_once($path. DIRECTORY_SEPARATOR .$routeFile);
-            }
-        }
-
-        return self::getInstance();
     }
 
     public static function form(string $uri, string $controll): Router
@@ -160,17 +142,8 @@ class Router{
 		$currentProtocol = $this->getProtocol();
 
         foreach(array_reverse($this->routers) as $r => $route){
-            if(is_array($route['protocol'])){
-                foreach($route['protocol'] as $protocol){
-                    if($protocol !== $currentProtocol){
-                        continue;
-                    }
-                }
-	        }else{
-				if($route['protocol'] !== $currentProtocol){
-                    continue;
-                }
-			}
+
+            $this->hasProtocol($route, $currentProtocol);
 
 	        $route_loop = explode(
                 '/',
@@ -203,17 +176,9 @@ class Router{
 	            if(!$param and $route_loop[$rr] !== $route_request[$rr]){
                     continue 2;
                 }
-	        }
-
-	        if(!empty($route['filters'])){
-	            if(is_array($route['filters'])){
-	                foreach($route['filters'] as $filter){
-	                    $this->filter->filtering($filter);
-	                }
-	            }else{
-	                $this->filter->filtering($route['filters']);
-	            }
-	        }
+            }
+            
+            $this->check_filtering($route);
 
             $this->Controller($route['role']);
 	        return true;
@@ -296,17 +261,5 @@ class Router{
             $controller->$method($data);
         }
     }    
-
-    public function ControllerForm($controller, string $method, array $values){
-		if(Validator::execute($values)){
-            if(!array_key_exists('role',$this->getData()['POST'])){
-                throw new Exception('O servidor não conseguiu identificar a finalidade deste formulário.');
-            }
-
-            $role = ($method !== 'method') ? $method : $this->getData()['POST']['role'];
-            $data = (!is_null($values)) ? json_decode($values['data']) : null;
-            $controller->$role($data);
-        }
-    }
 
 }

@@ -2,7 +2,10 @@
 
 namespace HnrAzevedo\Router;
 
+use HnrAzevedo\Validator\Validator;
+
 trait Helper{
+    use CheckTrait;
     
     protected function getProtocol(): string
     {
@@ -25,6 +28,26 @@ trait Helper{
             'GET' => $_GET,
             'FILES' => $_FILES
         ];
+    }
+
+    protected function import(string $path)
+    {
+        foreach (scandir($path) as $routeFile) {
+            if(pathinfo($path.DIRECTORY_SEPARATOR.$routeFile, PATHINFO_EXTENSION) === 'php'){
+                require_once($path. DIRECTORY_SEPARATOR .$routeFile);
+            }
+        }
+    }
+
+    protected function ControllerForm($controller, string $method, array $values){
+		if(Validator::execute($values)){
+
+            $this->check_role();
+
+            $role = ($method !== 'method') ? $method : $this->getData()['POST']['role'];
+            $data = (!is_null($values)) ? json_decode($values['data']) : null;
+            $controller->$role($data);
+        }
     }
 
 }
