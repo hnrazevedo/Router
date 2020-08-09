@@ -7,7 +7,7 @@ use HnrAzevedo\Validator\Validator;
 use Exception;
 
 class Router{
-    use Helper;
+    use Helper, CheckTrait;
 
     private static $instance = null;
     private array $routers = [];
@@ -135,29 +135,17 @@ class Router{
         return self::getInstance();
     }
 
-    public function byName(string $route_name)
+    private function byName(string $route_name)
     {
         $currentProtocol = $this->getProtocol();
 
-        if(!array_key_exists($route_name,$this->routers)){
-            throw new Exception('Page not found.'.$route_name,404);
-        }
+        $this->check_name($route_name);
 
         $route = $this->routers[$route_name];
 
-        if($route['protocol']!==$currentProtocol){
-            throw new Exception('Page not found.'.$route_name,404);
-        }
+        $this->check_protocol($route['protocol'], $currentProtocol);
 
-        if(!empty($route['filters'])){
-            if(is_array($route['filters'])){
-                foreach($route['filters'] as $filter){
-                    $this->filter->filtering($filter);
-                }
-            }else{
-                $this->filter->filtering($route['filters']);
-            }
-        }
+        $this->check_filtering($route);
 
         $this->Controller($route['role']);
         return true;
@@ -240,15 +228,16 @@ class Router{
             $currentGroup = end(self::getInstance()->routers)['group'];
 
             foreach (self::getInstance()->routers as $key => $value) {
+
                 if($value['group'] === $currentGroup){
                     $currentRoute = self::getInstance()->addFilter(self::getInstance()->routers[$key],$filters);
                     self::getInstance()->routers[$key] = $currentRoute;
                 }
+
             }
             
         }else{
-            $currentRoute = self::getInstance()->addFilter(end(self::getInstance()->routers),$filters);
-            self::getInstance()->routers[count(self::getInstance()->routers)-1] = $currentRoute;
+            self::getInstance()->routers[count(self::getInstance()->routers)-1] = self::getInstance()->addFilter(end(self::getInstance()->routers),$filters);
         }
 
         return self::getInstance();
@@ -274,14 +263,6 @@ class Router{
         $route['filters'] = $filters;
         return $route;
     }
-
-    
-
-
-
-
-
-
 
     public function Controller(string $controll): void
     {
@@ -309,9 +290,7 @@ class Router{
         $controller = new $controller();
         $method = $d[1];
 
-        $isForm = ( $this->getProtocol() == 'form');
-
-        if($isform){
+        if( ( $this->getProtocol() == 'form') ){
             $this->ControllerForm($controller, $method, $data['POST']);
         }else {
             $controller->$method($data);
