@@ -160,18 +160,8 @@ class Router{
                 : $_SERVER['REQUEST_URI'] 
             );
 
-	        if($this->check_numparams($route_loop, $route_request)){
+	        if($this->check_numparams($route_loop, $route_request) || $this->check_parameters($route_loop, $route_request)){
                 continue;
-            }
-
-            foreach($route_loop as $rr => $param){
-                //if( (substr($param,0,1) === '{') ){
-                //    $data[ substr($param,1,strlen($param)-2) ] = $route_request[$rr];    
-                //}
-
-	            if($this->check_parameter($param, $route_request[$rr])){
-                    continue 2;
-                }
             }
             
             $this->check_filtering($route);
