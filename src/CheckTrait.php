@@ -38,6 +38,16 @@ trait CheckTrait{
         }
     }
 
+    protected function check_numparams(array $route_loop, array $route_request)
+    {
+        return (count($route_loop) !== count($route_request));
+    }
+
+    protected function check_parameter(string $route_loop, string $route_request)
+    {
+        return !( substr($route_loop,0,1) === '{' ) and $route_loop !== $route_request;
+    }
+
     protected function check_role()
     {
         if(!array_key_exists('role', $this->getData()['POST'])){
@@ -51,7 +61,7 @@ trait CheckTrait{
 
         foreach($protocols as $protocol){
             if($protocol !== $currentProtocol){
-                parent::continue;
+                continue;
             }
         }
     }

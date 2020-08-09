@@ -152,30 +152,27 @@ class Router{
                     : $route['url'] 
             );
 
-            /* ONLY FOR DEBUG CONDITION */
-            $route_request = $route_loop;
-	        /*$route_request = explode(
+            $route_request = explode(
                 '/',
                 (substr($_SERVER['REQUEST_URI'],strlen($_SERVER['REQUEST_URI'])-1,1) === '/') 
                 ? substr($_SERVER['REQUEST_URI'], 0, -1) 
                 : $_SERVER['REQUEST_URI'] 
-            );*/
+            );
 
-	        if(count($route_loop) !== count($route_request)){
+	        if($this->check_numparams($route_loop, $route_request)){
                 continue;
             }
 
 	        for($rr = 0; $rr < count($route_loop); $rr++){
-	            $param = (substr($route_loop[$rr],0,1)==='{');
 
-	            if($param){
-                    $param_name = substr($route_loop[$rr],1,strlen($route_loop[$rr])-2);
-	                $data[$param_name] = $route_request[$rr];
-	            }
+	            if( (substr($route_loop[$rr],0,1) === '{') ){
+                    $data[ substr($route_loop[$rr],1,strlen($route_loop[$rr])-2) ] = $route_request[$rr];    
+                }
 
-	            if(!$param and $route_loop[$rr] !== $route_request[$rr]){
+	            if($this->check_parameter($route_loop[$rr], $route_request[$rr])){
                     continue 2;
                 }
+
             }
             
             $this->check_filtering($route);

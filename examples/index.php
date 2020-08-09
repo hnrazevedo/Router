@@ -13,10 +13,6 @@ try{
 
 }catch(Exception $er){
 
-    die($er->getCode().'  -  '.$er->getMessage());
+    die("Code Error: {$er->getCode()}, Line: {$er->getLine()}, File: {$er->getFile()}, Message: {$er->getMessage()}.");
 
 }
-
-
-
-
