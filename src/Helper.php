@@ -2,8 +2,6 @@
 
 namespace HnrAzevedo\Router;
 
-use HnrAzevedo\Validator\Validator;
-
 trait Helper{
     use CheckTrait, ControllerTrait;
     
@@ -40,14 +38,11 @@ trait Helper{
     }
 
     protected function ControllerForm($controller, string $method, array $values){
-		if(Validator::execute($values)){
+		$this->check_role();
 
-            $this->check_role();
-
-            $role = ($method !== 'method') ? $method : $this->getData()['POST']['role'];
-            $data = (!is_null($values)) ? json_decode($values['data']) : null;
-            $controller->$role($data);
-        }
+        $role = ($method !== 'method') ? $method : $this->getData()['POST']['role'];
+        $data = (!is_null($values)) ? json_decode($values['data']) : null;
+        $controller->$role($data);
     }
 
     protected function Controller(string $controll): void
