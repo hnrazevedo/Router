@@ -146,7 +146,7 @@ class Router{
 
             $this->hasProtocol($route, $currentProtocol);
 
-            $route_loop = $this->explodeRoute((substr($route['url'],strlen($route['url'])-1,1) === '/') , $route['url']);
+            $route_loop = $this->explodeRoute( (substr($route['url'],strlen($route['url'])-1,1) === '/') , $route['url']);
             
             $route_request = $this->explodeRoute((substr($_SERVER['REQUEST_URI'],strlen($_SERVER['REQUEST_URI'])-1,1) === '/') , $_SERVER['REQUEST_URI']);
 
