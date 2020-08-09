@@ -117,27 +117,28 @@ class Router{
         return self::getInstance();
     }
 
-    private function byName(string $route_name)
+    private function byName(?string $route_name)
     {
-        $currentProtocol = $this->getProtocol();
+        if(!is_null($route_name)){
+            $currentProtocol = $this->getProtocol();
 
-        $this->check_name($route_name);
-
-        $route = $this->routers[$route_name];
-
-        $this->check_protocol($route['protocol'], $currentProtocol);
-
-        $this->check_filtering($route);
-
-        $this->Controller($route['role']);
-        return true;
+            $this->check_name($route_name);
+    
+            $route = $this->routers[$route_name];
+    
+            $this->check_protocol($route['protocol'], $currentProtocol);
+    
+            $this->check_filtering($route);
+    
+            $this->Controller($route['role']);
+            throw true;
+        }
+        
     }
 
     public function dispatch(?string $route_name = null): bool
     {
-        if(!is_null($route_name)){
-            return $this->byName($route_name);
-        }
+        $this->byName($route_name);
 
 		$currentProtocol = $this->getProtocol();
 
@@ -163,16 +164,14 @@ class Router{
                 continue;
             }
 
-	        for($rr = 0; $rr < count($route_loop); $rr++){
+            foreach($route_loop as $rr => $param){
+                //if( (substr($param,0,1) === '{') ){
+                //    $data[ substr($param,1,strlen($param)-2) ] = $route_request[$rr];    
+                //}
 
-	            if( (substr($route_loop[$rr],0,1) === '{') ){
-                    $data[ substr($route_loop[$rr],1,strlen($route_loop[$rr])-2) ] = $route_request[$rr];    
-                }
-
-	            if($this->check_parameter($route_loop[$rr], $route_request[$rr])){
+	            if($this->check_parameter($param, $route_request[$rr])){
                     continue 2;
                 }
-
             }
             
             $this->check_filtering($route);
@@ -198,10 +197,10 @@ class Router{
 
             }
             
-        }else{
-            self::getInstance()->routers[count(self::getInstance()->routers)-1] = self::getInstance()->addFilter(end(self::getInstance()->routers),$filters);
+            return self::getInstance();
         }
-
+        
+        self::getInstance()->routers[count(self::getInstance()->routers)-1] = self::getInstance()->addFilter(end(self::getInstance()->routers),$filters);
         return self::getInstance();
     }
 
@@ -225,38 +224,5 @@ class Router{
         $route['filters'] = $filters;
         return $route;
     }
-
-    public function Controller(string $controll): void
-    {
-        $data = $this->getData();
-
-        foreach ($data['GET'] as $name => $value) {
-            $controll = str_replace('{'.$name.'}',$value,$controll);
-        }
-
-        $d = explode(':',$controll);
-
-        if(count($d) != 2){
-            throw new Exception("Controller {$controll} badly set.");
-        }
-
-        if(!class_exists('Controllers\\' . ucfirst($d[0]))){
-            throw new Exception("No controller {$d[0]} found.");
-        }
-
-        if(!method_exists('Controllers\\' . ucfirst($d[0]), $d[1])){
-            throw new Exception("No method {$d[1]} found for {$d[0]}.");
-        }
-
-        $controller = 'Controllers\\' . ucfirst($d[0]);
-        $controller = new $controller();
-        $method = $d[1];
-
-        if( ( $this->getProtocol() == 'form') ){
-            $this->ControllerForm($controller, $method, $data['POST']);
-        }else {
-            $controller->$method($data);
-        }
-    }    
 
 }

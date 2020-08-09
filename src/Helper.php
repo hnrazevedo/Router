@@ -5,7 +5,7 @@ namespace HnrAzevedo\Router;
 use HnrAzevedo\Validator\Validator;
 
 trait Helper{
-    use CheckTrait;
+    use CheckTrait, ControllerTrait;
     
     protected function getProtocol(): string
     {
@@ -49,5 +49,30 @@ trait Helper{
             $controller->$role($data);
         }
     }
+
+    protected function Controller(string $controll): void
+    {
+        $data = $this->getData();
+
+        foreach ($data['GET'] as $name => $value) {
+            $controll = str_replace('{'.$name.'}',$value,$controll);
+        }
+
+        $this->check_controllsettable($controll);
+
+        $this->check_controllexist($controll);
+
+        $this->check_controllmethod($controll);
+
+        $controller = 'Controllers\\' . ucfirst(explode(':',$controll)[0]);
+        $controller = new $controller();
+        $method = explode(':',$controll)[1];
+
+        if( ( $this->getProtocol() == 'form') ){
+            $this->ControllerForm($controller, $method, $data['POST']);
+        }else {
+            $controller->$method($data);
+        }
+    }    
 
 }
