@@ -146,21 +146,11 @@ class Router{
 
             $this->hasProtocol($route, $currentProtocol);
 
-	        $route_loop = explode(
-                '/',
-                (substr($route['url'],strlen($route['url'])-1,1) === '/') 
-                    ? substr($route['url'], 0, -1) 
-                    : $route['url'] 
-            );
+            $route_loop = $this->explodeRoute((substr($route['url'],strlen($route['url'])-1,1) === '/') , $route['url']);
+            
+            $route_request = $this->explodeRoute((substr($_SERVER['REQUEST_URI'],strlen($_SERVER['REQUEST_URI'])-1,1) === '/') , $_SERVER['REQUEST_URI']);
 
-            $route_request = explode(
-                '/',
-                (substr($_SERVER['REQUEST_URI'],strlen($_SERVER['REQUEST_URI'])-1,1) === '/') 
-                ? substr($_SERVER['REQUEST_URI'], 0, -1) 
-                : $_SERVER['REQUEST_URI'] 
-            );
-
-	        if($this->check_numparams($route_loop, $route_request) || $this->check_parameters($route_loop, $route_request)){
+	        if($this->check_numparams($route_loop, $route_request) || !$this->check_parameters($route_loop, $route_request)){
                 continue;
             }
             

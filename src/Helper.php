@@ -75,4 +75,9 @@ trait Helper{
         }
     }    
 
+    protected function explodeRoute(bool $bar, array $url): array
+    {   
+        return explode( '/', $bar ? substr($url, 0, -1) : $url );
+    }
+
 }
