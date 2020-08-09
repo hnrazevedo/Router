@@ -150,7 +150,7 @@ class Router{
             
             $route_request = $this->explodeRoute((substr($_SERVER['REQUEST_URI'],strlen($_SERVER['REQUEST_URI'])-1,1) === '/') , $_SERVER['REQUEST_URI']);
 
-	        if($this->check_numparams($route_loop, $route_request) || $this->check_parameters($route_loop, $route_request)){
+	        if($this->check_numparams($route_loop, $route_request) || !$this->check_parameters($route_loop, $route_request)){
                 continue;
             }
             
