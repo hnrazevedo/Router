@@ -24,32 +24,24 @@ trait FilterTrait{
         }
 
         $filter = $this->check_filClassExist(explode(':',$filtername)[0]);
-        $method = $this->check_filMethodExist($filter ,explode(':',$filtername)[1]);
-        
-        $filter->$method();
+
+        if(!$filter->check(explode(':',$filtername)[1])){
+            throw new Exception($filter->getMessage(explode(':',$filtername)[1]));
+        }
     }
 
     protected function check_filClassExist(string $class)
     {
-        if(class_exists("Filter\\{$class}")){
-            $filter = "Filter\\{$class}";
+        if(class_exists("HnrAzevedo\\Filter\\{$class}")){
+            $filter = "HnrAzevedo\\Filter\\{$class}";
             return new $filter();
         }
         if(file_exists(ROUTER_CONFIG['path.filters'].$class.'.php')){
             require_once(ROUTER_CONFIG['path.filters'].$class.'.php');
-            $filter = "Filter\\{$class}";
+            $filter = "HnrAzevedo\\Filter\\{$class}";
             return new $filter();
         }
         throw new Exception("Filter {$class} not found.");
-    }
-
-    protected function check_filMethodExist($filter, string $method): string
-    {
-        if(!method_exists($filter, $method)){
-            $filter = get_class(($filter));
-            throw new Exception("Filter {$method} not found in {$filter}.");
-        }
-        return $method;
     }
 
 }

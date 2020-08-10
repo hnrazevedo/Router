@@ -1,16 +1,21 @@
 <?php
 
-namespace Filter;
+namespace HnrAzevedo\Filter;
 
-use Exception;
+class User extends Filter{
 
-class User{
-    
-    public function user_in()
+    public function user_in(): bool
     {
-        if(!array_key_exists('user',$_SESSION)){
-            throw new Exception('User must be logged in.');
-        }
+        $this->addMessage('user_in','User required to be logged in.');
+
+        $this->addTreat('user_in','report_notLogged');
+
+        return (array_key_exists('user',$_SESSION));
+    }
+
+    public function report_notLogged(): void
+    {
+
     }
 
 }

@@ -97,7 +97,6 @@ class Router{
 
     public static function name(string $name): Router
     {
-
         if(self::getInstance()->lastReturn){
             throw new Exception("There is no reason to call a {$name} route group.");
         }
