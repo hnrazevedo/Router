@@ -20,6 +20,12 @@ trait CheckTrait{
         }
     }
 
+    protected function check_typeRole($role){
+        if(!is_string($role) && @get_class($role) !== 'Closure' ){
+            throw new Exception("Improperly defined route track.");
+        }
+    }
+
     protected function check_config()
     {
         if(!defined('ROUTER_CONFIG')){

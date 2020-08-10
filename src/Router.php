@@ -34,32 +34,32 @@ class Router{
         return self::$instance;
     }
 
-    public static function form(string $uri, string $controll): Router
+    public static function form(string $uri, $walking): Router
     {
-        return self::getInstance()->add($uri, $controll, 'form');
+        return self::getInstance()->add($uri, $walking, 'form');
     }
 
-    public static function get(string $uri, string $controll): Router
+    public static function get(string $uri, $walking): Router
     {
-        return self::getInstance()->add($uri, $controll, 'get');
+        return self::getInstance()->add($uri, $walking, 'get');
     }
 
-    public static function post(string $uri, string $controll): Router
+    public static function post(string $uri, $walking): Router
     {
-        return self::getInstance()->add($uri, $controll, 'post');
+        return self::getInstance()->add($uri, $walking, 'post');
     }
 
-    public static function ajax(string $uri, string $controll): Router
+    public static function ajax(string $uri, $walking): Router
     {
-        return self::getInstance()->add($uri, $controll, 'ajax');
+        return self::getInstance()->add($uri, $walking, 'ajax');
     }
 
-    public static function add(string $uri, string $controll, string $protocol): Router
+    public static function add(string $uri, $walking, string $protocol): Router
     {
-        return self::getInstance()->set($uri, $controll, $protocol);
+        return self::getInstance()->set($uri, $walking, $protocol);
     }
 
-    public function set($url , $role , $protocol = null): Router
+    public function set($url ,$walking , string $protocol): Router
     {
 		$url = (substr($url,0,1) !=='/' and strlen($url) > 0) ? "/{$url}" : $url;
 
@@ -67,11 +67,13 @@ class Router{
     		if( md5($this->prefix . $value['url'] . $value['protocol'] ) === md5( $url . $protocol ) ){
                 throw new Exception("There is already a route with the url {$url} and with the {$protocol} protocol configured.");
             }
-    	}
+        }
+        
+        $this->check_typeRole($walking);
 
 		$route = [
 			'url' => $this->prefix.$url,
-			'role' => $role,
+			'role' => $walking,
 			'protocol' => $protocol,
 			'filters' => null,
             'group' => self::getInstance()->group
@@ -130,10 +132,9 @@ class Router{
     
             $this->check_filtering($route);
     
-            $this->Controller($route['role']);
+            $this->toHiking($route['role']);
             throw true;
         }
-        
     }
 
     public function dispatch(?string $route_name = null): bool
@@ -156,7 +157,7 @@ class Router{
             
             $this->check_filtering($route);
 
-            $this->Controller($route['role']);
+            $this->toHiking($route['role']);
 	        return true;
 	    }
 

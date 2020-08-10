@@ -10,11 +10,6 @@ trait Helper{
         if((isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest')){
             return 'ajax';
         }
-        
-        /* ONLY FOR DEBUG CONDITION */
-        if(!array_key_exists('REQUEST_METHOD',$_SERVER)){
-            return 'get';
-        }
 
         return strtolower($_SERVER['REQUEST_METHOD']);
     }
@@ -39,7 +34,6 @@ trait Helper{
 
     protected function ControllerForm($controller, string $method, array $values){
 		$this->check_role();
-
         $role = ($method !== 'method') ? $method : $this->getData()['POST']['role'];
         $data = (!is_null($values)) ? json_decode($values['data']) : null;
         $controller->$role($data);
@@ -73,6 +67,15 @@ trait Helper{
     protected function explodeRoute(bool $bar, string $url): array
     {   
         return explode( '/', $bar ? substr($url, 0, -1) : $url );
+    }
+
+    protected function toHiking($walking)
+    {
+        if(is_string($walking)){
+            $this->Controller($walking);
+            return true;
+        }
+        $walking($this->getData()['GET']);
     }
 
 }
