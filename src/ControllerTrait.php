@@ -15,15 +15,18 @@ trait ControllerTrait{
 
     protected function check_controllexist(string $controll)
     {
-        if(!class_exists('Controllers\\' . ucfirst(explode(':',$controll)[0]))){
-            throw new Exception("No controller ".explode(':',$controll)[0]." found.");
+        $controllname = ROUTER_CONFIG['controller.namespace'].'\\'.ucfirst(explode(':',$controll)[0]);
+        if(!class_exists($controllname)){
+            throw new Exception("No controller {$controllname} found.");
         }
     }
 
     protected function check_controllmethod(string $controll)
     {
-        if(!method_exists('Controllers\\' . ucfirst(explode(':',$controll)[0]), explode(':',$controll)[1])){
-            throw new Exception("No method ".explode(':',$controll)[1]." found for ".explode(':',$controll)[0].".");
+        $controllname = ROUTER_CONFIG['controller.namespace'].'\\'.ucfirst(explode(':',$controll)[0]);
+        $method = explode(':',$controll)[1];
+        if(!method_exists($controllname, $method)){
+            throw new Exception("No method {$method} found for {$controllname}.");
         }
     }
 

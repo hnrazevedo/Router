@@ -53,7 +53,7 @@ trait Helper{
 
         $this->check_controllmethod($controll);
 
-        $controller = 'Controllers\\' . ucfirst(explode(':',$controll)[0]);
+        $controller = ROUTER_CONFIG['controller.namespace'].'\\'. ucfirst(explode(':',$controll)[0]);
         $controller = new $controller();
         $method = explode(':',$controll)[1];
 

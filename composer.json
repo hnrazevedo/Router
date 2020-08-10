@@ -15,7 +15,8 @@
     "license":"MIT",
     "autoload": {
         "psr-4": {
-            "HnrAzevedo\\Router\\":"src/"
+            "HnrAzevedo\\Router\\":"src/",
+            "Example\\Controllers\\":"examples/Controllers/"
         }
     }
 }
