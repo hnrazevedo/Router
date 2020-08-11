@@ -144,7 +144,9 @@ class Router{
 
         foreach(array_reverse($this->routers) as $r => $route){
 
-            $this->hasProtocol($route, $currentProtocol);
+            if(!$this->hasProtocol($route, $currentProtocol)){
+                continue;
+            }
 
             $route_loop = $this->explodeRoute( (substr($route['url'],strlen($route['url'])-1,1) === '/') , $route['url']);
             
