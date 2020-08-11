@@ -1,6 +1,6 @@
 {
     "name": "hnrazevedo/router",
-    "description": "Tools for developing personal projects",
+    "description": "Router is a simple friendly URL abstractor.",
     "authors": [
         {
             "name": "Henri Mateus Santos de Azevedo",
