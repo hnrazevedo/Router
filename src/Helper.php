@@ -7,11 +7,7 @@ trait Helper{
     
     protected function getProtocol(): string
     {
-        if((isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest')){
-            return 'ajax';
-        }
-
-        return (array_key_existS('REQUEST_METHOD',$_SESSION)) ? strtolower($_SERVER['REQUEST_METHOD']) : 'get';
+        return (array_key_exists('HTTP_REQUESTED_METHOD',$_SERVER)) ? $_SERVER['HTTP_REQUESTED_METHOD'] : 'get';
     }
 
     protected function getData(): ?array
