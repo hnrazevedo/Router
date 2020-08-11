@@ -5,7 +5,7 @@ namespace HnrAzevedo\Router;
 trait Helper{
     use CheckTrait, ControllerTrait;
     
-    protected function getProtocol(): string
+    public function getProtocol(): string
     {
         if((isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest')){
             return 'ajax';
@@ -19,7 +19,8 @@ trait Helper{
         return [
             'POST' => $_POST,
             'GET' => $_GET,
-            'FILES' => $_FILES
+            'FILES' => $_FILES,
+            'PROTOCOL' => $this->getProtocol()
         ];
     }
 
