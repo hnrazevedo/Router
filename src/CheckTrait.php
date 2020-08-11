@@ -64,15 +64,16 @@ trait CheckTrait{
         }
     }
 
-    protected function hasProtocol(array $route, string $currentProtocol)
+    protected function hasProtocol(array $route, string $currentProtocol): bool
     {
         $protocols = ( is_array($route['protocol']) ) ? $route['protocol'] : [ $route['protocol'] ];
-
+        $protocolEquals = false;
         foreach($protocols as $protocol){
-            if($protocol !== $currentProtocol){
-                continue;
+            if($protocol === $currentProtocol){
+                $protocolEquals = true;
             }
         }
+        return $protocolEquals;
     }
 
 }
