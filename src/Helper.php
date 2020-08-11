@@ -11,7 +11,7 @@ trait Helper{
             return 'ajax';
         }
 
-        return strtolower($_SERVER['REQUEST_METHOD']);
+        return (array_key_existS('REQUEST_METHOD',$_SESSION)) ? strtolower($_SERVER['REQUEST_METHOD']) : 'get';
     }
 
     protected function getData(): ?array
