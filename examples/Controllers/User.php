@@ -2,7 +2,9 @@
 
 namespace Example\Controllers;
 
-class User{
+use HnrAzevedo\Router\Controller;
+
+class User extends Controller{
 
     public function my_account(array $data): void
     {

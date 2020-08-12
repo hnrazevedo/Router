@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "af2f447f84e62cdd1f9b9c40d9b02e86",
+    "content-hash": "46cef27385989f277e83cef1f45caed9",
     "packages": [
         {
             "name": "hnrazevedo/filter",
@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/hnrazevedo/Filter.git",
-                "reference": "57372f3b469a3d32efbf2642e01bc3e03a538f76"
+                "reference": "c704edfde8e038c6d31076757530d85c0a38bbd5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hnrazevedo/Filter/zipball/57372f3b469a3d32efbf2642e01bc3e03a538f76",
-                "reference": "57372f3b469a3d32efbf2642e01bc3e03a538f76",
+                "url": "https://api.github.com/repos/hnrazevedo/Filter/zipball/c704edfde8e038c6d31076757530d85c0a38bbd5",
+                "reference": "c704edfde8e038c6d31076757530d85c0a38bbd5",
                 "shasum": ""
             },
             "require": {
@@ -40,8 +40,45 @@
                     "role": "Developer"
                 }
             ],
-            "description": "Tools for developing personal projects",
-            "time": "2020-08-10T14:09:21+00:00"
+            "description": "Filter is a simple component to check information.",
+            "time": "2020-08-11T20:05:55+00:00"
+        },
+        {
+            "name": "hnrazevedo/validator",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hnrazevedo/Validator.git",
+                "reference": "60e202f135855fc406d7061683bf65b6da68a756"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hnrazevedo/Validator/zipball/60e202f135855fc406d7061683bf65b6da68a756",
+                "reference": "60e202f135855fc406d7061683bf65b6da68a756",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "HnrAzevedo\\Validator\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Henri Mateus Santos de Azevedo",
+                    "email": "hnr.azevedo@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Validator is a simple data validation component.",
+            "time": "2020-08-11T12:55:01+00:00"
         }
     ],
     "packages-dev": [],
