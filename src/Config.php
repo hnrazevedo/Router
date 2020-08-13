@@ -1,6 +1,8 @@
 <?php
 
 define("ROUTER_CONFIG", [
-    "path" => "routers",
-    "controller.namespace" => "Controllers"
+    "path" => "/routes/",
+    "path.filters" => "/filters/",
+    "filter.namespace" => "Filter",
+    "controller.namespace" => "Controller"
 ]);
