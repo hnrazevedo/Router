@@ -13,6 +13,7 @@
         "hnrazevedo/filter": "^1.0",
         "hnrazevedo/validator": "^1.0"
     },
+    "minimum-stability":"dev",
     "license":"MIT",
     "autoload": {
         "psr-4": {
