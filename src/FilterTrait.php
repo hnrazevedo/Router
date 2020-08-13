@@ -32,13 +32,13 @@ trait FilterTrait{
 
     protected function check_filClassExist(string $class)
     {
-        if(class_exists("HnrAzevedo\\Filter\\{$class}")){
-            $filter = "HnrAzevedo\\Filter\\{$class}";
+        if(class_exists(ROUTER_CONFIG['filter.namespace']."\\{$class}")){
+            $filter = ROUTER_CONFIG['filter.namespace']."\\{$class}";
             return new $filter();
         }
         if(file_exists(ROUTER_CONFIG['path.filters'].$class.'.php')){
             require_once(ROUTER_CONFIG['path.filters'].$class.'.php');
-            $filter = "HnrAzevedo\\Filter\\{$class}";
+            $filter = ROUTER_CONFIG['filter.namespace']."\\{$class}";
             return new $filter();
         }
         throw new Exception("Filter {$class} not found.");
