@@ -36,7 +36,7 @@ class Controller{
 
     private function ValidateData(): void
     {
-        $valid = Validator::execute($this->getData()['POST']['data']);
+        $valid = Validator::execute($this->getData()['POST']);
 
         if(!$valid){
             foreach(Validator::getErrors() as $err => $message){
