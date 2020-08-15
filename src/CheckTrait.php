@@ -7,11 +7,9 @@ use Exception;
 trait CheckTrait{
     use FilterTrait;
 
-    protected function check_protocol(string $expected, string $current)
+    protected function check_protocol(string $expected, string $current): bool
     {
-        if($expected !== $current){
-            throw new Exception('Page not found.',404);
-        }
+        return ($expected === $current);
     }
 
     protected function check_name(string $route_name){
