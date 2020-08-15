@@ -127,7 +127,9 @@ class Router{
     
             $route = $this->routers[$route_name];
     
-            $this->check_protocol($route['protocol'], $currentProtocol);
+            if(!$this->check_protocol($route['protocol'], $currentProtocol)){
+                throw new Exception('Page not found.',404);
+            }
     
             $this->check_filtering($route);
     
@@ -146,7 +148,9 @@ class Router{
 
             $_SESSION['route'] = serialize($route);
 
-            $this->check_protocol($route['protocol'], $currentProtocol);
+            if(!$this->check_protocol($route['protocol'], $currentProtocol)){
+                continue;
+            }
 
             $this->hasProtocol($route, $currentProtocol);
 
