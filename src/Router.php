@@ -144,6 +144,10 @@ class Router{
 
         foreach(array_reverse($this->routers) as $r => $route){
 
+            $_SESSION['route'] = serialize($route);
+
+            $this->check_protocol($route['protocol'], $currentProtocol);
+
             $this->hasProtocol($route, $currentProtocol);
 
             $route_loop = $this->explodeRoute( (substr($route['url'],strlen($route['url'])-1,1) === '/') , $route['url']);
@@ -160,7 +164,9 @@ class Router{
 
             $this->toHiking($route['role']);
 	        return true;
-	    }
+        }
+        
+        unset($_SESSION['route']);
 
 	    throw new Exception('Page not found.',404);
     }
@@ -178,8 +184,8 @@ class Router{
                 }
 
             }
-		
-	    self::getInstance()->lastReturn = null;
+
+            self::getInstance()->lastReturn = null;
             
             return self::getInstance();
         }
