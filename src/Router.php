@@ -178,6 +178,8 @@ class Router{
                 }
 
             }
+		
+	    self::getInstance()->lastReturn = null;
             
             return self::getInstance();
         }
