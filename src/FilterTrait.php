@@ -26,7 +26,7 @@ trait FilterTrait{
         $filter = $this->check_filClassExist(explode(':',$filtername)[0]);
 
         if(!$filter->check(explode(':',$filtername)[1])){
-            throw new Exception($filter->getMessage(explode(':',$filtername)[1]));
+            throw new Exception($filter->getMessage(explode(':',$filtername)[1]),403);
         }
     }
 
