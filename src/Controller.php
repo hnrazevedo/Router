@@ -29,7 +29,7 @@ class Controller{
 
         $this->check_method($method);
 
-        $this->$method();
+        $this->$method($this->getData());
 
         return true;
     }
