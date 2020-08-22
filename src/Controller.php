@@ -17,7 +17,7 @@ class Controller{
         }
     }
 
-    public function method($data): bool
+    public function method(): bool
     {        
         $this->ValidateData();
 
@@ -29,7 +29,7 @@ class Controller{
 
         $this->checkMethod($method);
 
-        $this->$method($data);
+        call_user_func_array([$this,$method],  func_get_args());
 
         return true;
     }
