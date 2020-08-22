@@ -7,11 +7,10 @@ trait Helper{
     
     protected function getProtocol(): string
     {
-        if((isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest')){
-            return 'ajax';
-        }
-
-        return (array_key_existS('REQUEST_METHOD',$_SESSION)) ? strtolower($_SERVER['REQUEST_METHOD']) : 'get';
+        $protocol = ((isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest')) ? 'ajax' : 'get';
+        $protocol = (array_key_existS('HTTP_REQUESTED_METHOD',$_SERVER)) ? strtolower($_SERVER['HTTP_REQUESTED_METHOD']) : $protocol;
+            
+        return $protocol;
     }
 
     protected function getData(): ?array
@@ -34,10 +33,11 @@ trait Helper{
     }
 
     protected function ControllerForm($controller, string $method, array $values){
-		$this->check_role();
-        $role = ($method !== 'method') ? $method : $this->getData()['POST']['role'];
-        $data = (!is_null($values)) ? json_decode($values['data']) : null;
-        $controller->$role($data);
+		$this->checkRole();
+        $method = ($method !== 'method') ? $method : $this->getData()['POST']['role'];
+        $data = (!is_null($values)) ? json_decode($values['data'], true) : null;
+
+        call_user_func_array([$controller,$method],  $data);
     }
 
     protected function Controller(string $controll): void
@@ -48,21 +48,23 @@ trait Helper{
             $controll = str_replace('{'.$name.'}',$value,$controll);
         }
 
-        $this->check_controllsettable($controll);
+        $this->checkControllsettable($controll);
 
-        $this->check_controllexist($controll);
+        $this->checkControllexist($controll);
 
-        $this->check_controllmethod($controll);
+        $this->checkControllmethod($controll);
 
         $controller = ROUTER_CONFIG['controller.namespace'].'\\'. ucfirst(explode(':',$controll)[0]);
         $controller = new $controller();
         $method = explode(':',$controll)[1];
 
-        if( ( $this->getProtocol() == 'form') ){
+        if( ($this->getProtocol() == 'form') ){
             $this->ControllerForm($controller, $method, $data['POST']);
         }else {
-            $controller->$method($data);
+            $data = (array_key_exists('data',$data['POST'])) ? json_decode($data['POST']['data'], true) : $data['GET'];
+            call_user_func_array([$controller,$method],  $data);
         }
+       
     }    
 
     protected function explodeRoute(bool $bar, string $url): array
@@ -76,7 +78,8 @@ trait Helper{
             $this->Controller($walking);
             return true;
         }
-        $walking($this->getData()['GET']);
+
+        call_user_func_array($walking,$this->getData()['GET']);
     }
 
 }

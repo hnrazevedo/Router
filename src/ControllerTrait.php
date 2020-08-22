@@ -6,14 +6,14 @@ use Exception;
 
 trait ControllerTrait{
 
-    protected function check_controllsettable(string $controll)
+    protected function checkControllsettable(string $controll)
     {
         if(count(explode(':',$controll)) != 2){
             throw new Exception("Controller {$controll} badly set.");
         }
     }
 
-    protected function check_controllexist(string $controll)
+    protected function checkControllexist(string $controll)
     {
         $controllname = ROUTER_CONFIG['controller.namespace'].'\\'.ucfirst(explode(':',$controll)[0]);
         if(!class_exists($controllname)){
@@ -21,7 +21,7 @@ trait ControllerTrait{
         }
     }
 
-    protected function check_controllmethod(string $controll)
+    protected function checkControllmethod(string $controll)
     {
         $controllname = ROUTER_CONFIG['controller.namespace'].'\\'.ucfirst(explode(':',$controll)[0]);
         $method = explode(':',$controll)[1];

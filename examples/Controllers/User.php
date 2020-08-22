@@ -6,9 +6,9 @@ use HnrAzevedo\Router\Controller;
 
 class User extends Controller{
 
-    public function my_account(array $data): void
+    public function requereLogin($username, $password): void
     {
-        echo 'my_account';
+        //
     }
 
 }

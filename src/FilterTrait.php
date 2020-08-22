@@ -5,7 +5,7 @@ namespace HnrAzevedo\Router;
 use Exception;
 
 trait FilterTrait{
-    protected function check_filtering(array $route)
+    protected function checkFiltering(array $route)
     {
         $filters = (is_array($route['filters'])) ? $route['filters'] : [ $route['filters'] ];
 
@@ -13,31 +13,26 @@ trait FilterTrait{
             if(is_null($filter)){
                 continue;
             }
-            $this->check_filter($filter);
+            $this->checkFilter($filter);
         }
     }
 
-    protected function check_filter(string $filtername)
+    protected function checkFilter(string $filtername)
     {
         if(count(explode(':',$filtername)) != 2){
             throw new Exception("Wrongly configured filter: {$filtername}.");
         }
 
-        $filter = $this->check_filClassExist(explode(':',$filtername)[0]);
+        $filter = $this->checkFilClassExist(explode(':',$filtername)[0]);
 
         if(!$filter->check(explode(':',$filtername)[1])){
-            throw new Exception($filter->getMessage(explode(':',$filtername)[1]));
+            throw new Exception($filter->getMessage(explode(':',$filtername)[1]),403);
         }
     }
 
-    protected function check_filClassExist(string $class)
+    protected function checkFilClassExist(string $class)
     {
         if(class_exists(ROUTER_CONFIG['filter.namespace']."\\{$class}")){
-            $filter = ROUTER_CONFIG['filter.namespace']."\\{$class}";
-            return new $filter();
-        }
-        if(file_exists(ROUTER_CONFIG['path.filters'].$class.'.php')){
-            require_once(ROUTER_CONFIG['path.filters'].$class.'.php');
             $filter = ROUTER_CONFIG['filter.namespace']."\\{$class}";
             return new $filter();
         }

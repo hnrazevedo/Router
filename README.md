@@ -78,7 +78,6 @@ Para mais detalhes sobre como usar o Router, veja a pasta de exemplos com detalh
 ```php
 define("ROUTER_CONFIG", [
     "path" => "/Routes/", //Directory where PHP files with routes are stored
-    "path.filters" => __DIR__."/Filters/", // Directory where the extended HnrAzevedo\Filter objects are stored with the filters
     "filters.namespace" => "Example\\Filters" // Namespace of your project's filter
     "controller.namespace" => "Example\\Controllers" // Namespace of your project's controller
 ]);
@@ -96,7 +95,6 @@ Em casos de erros de configuração ou páginas inexistentes, o Router disparara
 - get: URL access or get method
 - post: post method
 - ajax: called fetch or XMLHttpRequest
-- form*: to be implemented globally
 
 ### The routes must be set in a flat file without classes, as they will be imported when creating the object
 As rotas devem ser setadas num arquivo simples sem classes, pois seram importadas na criação do objeto
@@ -129,9 +127,12 @@ Router::group('/administrator/', function(){
     Router::get('/pages/index','Administrator:view');
 })->filter('admin');
 
-/* Perform anonymous function directly via the route */
-Router::get('/{parameter}', function($data){
-    echo $data['parameter'];
+/* Passing parameters through the route */
+Router::get('/{parameter}', function($parameter){
+    //
+});
+Router::get('/{parameter}/{outerparameter}', function($parameter, $outerParameter){
+    //
 });
 
 /* Filter definition */
@@ -181,10 +182,10 @@ use HnrAzevedo\Router\Router;
 
 /* NOTE: in case of error an exception is thrown */
 /* Fires from the URL accessed */
-Router::create()->dispatch();
+Router::dispatch();
 
 /* Shoot by name */
-Router::create()->dispatch('index');
+Router::dispatch('index');
 ```
 
 ## Controller

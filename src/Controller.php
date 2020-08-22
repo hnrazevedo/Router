@@ -10,26 +10,26 @@ class Controller{
 
     protected array $fail = [];
 
-    private function check_method(string $method): void
+    private function checkMethod(string $method): void
     {
         if(!method_exists($this,$method)){
             throw new Exception("{$method} not found in ".get_class($this).".");
         }
     }
 
-    public function method(): bool
+    public function method($data): bool
     {        
         $this->ValidateData();
 
-        if($this->check_failData()){
+        if($this->checkFailData()){
             return false;
         }
 
         $method = $this->getData()['POST']['role'];
 
-        $this->check_method($method);
+        $this->checkMethod($method);
 
-        $this->$method();
+        $this->$method($data);
 
         return true;
     }
@@ -48,7 +48,7 @@ class Controller{
         }
     }
 
-    private function check_failData(): bool
+    private function checkFailData(): bool
     {
         if(count($this->fail) > 0 ){
             echo json_encode([

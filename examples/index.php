@@ -11,7 +11,14 @@ use HnrAzevedo\Router\Router;
 
 try{
     
-    Router::create()->dispatch();
+    Router::dispatch();
+
+    /* Return current route */
+    $router = Router::current();
+    /* Return current name route*/
+    $name = Router::currentRouteName();
+    /* Return current action route */
+    $action = Router::currentRouteAction();
 
 }catch(Exception $er){
 

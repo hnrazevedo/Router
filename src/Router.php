@@ -15,6 +15,8 @@ class Router{
     private $filter = null;
     private $group = false;
     private $lastReturn = null;
+    private bool $instanced = false;
+    private $currentRoute = null;
 
     public function __construct()
     {
@@ -23,8 +25,12 @@ class Router{
 
     public static function create(): Router
     {
-        self::getInstance()->check_config();
-        self::getInstance()->import(ROUTER_CONFIG['path']);
+        if(!self::getInstance()->instanced){
+            self::getInstance()->checkConfig();
+            self::getInstance()->import(ROUTER_CONFIG['path']);
+            self::getInstance()->instanced = true;
+        }
+        
         return self::getInstance();
     }
 
@@ -34,9 +40,11 @@ class Router{
         return self::$instance;
     }
 
-    public static function form(string $uri, $walking): Router
+    public static function any(string $uri, $walking): Router
     {
-        return self::getInstance()->add($uri, $walking, 'form');
+        self::getInstance()->add($uri, $walking, 'get');
+        self::getInstance()->add($uri, $walking, 'post');
+        return self::getInstance()->add($uri, $walking, 'ajax');
     }
 
     public static function get(string $uri, $walking): Router
@@ -54,9 +62,29 @@ class Router{
         return self::getInstance()->add($uri, $walking, 'ajax');
     }
 
+    public static function form(string $uri, $walking): Router
+    {
+        return self::getInstance()->add($uri, $walking, 'form');
+    }
+
     public static function add(string $uri, $walking, string $protocol): Router
     {
         return self::getInstance()->set($uri, $walking, $protocol);
+    }
+
+    public static function current(): ?array
+    {
+        return self::getInstance()->currentRoute;
+    }
+
+    public static function currentRouteName(): ?string
+    {
+        return self::getInstance()->currentRoute['name'];
+    }
+
+    public static function currentRouteAction()
+    {
+        return self::getInstance()->currentRoute['role'];
     }
 
     public function set($url ,$walking , string $protocol): Router
@@ -69,7 +97,7 @@ class Router{
             }
         }
         
-        $this->check_typeRole($walking);
+        $this->checkTypeRole($walking);
 
 		$route = [
 			'url' => $this->prefix.$url,
@@ -118,49 +146,61 @@ class Router{
         return self::getInstance();
     }
 
-    private function byName(?string $route_name)
+    private function byName(?string $routName)
     {
-        if(!is_null($route_name)){
+        if(!is_null($routName)){
             $currentProtocol = $this->getProtocol();
 
-            $this->check_name($route_name);
+            $this->checkName($routName);
     
-            $route = $this->routers[$route_name];
+            $route = $this->routers[$routName];
     
-            $this->check_protocol($route['protocol'], $currentProtocol);
+            if(!$this->checkProtocol($route['protocol'], $currentProtocol)){
+                throw new Exception('Page not found.',404);
+            }
     
-            $this->check_filtering($route);
+            $this->checkFiltering($route);
     
             $this->toHiking($route['role']);
             throw true;
         }
     }
 
-    public function dispatch(?string $route_name = null): bool
+    public static function dispatch(?string $routeName = null): bool
     {
-        $this->byName($route_name);
+        $instance = self::create();
 
-		$currentProtocol = $this->getProtocol();
+        $instance->getInstance()->byName($routeName);
 
-        foreach(array_reverse($this->routers) as $r => $route){
+		$currentProtocol = $instance->getInstance()->getProtocol();
 
-            $this->hasProtocol($route, $currentProtocol);
+        foreach(array_reverse($instance->getInstance()->routers) as $r => $route){
 
-            $route_loop = $this->explodeRoute( (substr($route['url'],strlen($route['url'])-1,1) === '/') , $route['url']);
+            $instance->getInstance()->currentRoute = $route;
+
+            if(!$instance->getInstance()->checkProtocol($route['protocol'], $currentProtocol)){
+                continue;
+            }
+
+            $instance->getInstance()->hasProtocol($route, $currentProtocol);
+
+            $routeLoop = $instance->getInstance()->explodeRoute( (substr($route['url'],strlen($route['url'])-1,1) === '/') , $route['url']);
             
             $_SERVER['REQUEST_URI'] = (array_key_exists('REQUEST_URI', $_SERVER)) ? $_SERVER['REQUEST_URI'] : '';
 
-            $route_request = $this->explodeRoute((substr($_SERVER['REQUEST_URI'],strlen($_SERVER['REQUEST_URI'])-1,1) === '/') , $_SERVER['REQUEST_URI']);
+            $routeRequest = $instance->getInstance()->explodeRoute((substr($_SERVER['REQUEST_URI'],strlen($_SERVER['REQUEST_URI'])-1,1) === '/') , $_SERVER['REQUEST_URI']);
 
-	        if($this->check_numparams($route_loop, $route_request) || !$this->check_parameters($route_loop, $route_request)){
+	        if($instance->getInstance()->checkNumparams($routeLoop, $routeRequest) || !$instance->getInstance()->checkParameters($routeLoop, $routeRequest)){
                 continue;
             }
             
-            $this->check_filtering($route);
+            $instance->getInstance()->checkFiltering($route);
 
-            $this->toHiking($route['role']);
+            $instance->getInstance()->toHiking($route['role']);
 	        return true;
-	    }
+        }
+        
+        $instance->getInstance()->currentRoute = null;
 
 	    throw new Exception('Page not found.',404);
     }
@@ -178,6 +218,8 @@ class Router{
                 }
 
             }
+
+            self::getInstance()->lastReturn = null;
             
             return self::getInstance();
         }
