@@ -10,9 +10,6 @@ class Router{
     private static $instance = null;
     private array $routers = [];
     private ?string $prefix = null;
-    private $protocol = null;
-    private $filtersSet = null;
-    private $filter = null;
     private $group = false;
     private $lastReturn = null;
     private bool $instanced = false;
