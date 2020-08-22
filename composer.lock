@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "46cef27385989f277e83cef1f45caed9",
+    "content-hash": "a73b089ea065ca554cd53e02b2f7dc36",
     "packages": [
         {
             "name": "hnrazevedo/filter",
@@ -45,16 +45,16 @@
         },
         {
             "name": "hnrazevedo/validator",
-            "version": "v1.0.0",
+            "version": "v1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hnrazevedo/Validator.git",
-                "reference": "60e202f135855fc406d7061683bf65b6da68a756"
+                "reference": "c92a70cda0a902f261942d47ccd5fe07f720c4f2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hnrazevedo/Validator/zipball/60e202f135855fc406d7061683bf65b6da68a756",
-                "reference": "60e202f135855fc406d7061683bf65b6da68a756",
+                "url": "https://api.github.com/repos/hnrazevedo/Validator/zipball/c92a70cda0a902f261942d47ccd5fe07f720c4f2",
+                "reference": "c92a70cda0a902f261942d47ccd5fe07f720c4f2",
                 "shasum": ""
             },
             "require": {
@@ -78,17 +78,18 @@
                 }
             ],
             "description": "Validator is a simple data validation component.",
-            "time": "2020-08-11T12:55:01+00:00"
+            "time": "2020-08-20T19:34:53+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
         "php": ">=7.4"
     },
-    "platform-dev": []
+    "platform-dev": [],
+    "plugin-api-version": "1.1.0"
 }

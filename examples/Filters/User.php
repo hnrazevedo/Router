@@ -1,8 +1,8 @@
 <?php
 
-namespace Example\Filter;
+namespace Example\Filters;
 
-use HnrAzevedo\Filter as HnrFilter;
+use HnrAzevedo\Filter\Filter as HnrFilter;
 
 class User extends HnrFilter{
 

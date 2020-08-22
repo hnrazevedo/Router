@@ -18,7 +18,8 @@
     "autoload": {
         "psr-4": {
             "HnrAzevedo\\Router\\":"src/",
-            "Example\\Controllers\\":"examples/Controllers/"
+            "Example\\Controllers\\":"examples/Controllers/",
+            "Example\\Filters\\":"examples/Filters/"
         }
     }
 }
