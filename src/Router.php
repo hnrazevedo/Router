@@ -13,7 +13,6 @@ class Router{
     private $group = false;
     private $lastReturn = null;
     private bool $instanced = false;
-    private $currentRoute = null;
 
     public function __construct()
     {
@@ -67,21 +66,6 @@ class Router{
     public static function add(string $uri, $walking, string $protocol): Router
     {
         return self::getInstance()->set($uri, $walking, $protocol);
-    }
-
-    public static function current(): ?array
-    {
-        return self::getInstance()->currentRoute;
-    }
-
-    public static function currentRouteName(): ?string
-    {
-        return self::getInstance()->currentRoute['name'];
-    }
-
-    public static function currentRouteAction()
-    {
-        return self::getInstance()->currentRoute['role'];
     }
 
     public function set($url ,$walking , string $protocol): Router

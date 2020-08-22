@@ -5,6 +5,23 @@ namespace HnrAzevedo\Router;
 trait Helper{
     use CheckTrait, ControllerTrait;
     
+    private $currentRoute = null;
+
+    public static function current(): ?array
+    {
+        return self::getInstance()->currentRoute;
+    }
+
+    public static function currentRouteName(): ?string
+    {
+        return self::getInstance()->currentRoute['name'];
+    }
+
+    public static function currentRouteAction()
+    {
+        return self::getInstance()->currentRoute['role'];
+    }
+    
     protected function getProtocol(): string
     {
         $protocol = ((isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest')) ? 'ajax' : 'get';
