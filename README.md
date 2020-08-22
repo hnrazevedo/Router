@@ -90,11 +90,12 @@ Em casos de erros de configuração ou páginas inexistentes, o Router disparara
 
 ### Router methods
 
-#### Available methods
+#### Available protocols
 
 - get: URL access or get method
 - post: post method
 - ajax: called fetch or XMLHttpRequest
+- form: called fetch or XMLHttpRequest (with Requested-Method defined in the header as form)
 
 ### The routes must be set in a flat file without classes, as they will be imported when creating the object
 As rotas devem ser setadas num arquivo simples sem classes, pois seram importadas na criação do objeto
@@ -144,16 +145,16 @@ Router::get('/my-account','User:my_account')->filter('user_in');
 #### Correct way of defining routes
 ```php
 /* Access via anything except /1 and /3 */
-Router::get('/{teste}',function(){
-    echo 'teste';
+Router::get('/{test}',function($test){
+    //
 });
 /* Acess via /1 */
 Router::get('/1',function(){
-    echo 1;
+    //
 });
 /* Acess via /3 */
 Router::get('/3',function(){
-    echo 3;
+    //
 });
 ```
 
@@ -161,18 +162,25 @@ Router::get('/3',function(){
 ```php
 /* It will never be accessed */
 Router::get('/1',function(){
-    echo 1;
+    //
 });
 
 /* It will never be accessed */
 Router::get('/3',function(){
-    echo 3;
+    //
 });
 
 /* Access via anything */
-Router::get('/{teste}',function(){
-    echo 'teste';
+Router::get('/{test}',function($test){
+    //
 });
+```
+
+#### Current route
+```php
+$route = Router::current();
+$name = Router::currentRouteName();
+$action = Router::currentRouteAction();
 ```
 
 ### Run route
@@ -194,13 +202,9 @@ namespace Example\Controllers;
 
 class User{
 
-    public function my_account(array $data): void
+    public function my_account(/* form inputs */): void
     {
-        // Returning values ​​in the controller
-        var_dump($data['GET']);
-        var_dump($data['POST']);
-        var_dump($data['FILES']);
-        var_dump($data['PROTOCOL']);
+        //
     }
 
 }
@@ -218,9 +222,9 @@ use HnrAzevedo\Router\Controller;
 
 class User extends Controller{
 
-    public function my_account(array $data): void
+    public function my_account($another): void
     {
-        ...
+        //
     }
 
 }
