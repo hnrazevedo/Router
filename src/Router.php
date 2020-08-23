@@ -112,30 +112,7 @@ class Router{
             throw new Exception("It is not possible to define parameter tests for groups of routes.");
         }
 
-        $data = func_get_args();
-
-        self::getInstance()->checkWhereParam($data);
-        
-        $data = (count($data) > 1) ? [$data[0] => $data[1]] : $data[0];
-        
-        $route = end(self::getInstance()->routers);
-        $routeURI = explode('/',$route['url']);
-        $params = [];
-        foreach($routeURI as $part){
-            if(substr($part,0,1) === '{' && substr($part,-1) === '}'){
-                $param = substr($part,1,-1);
-
-                self::getInstance()->checkExistParam($param,$data);
-
-                $params[$param] = $data[$param];
-            }
-        }
-
-        self::getInstance()->checkWhereParams($params);
-
-        $route['where'] = (is_array($route['where'])) ? array_merge($route['where'],$params) : $params;
-
-        self::getInstance()->routers[count(self::getInstance()->routers)-1] = $route;
+        self::getInstance()->callWhereAdd(func_get_args());
 
         return self::getInstance();
     }
