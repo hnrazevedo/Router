@@ -5,7 +5,7 @@ namespace HnrAzevedo\Router;
 use Exception;
 
 trait CheckTrait{
-    use FilterTrait;
+    use FilterTrait, CheckWhere;
 
     protected function checkProtocol(string $expected, string $current): bool
     {
@@ -71,6 +71,16 @@ trait CheckTrait{
                 continue;
             }
         }
+    }
+
+    protected function checkToHiking($route, $routeRequest, $routeLoop): bool
+    {
+        if($this->checkNumparams($routeLoop, $routeRequest) || 
+            $this->checkParameters($routeLoop, $routeRequest) ||
+            $this->checkWhere($route, $routeRequest)){
+                return false;
+        }
+        return true;
     }
 
 }

@@ -184,17 +184,14 @@ class Router{
 
             $routeRequest = $instance->getInstance()->explodeRoute((substr($_SERVER['REQUEST_URI'],strlen($_SERVER['REQUEST_URI'])-1,1) === '/') , $_SERVER['REQUEST_URI']);
 
-	        if($instance->getInstance()->checkNumparams($routeLoop, $routeRequest) || !$instance->getInstance()->checkParameters($routeLoop, $routeRequest)){
+            if(!$instance->getInstance()->checkToHiking($route, $routeRequest, $routeLoop)){
                 continue;
             }
 
-            if($instance->getInstance()->checkWhere($route, $routeRequest)){
+            $instance->getInstance()->checkFiltering($route);
 
-                $instance->getInstance()->checkFiltering($route);
-
-                $instance->getInstance()->toHiking($route['role']);
-                return true;
-            }
+            $instance->getInstance()->toHiking($route['role']);
+            return true;
             
         }
         
