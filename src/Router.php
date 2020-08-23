@@ -40,6 +40,7 @@ class Router{
     {
         self::getInstance()->add($uri, $walking, 'get');
         self::getInstance()->add($uri, $walking, 'post');
+        self::getInstance()->add($uri, $walking, 'form');
         return self::getInstance()->add($uri, $walking, 'ajax');
     }
 

@@ -52,7 +52,7 @@ trait Helper{
     protected function ControllerForm($controller, string $method, array $values){
 		$this->checkRole();
         $method = ($method !== 'method') ? $method : $this->getData()['POST']['role'];
-        $data = (!is_null($values)) ? json_decode($values['data'], true) : null;
+        $data = (array_key_exists('data',$values)) ? json_decode($values['data'], true) : null;
 
         call_user_func_array([$controller,$method],  $data);
     }
