@@ -76,8 +76,8 @@ trait CheckTrait{
     protected function checkToHiking($route, $routeRequest, $routeLoop): bool
     {
         if($this->checkNumparams($routeLoop, $routeRequest) || 
-            $this->checkParameters($routeLoop, $routeRequest) ||
-            $this->checkWhere($route, $routeRequest)){
+            !$this->checkParameters($routeLoop, $routeRequest) ||
+            !$this->checkWhere($route, $routeRequest)){
                 return false;
         }
         return true;
