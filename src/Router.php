@@ -5,7 +5,7 @@ namespace HnrAzevedo\Router;
 use Exception;
 
 class Router{
-    use Helper, CheckTrait;
+    use Helper, CheckTrait, CheckWhere;
 
     private static $instance = null;
     private array $routers = [];
@@ -85,7 +85,8 @@ class Router{
 			'url' => $this->prefix.$url,
 			'role' => $walking,
 			'protocol' => $protocol,
-			'filters' => null,
+            'filters' => null,
+            'where' => null,
             'group' => self::getInstance()->group
 		];
 
@@ -102,6 +103,40 @@ class Router{
         self::getInstance()->group = null;
         self::getInstance()->prefix = null;
         self::getInstance()->lastReturn = true;
+        return self::getInstance();
+    }
+
+    public static function where(): Router
+    {
+        if(self::getInstance()->lastReturn){
+            throw new Exception("It is not possible to define parameter tests for groups of routes.");
+        }
+
+        $data = func_get_args();
+
+        self::getInstance()->checkWhereParam($data);
+        
+        $data = (count($data) > 1) ? [$data[0] => $data[1]] : $data[0];
+        
+        $route = end(self::getInstance()->routers);
+        $routeURI = explode('/',$route['url']);
+        $params = [];
+        foreach($routeURI as $part){
+            if(substr($part,0,1) === '{' && substr($part,-1) === '}'){
+                $param = substr($part,1,-1);
+
+                self::getInstance()->checkExistParam($param,$data);
+
+                $params[$param] = $data[$param];
+            }
+        }
+
+        self::getInstance()->checkWhereParams($params);
+
+        $route['where'] = (is_array($route['where'])) ? array_merge($route['where'],$params) : $params;
+
+        self::getInstance()->routers[count(self::getInstance()->routers)-1] = $route;
+
         return self::getInstance();
     }
 
@@ -175,11 +210,15 @@ class Router{
 	        if($instance->getInstance()->checkNumparams($routeLoop, $routeRequest) || !$instance->getInstance()->checkParameters($routeLoop, $routeRequest)){
                 continue;
             }
-            
-            $instance->getInstance()->checkFiltering($route);
 
-            $instance->getInstance()->toHiking($route['role']);
-	        return true;
+            if($instance->getInstance()->checkWhere($route, $routeRequest)){
+
+                $instance->getInstance()->checkFiltering($route);
+
+                $instance->getInstance()->toHiking($route['role']);
+                return true;
+            }
+            
         }
         
         $instance->getInstance()->currentRoute = null;

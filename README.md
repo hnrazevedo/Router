@@ -176,6 +176,20 @@ Router::get('/{test}',function($test){
 });
 ```
 
+### Regular Expression Constraints
+```php
+Router::get('/test/{id}/{id2}',function(){
+    //
+})->where([
+    'id'=>'[0-9]*',
+    'id2' => '[0-9]*'
+]);
+
+Router::get('/test/{id}/{id2}',function(){
+    //
+})->where('id','[0-9]*');
+```
+
 #### Current route
 ```php
 $route = Router::current();
