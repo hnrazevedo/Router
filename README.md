@@ -257,9 +257,9 @@ Para criar filtros para suas rotas, consulte https://github.com/hnrazevedo/Filte
 
 ## Support
 
-###### Security: If you discover any security related issues, please email hnrazevedo@gmail.com instead of using the issue tracker.
+###### Security: If you discover any security related issues, please email hnr.azevedo@gmail.com instead of using the issue tracker.
 
-Se você descobrir algum problema relacionado à segurança, envie um e-mail para hnrazevedo@gmail.com em vez de usar o rastreador de problemas.
+Se você descobrir algum problema relacionado à segurança, envie um e-mail para hnr.azevedo@gmail.com em vez de usar o rastreador de problemas.
 
 ## Credits
 
