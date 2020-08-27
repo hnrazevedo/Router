@@ -13,13 +13,6 @@ trait CheckWhere{
         }
     }
 
-    protected function checkExistParam($param, $data)
-    {
-        if(!array_key_exists($param,$data)){
-            throw new Exception('Test parameter not available on the route in question.');
-        }
-    }
-
     protected function checkWhereParams($params)
     {
         if(count($params) === 0){
@@ -39,12 +32,17 @@ trait CheckWhere{
         $params = [];
         foreach($routeURI as $p => $part){
             if(substr($part,0,1) === '{' && substr($part,-1) === '}'){
-                $param = substr($part,1,-1);
-                $params[$param] = $route['where'][$param];
+                $param = substr(str_replace('?','',$part),1,-1);
 
-                if(!preg_match("/^{$params[$param]}$/",$request[$p])){
-                    $pass = false;
+                if(array_key_exists($param,$route['where'])){
+                    
+                    $params[$param] = $route['where'][$param];
+
+                    if(!preg_match("/^{$params[$param]}$/",$request[$p])){
+                        $pass = false;
+                    }
                 }
+                
             }
         }
         
@@ -62,11 +60,12 @@ trait CheckWhere{
         $params = [];
         foreach($routeURI as $part){
             if(substr($part,0,1) === '{' && substr($part,-1) === '}'){
-                $param = substr($part,1,-1);
+                $param = substr(str_replace('?','',$part),1,-1);
 
-                $this->checkExistParam($param,$data);
-
-                $params[$param] = $data[$param];
+                if(array_key_exists($param,$data)){
+                    $params[$param] = $data[$param];
+                }
+                
             }
         }
 

@@ -84,9 +84,23 @@ trait Helper{
        
     }    
 
-    protected function explodeRoute(bool $bar, string $url): array
+    protected function explodeRoutes(bool $bar, string $url ,bool $bar_, string $url_): array
     {   
-        return explode( '/', $bar ? substr($url, 0, -1) : $url );
+        $url = $bar ? substr($url, 0, -1) : $url ;
+        $url = explode('/',$url);
+
+        $url_ = $bar_ ? substr($url_, 0, -1) : $url_ ;
+        $url_ = explode('/',$url_);
+
+        foreach($url as $ur => $u){
+            if(substr($u,0,2) === '{?'){
+                if(!array_key_exists($ur,$url_)){
+                    $url_[$ur] = '';
+                };
+            }
+        }
+
+        return ['routeLoop' => $url, 'routeRequest' => $url_];
     }
 
     protected function toHiking($walking)

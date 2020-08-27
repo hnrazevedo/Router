@@ -51,7 +51,6 @@ trait DefinitionsTrait{
         return self::getInstance()->add($uri, $walking, 'options');
     }
 
-
     public static function delete(string $uri, $walking): Router
     {
         return self::getInstance()->add($uri, $walking, 'delete');

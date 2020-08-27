@@ -167,6 +167,31 @@ Router::match('post|get|ajax','/my-account','User:my_account')->filter('user_in'
 Router::any('/my-account','User:my_account')->filter('user_in');
 ```
 
+### Optional parameters
+```php
+Router::get('/user/{?id}','Controller:method');
+/* Access on HTTP GET '/user' or '/user/1' */
+
+
+Router::get('/user/{?any}/{?id}','Controller:method')->where([
+    'id' => '[0-9]{1,11}'
+]);
+/* HTTP GET REQUESTS
+ * /user                            -> ACCESS
+ * /user/anything                   -> ACCESS
+ * /user/anything/1                 -> ACCESS
+ * /user/anything/123456789011111   -> NOT ACCESS
+ * /user/anything/abc               -> NOT ACCESS
+ */
+
+Router::get('/user/{?id}/{text}','Controller:method')->where([
+    'id' => '[0-9]{1,11}'
+]);
+/* HTTP GET REQUESTS
+ * IMPORTANT: Access only if all parameters are passed
+ */
+```
+
 ### Order
 
 #### Correct way of defining routes

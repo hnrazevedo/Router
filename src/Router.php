@@ -145,13 +145,15 @@ class Router{
 
             $instance->getInstance()->hasProtocol($route, $currentProtocol);
 
-            $routeLoop = $instance->getInstance()->explodeRoute( (substr($route['url'],strlen($route['url'])-1,1) === '/') , $route['url']);
-            
             $_SERVER['REQUEST_URI'] = (array_key_exists('REQUEST_URI', $_SERVER)) ? $_SERVER['REQUEST_URI'] : '';
 
-            $routeRequest = $instance->getInstance()->explodeRoute((substr($_SERVER['REQUEST_URI'],strlen($_SERVER['REQUEST_URI'])-1,1) === '/') , $_SERVER['REQUEST_URI']);
 
-            if(!$instance->getInstance()->checkToHiking($route, $routeRequest, $routeLoop)){
+            $routs = $instance->getInstance()->explodeRoutes(
+                (substr($route['url'],strlen($route['url'])-1,1) === '/') , $route['url'],
+                (substr($_SERVER['REQUEST_URI'],strlen($_SERVER['REQUEST_URI'])-1,1) === '/') , $_SERVER['REQUEST_URI']
+            );
+
+            if(!$instance->getInstance()->checkToHiking($route, $routs['routeRequest'], $routs['routeLoop'])){
                 continue;
             }
 
