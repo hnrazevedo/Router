@@ -23,7 +23,7 @@ O Router é um simples abstrator de URL amigável. Seu autor não é profissiona
 Router is available via Composer:
 
 ```bash 
-"hnrazevedo/router": "^1.3"
+"hnrazevedo/router": "^1.4"
 ```
 
 or run
