@@ -5,7 +5,7 @@ namespace HnrAzevedo\Router;
 use Exception;
 
 class Router{
-    use Helper, CheckTrait, CheckWhere;
+    use Helper, CheckTrait, CheckWhere, DefinitionsTrait;
 
     private static $instance = null;
     private array $routers = [];
@@ -34,39 +34,6 @@ class Router{
     {
         self::$instance = (is_null(self::$instance)) ? new self() : self::$instance;
         return self::$instance;
-    }
-
-    public static function any(string $uri, $walking): Router
-    {
-        self::getInstance()->add($uri, $walking, 'get');
-        self::getInstance()->add($uri, $walking, 'post');
-        self::getInstance()->add($uri, $walking, 'form');
-        return self::getInstance()->add($uri, $walking, 'ajax');
-    }
-
-    public static function get(string $uri, $walking): Router
-    {
-        return self::getInstance()->add($uri, $walking, 'get');
-    }
-
-    public static function post(string $uri, $walking): Router
-    {
-        return self::getInstance()->add($uri, $walking, 'post');
-    }
-
-    public static function ajax(string $uri, $walking): Router
-    {
-        return self::getInstance()->add($uri, $walking, 'ajax');
-    }
-
-    public static function form(string $uri, $walking): Router
-    {
-        return self::getInstance()->add($uri, $walking, 'form');
-    }
-
-    public static function add(string $uri, $walking, string $protocol): Router
-    {
-        return self::getInstance()->set($uri, $walking, $protocol);
     }
 
     public function set($url ,$walking , string $protocol): Router

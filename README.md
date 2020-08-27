@@ -23,7 +23,7 @@ O Router é um simples abstrator de URL amigável. Seu autor não é profissiona
 Router is available via Composer:
 
 ```bash 
-"hnrazevedo/router": "^1.2"
+"hnrazevedo/router": "^1.3"
 ```
 
 or run
@@ -96,6 +96,13 @@ Em casos de erros de configuração ou páginas inexistentes, o Router disparara
 - post: post method
 - ajax: called fetch or XMLHttpRequest
 - form: called fetch or XMLHttpRequest (with Requested-Method defined in the header as form)
+- put: REST requests
+- delete: REST requests
+- patch: REST requests
+- connect: REST requests
+- head: REST requests
+- trace: REST requests
+- options: REST requests
 
 ### The routes must be set in a flat file without classes, as they will be imported when creating the object
 As rotas devem ser setadas num arquivo simples sem classes, pois seram importadas na criação do objeto
@@ -140,7 +147,21 @@ Router::get('/{parameter}/{outerparameter}', function($parameter, $outerParamete
 Router::get('/my-account','User:my_account')->filter('user_in');
 ```
 
-### Route definition orders
+## Route definition
+
+### Protocols
+```php
+/* Unique protocol */
+Router::get('/my-account','User:my_account')->filter('user_in');
+
+/* Multiple protocols */
+Router::match('post|get|ajax','/my-account','User:my_account')->filter('user_in');
+
+/* All protocols */
+Router::any('/my-account','User:my_account')->filter('user_in');
+```
+
+### Order
 
 #### Correct way of defining routes
 ```php
