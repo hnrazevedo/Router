@@ -96,13 +96,12 @@ Em casos de erros de configuração ou páginas inexistentes, o Router disparara
 - post: post method
 - ajax: called fetch or XMLHttpRequest
 - form: called fetch or XMLHttpRequest (with Requested-Method defined in the header as form)
-- put: REST requests
-- delete: REST requests
-- patch: REST requests
-- connect: REST requests
-- head: REST requests
-- trace: REST requests
-- options: REST requests
+
+- POST: REST request
+- GET: REST request
+- PUT: REST requests
+- DELETE: REST requests
+- PATCH: REST requests
 
 ### The routes must be set in a flat file without classes, as they will be imported when creating the object
 As rotas devem ser setadas num arquivo simples sem classes, pois seram importadas na criação do objeto
@@ -142,6 +141,13 @@ Router::get('/{parameter}', function($parameter){
 Router::get('/{parameter}/{outerparameter}', function($parameter, $outerParameter){
     //
 });
+
+/* REST examples */
+Router::delete('pattern','Controller:method');
+Router::get('pattern','Controller:method');
+Router::post('pattern','Controller:method');
+Router::put('pattern','Controller:method');
+Router::patch('pattern','Controller:method');
 
 /* Filter definition */
 Router::get('/my-account','User:my_account')->filter('user_in');

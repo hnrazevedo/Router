@@ -9,7 +9,7 @@ trait CheckTrait{
 
     protected function checkProtocol(string $expected, string $current): bool
     {
-        return ($expected === $current);
+        return (strtoupper($expected) === strtoupper($current));
     }
 
     protected function checkName(string $routeName){
@@ -67,7 +67,7 @@ trait CheckTrait{
         $protocols = ( is_array($route['protocol']) ) ? $route['protocol'] : [ $route['protocol'] ];
 
         foreach($protocols as $protocol){
-            if($protocol !== $currentProtocol){
+            if(strtoupper($protocol) !== strtoupper($currentProtocol)){
                 continue;
             }
         }

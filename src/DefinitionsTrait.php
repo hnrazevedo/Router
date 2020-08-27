@@ -46,25 +46,11 @@ trait DefinitionsTrait{
         return self::getInstance()->add($uri, $walking, 'patch');
     }
 
-    public static function head(string $uri, $walking): Router
-    {
-        return self::getInstance()->add($uri, $walking, 'head');
-    }
-
-    public static function trace(string $uri, $walking): Router
-    {
-        return self::getInstance()->add($uri, $walking, 'trace');
-    }
-
     public static function options(string $uri, $walking): Router
     {
         return self::getInstance()->add($uri, $walking, 'options');
     }
 
-    public static function connect(string $uri, $walking): Router
-    {
-        return self::getInstance()->add($uri, $walking, 'connect');
-    }
 
     public static function delete(string $uri, $walking): Router
     {
