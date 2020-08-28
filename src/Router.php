@@ -10,7 +10,7 @@ class Router{
     private static $instance = null;
     private array $routers = [];
     private ?string $prefix = null;
-    private $group = false;
+    private ?string $group = null;
     private $lastReturn = null;
     private bool $instanced = false;
 
@@ -38,6 +38,8 @@ class Router{
 
     public function set($url ,$walking , string $protocol): Router
     {
+        $this->lastReturn = null;
+        
 		$url = (substr($url,0,1) !=='/' and strlen($url) > 0) ? "/{$url}" : $url;
 
     	foreach($this->routers as $key => $value){
@@ -54,6 +56,8 @@ class Router{
 			'protocol' => $protocol,
             'filters' => null,
             'where' => null,
+            'before' => null,
+            'after' => null,
             'group' => self::getInstance()->group
 		];
 
@@ -101,8 +105,6 @@ class Router{
         $currentRoute['name'] = $name;
 
         self::getInstance()->routers[count(self::getInstance()->routers)-1] = $currentRoute;
-
-        self::getInstance()->lastReturn = null;
 
         return self::getInstance();
     }
@@ -159,7 +161,7 @@ class Router{
 
             $instance->getInstance()->checkFiltering($route);
 
-            $instance->getInstance()->toHiking($route['role']);
+            $instance->getInstance()->toHiking($route);
             return true;
             
         }
@@ -169,28 +171,58 @@ class Router{
 	    throw new Exception('Page not found.',404);
     }
 
-    public static function filter($filters): Router
+    public function filter($filters): Router
     {
-        if(self::getInstance()->lastReturn !== null){
-            $currentGroup = end(self::getInstance()->routers)['group'];
+        if($this->lastReturn !== null){
+            $currentGroup = end($this->routers)['group'];
 
-            foreach (self::getInstance()->routers as $key => $value) {
+            foreach ($this->routers as $key => $value) {
 
                 if($value['group'] === $currentGroup){
-                    $currentRoute = self::getInstance()->addFilter(self::getInstance()->routers[$key],$filters);
-                    self::getInstance()->routers[$key] = $currentRoute;
+                    $currentRoute = $this->addFilter($this->routers[$key],$filters);
+                    $this->routers[$key] = $currentRoute;
                 }
 
             }
-
-            self::getInstance()->lastReturn = null;
             
-            return self::getInstance();
+            return $this;
         }
         
-        self::getInstance()->routers[count(self::getInstance()->routers)-1] = self::getInstance()->addFilter(end(self::getInstance()->routers),$filters);
-        return self::getInstance();
+        $this->routers[count($this->routers)-1] = $this->addFilter(end($this->routers),$filters);
+        return $this;
     }
+ 
+    public function before($walking): Router
+    {
+        return $this->setOnRoute($walking,'before');
+    }
+
+    public function after($walking): Router
+    {
+        return $this->setOnRoute($walking,'after');
+    }
+
+    private function setOnRoute($walking, string $state): Router
+    {
+        if($this->lastReturn !== null){
+            $currentGroup = end($this->routers)['group'];
+
+            foreach ($this->routers as $key => $value) {
+
+                if($value['group'] === $currentGroup){
+                    $this->routers[$key][$state] = $walking;
+                }
+
+            }
+            
+            return $this;
+        }
+        
+        $this->routers[count($this->routers)-1][$state] = $walking;
+        return $this;
+    }
+
+
 
     public static function addFilter(array $route, $filter): array
     {

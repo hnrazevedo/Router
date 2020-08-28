@@ -23,7 +23,7 @@ O Router é um simples abstrator de URL amigável. Seu autor não é profissiona
 Router is available via Composer:
 
 ```bash 
-"hnrazevedo/router": "^1.4"
+"hnrazevedo/router": "^1.5"
 ```
 
 or run
@@ -97,11 +97,12 @@ Em casos de erros de configuração ou páginas inexistentes, o Router disparara
 - ajax: called fetch or XMLHttpRequest
 - form: called fetch or XMLHttpRequest (with Requested-Method defined in the header as form)
 
-- POST: REST request
-- GET: REST request
-- PUT: REST requests
-- DELETE: REST requests
-- PATCH: REST requests
+#### REST request
+- post: REST request
+- get: REST request
+- put: REST requests
+- delete: REST requests
+- patch: REST requests
 
 ### The routes must be set in a flat file without classes, as they will be imported when creating the object
 As rotas devem ser setadas num arquivo simples sem classes, pois seram importadas na criação do objeto
@@ -172,7 +173,6 @@ Router::any('/my-account','User:my_account')->filter('user_in');
 Router::get('/user/{?id}','Controller:method');
 /* Access on HTTP GET '/user' or '/user/1' */
 
-
 Router::get('/user/{?any}/{?id}','Controller:method')->where([
     'id' => '[0-9]{1,11}'
 ]);
@@ -192,6 +192,35 @@ Router::get('/user/{?id}/{text}','Controller:method')->where([
  */
 ```
 
+### Optional methods
+
+#### Method before and after
+```php
+/* Method before */
+Router::get('/user/{?id}','Controller:method')
+      ->before('Controller:method');
+
+Router::get('/user/{?id}','Controller:method')
+      ->before(function(){
+          //
+      });
+
+/* Method after */
+Router::get('/user/{?id}','Controller:method')
+      ->after('Controller:method');
+
+Router::get('/user/{?id}','Controller:method')
+      ->after(function(){
+          //
+      });
+
+/* Method before and after */
+Router::get('/user/{?id}','Controller:method')
+      ->before('Controller:method')
+      ->after(function(){
+          //
+      });
+```
 ### Order
 
 #### Correct way of defining routes

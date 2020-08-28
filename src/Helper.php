@@ -103,14 +103,30 @@ trait Helper{
         return ['routeLoop' => $url, 'routeRequest' => $url_];
     }
 
-    protected function toHiking($walking)
+    protected function toHiking(array $route)
     {
-        if(is_string($walking)){
-            $this->Controller($walking);
+        $this->callOnRoute($route,'before');
+
+        if(is_string($route['role'])){
+            $this->Controller($route['role']);
+            $this->callOnRoute($route,'after');
             return true;
         }
 
-        call_user_func_array($walking,$this->getData()['GET']);
+        call_user_func_array($route['role'],$this->getData()['GET']);
+
+        $this->callOnRoute($route,'after');
+    }
+
+    protected function callOnRoute(array $route,string $state)
+    {
+        if($route[$state] !== null){
+            if(is_string($route[$state])){
+                $this->Controller($route[$state]);
+            }else{
+                $route[$state]();
+            }
+        }
     }
 
 }
