@@ -31,22 +31,28 @@ trait CheckWhere{
         $routeURI = explode('/',$route['url']);
         $params = [];
         foreach($routeURI as $p => $part){
-            if(substr($part,0,1) === '{' && substr($part,-1) === '}'){
-                $param = substr(str_replace('?','',$part),1,-1);
-
-                if(array_key_exists($param,$route['where'])){
-                    
-                    $params[$param] = $route['where'][$param];
-
-                    if(!preg_match("/^{$params[$param]}$/",$request[$p])){
-                        $pass = false;
-                    }
-                }
+            if(!$this->isParameter($part)){
+                continue;
+            }
                 
+            $param = substr(str_replace('?','',$part),1,-1);
+
+            if(array_key_exists($param,$route['where'])){
+                    
+                $params[$param] = $route['where'][$param];
+
+                if(!preg_match("/^{$params[$param]}$/",$request[$p])){
+                    $pass = false;
+                }
             }
         }
         
         return $pass;
+    }
+
+    protected function isParameter(string $part): bool
+    {
+        return (substr($part,0,1) === '{' && substr($part,-1) === '}');
     }
 
     protected function callWhereAdd($data)
@@ -59,14 +65,16 @@ trait CheckWhere{
         $routeURI = explode('/',$route['url']);
         $params = [];
         foreach($routeURI as $part){
-            if(substr($part,0,1) === '{' && substr($part,-1) === '}'){
-                $param = substr(str_replace('?','',$part),1,-1);
-
-                if(array_key_exists($param,$data)){
-                    $params[$param] = $data[$param];
-                }
-                
+            if(!$this->isParameter($part)){
+                continue;
             }
+            
+            $param = substr(str_replace('?','',$part),1,-1);
+
+            if(array_key_exists($param,$data)){
+                $params[$param] = $data[$param];
+            }
+                
         }
 
         $this->checkWhereParams($params);
