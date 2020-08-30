@@ -52,7 +52,7 @@ trait ExtraJobsTrait{
     private function setOnRoutes($walking, string $state, array $excepts): Router
     {
         foreach($this->routers as $r => $route){
-            if(!in_array($this->routers[$r]['name'],$excepts)){
+            if(!in_array($this->routers,$excepts)){
                 $this->routers[$r][$state] = $walking;
             }
         }
