@@ -107,68 +107,99 @@ Em casos de erros de configuração ou páginas inexistentes, o Router disparara
 ### The routes must be set in a flat file without classes, as they will be imported when creating the object
 As rotas devem ser setadas num arquivo simples sem classes, pois seram importadas na criação do objeto
 
+## Methods
+
+### get
 ```php
-use HnrAzevedo\Router\Router;
-
-/* Standard route definition mode */
 Router::get('/','Application:index');
+```
 
-/* Set route name to be called by identification */
-Router::get('/','Application:index')->name('index');
+### post
+```php
+Router::post('/controller/method','Controller:method');
+```
 
-/* Set filter for route */
-Router::get('/logout','User:logout')->filter('user_in');
-/* OR */
-Router::get('/logout','User:logout')->filter(['user_in']);
-
-/* Pass parameters to controller and method */
-Router::post('/{controller}/{method}','{controller}:{method}');
-
-/* Ajax example */
+### ajax
+```php
 Router::ajax('/userList/','User:listme');
+```
 
-/* Group only serves to add filters for all its members and a prefix in their URL */
+### filter
+#### Defines a filter, or several, for the route
+```php
+Router::get('/logout','User:logout')->filter('user_in');
+
+Router::get('/logout','User:logout')->filter(['user_in',...]);
+```
+
+### name
+#### Defines a name for the route, if you want to call dynamically by name
+```php
+Router::get('/','Application:index')->name('index');
+```
+
+### before
+#### Executes before completing the work of the accessed route
+```php
+Router::get('/user/{?id}','Controller:method')
+      ->before('Controller:method');
+
+Router::get('/user/{?id}','Controller:method')
+      ->before(function(){
+          //
+      });
+```
+
+### after 
+#### Executes after completing the work of the accessed route
+```php
+Router::get('/user/{?id}','Controller:method')
+      ->after('Controller:method');
+
+Router::get('/user/{?id}','Controller:method')
+      ->after(function(){
+          //
+      });
+```
+
+### group
+#### Set the group to use a common filter or before/after methods
+```php
 Router::group('/administrator/', function(){
-    /* POST: /administrator/controller */
     Router::post('/controller/','Administrator:execute');
-    /* GET: /administrador/pages/index */
     Router::get('/pages/index','Administrator:view');
-})->filter('admin');
+})->filter('admin')
+  ->before(function(){
+      //
+  })
+  ->after(function(){
+      //
+  });
+```
 
-/* Passing parameters through the route */
-Router::get('/{parameter}', function($parameter){
-    //
-});
-Router::get('/{parameter}/{outerparameter}', function($parameter, $outerParameter){
-    //
-});
-
-/* REST examples */
+### REST
+```php
 Router::delete('pattern','Controller:method');
 Router::get('pattern','Controller:method');
 Router::post('pattern','Controller:method');
 Router::put('pattern','Controller:method');
 Router::patch('pattern','Controller:method');
-
-/* Filter definition */
-Router::get('/my-account','User:my_account')->filter('user_in');
 ```
 
-## Route definition
-
-### Protocols
+## Parameters
 ```php
-/* Unique protocol */
-Router::get('/my-account','User:my_account')->filter('user_in');
+Router::get('/{parameter}', function($parameter){
+    //
+});
 
-/* Multiple protocols */
-Router::match('post|get|ajax','/my-account','User:my_account')->filter('user_in');
+Router::get('/{parameter}/{outerparameter}', function($parameter, $outerParameter){
+    //
+});
 
-/* All protocols */
-Router::any('/my-account','User:my_account')->filter('user_in');
+Router::post('/{controller}/{method}', '{controller}:{method}');
 ```
 
-### Optional parameters
+## Optional parameters
 ```php
 Router::get('/user/{?id}','Controller:method');
 /* Access on HTTP GET '/user' or '/user/1' */
@@ -192,35 +223,21 @@ Router::get('/user/{?id}/{text}','Controller:method')->where([
  */
 ```
 
-### Optional methods
+## Route definition
 
-#### Method before and after
+### Protocols
 ```php
-/* Method before */
-Router::get('/user/{?id}','Controller:method')
-      ->before('Controller:method');
+/* Unique protocol */
+Router::get('/my-account','User:my_account')->filter('user_in');
 
-Router::get('/user/{?id}','Controller:method')
-      ->before(function(){
-          //
-      });
+/* Multiple protocols */
+Router::match('post|get|ajax','/my-account','User:my_account')->filter('user_in');
 
-/* Method after */
-Router::get('/user/{?id}','Controller:method')
-      ->after('Controller:method');
+/* All protocols */
 
-Router::get('/user/{?id}','Controller:method')
-      ->after(function(){
-          //
-      });
-
-/* Method before and after */
-Router::get('/user/{?id}','Controller:method')
-      ->before('Controller:method')
-      ->after(function(){
-          //
-      });
+Router::any('/my-account','User:my_account')->filter('user_in');
 ```
+
 ### Order
 
 #### Correct way of defining routes
@@ -279,7 +296,6 @@ $action = Router::currentRouteAction();
 ```
 
 ### Run route
-
 ```php
 use HnrAzevedo\Router\Router;
 
