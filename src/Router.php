@@ -12,6 +12,10 @@ class Router{
     private ?string $prefix = null;
     private ?string $group = null;
     private $lastReturn = null;
+    private $beforeAll = null;
+    private $afterAll = null;
+    private array $afterExcepts = [];
+    private array $beforeExcepts = [];
     private bool $instanced = false;
 
     public function __construct()
@@ -57,7 +61,9 @@ class Router{
             'filters' => null,
             'where' => null,
             'before' => null,
+            'beforeAll' => $this->beforeAll,
             'after' => null,
+            'afterAll' => $this->afterAll,
             'group' => self::getInstance()->group
 		];
 
@@ -96,15 +102,19 @@ class Router{
 
         $currentRoute = end(self::getInstance()->routers);
 
-        foreach(self::getInstance()->routers as $key => $value){
-            if(array_key_exists($name, self::getInstance()->routers)){
-                throw new Exception("There is already a route with the name {$name} configured.");
-            }
+        self::getInstance()->hasRouteName($name);
+
+        if(in_array($name,self::getInstance()->beforeExcepts)){
+            $currentRoute['beforeAll'] = null;
         }
 
-        $currentRoute['name'] = $name;
+        if(in_array($name,self::getInstance()->afterExcepts)){
+            $currentRoute['afterAll'] = null;
+        }
 
-        self::getInstance()->routers[count(self::getInstance()->routers)-1] = $currentRoute;
+        unset(self::getInstance()->routers[count(self::getInstance()->routers)-1]);
+        
+        self::getInstance()->routers[$name] = $currentRoute;
 
         return self::getInstance();
     }
@@ -197,9 +207,25 @@ class Router{
         return $this->setOnRoute($walking,'before');
     }
 
+    public static function beforeAll($walking, $except = null): Router
+    {
+        $excepts = is_array($except) ? $except : [$except];
+        self::getInstance()->beforeExcepts = $excepts;
+        self::getInstance()->beforeAll = $walking;
+        return self::getInstance()->setOnRoutes($walking,'beforeAll',$excepts);
+    }
+
     public function after($walking): Router
     {
         return $this->setOnRoute($walking,'after');
+    }
+
+    public static function afterAll($walking, $except = null): Router
+    {
+        $excepts = is_array($except) ? $except : [$except];
+        self::getInstance()->afterExcepts = $excepts;
+        self::getInstance()->afterAll = $walking;
+        return self::getInstance()->setOnRoutes($walking,'afterAll',$excepts);
     }
 
     private function setOnRoute($walking, string $state): Router
@@ -214,7 +240,6 @@ class Router{
                 }
 
             }
-            
             return $this;
         }
         
@@ -222,7 +247,15 @@ class Router{
         return $this;
     }
 
-
+    private function setOnRoutes($walking, string $state, array $excepts): Router
+    {
+        foreach($this->routers as $r => $route){
+            if(!in_array($this->routers[$r]['name'],$excepts)){
+                $this->routers[$r][$state] = $walking;
+            }
+        }
+        return $this;
+    }
 
     public static function addFilter(array $route, $filter): array
     {

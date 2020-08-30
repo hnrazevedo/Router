@@ -139,7 +139,7 @@ Router::get('/','Application:index')->name('index');
 ```
 
 ### before
-#### Executes before completing the work of the accessed route
+#### Runs before starting the work of the accessed route
 ```php
 Router::get('/user/{?id}','Controller:method')
       ->before('Controller:method');
@@ -158,6 +158,31 @@ Router::get('/user/{?id}','Controller:method')
 
 Router::get('/user/{?id}','Controller:method')
       ->after(function(){
+          //
+      });
+```
+
+### beforeAll
+#### Runs before work on any route
+```php
+/* Callback, optional except routes (name) */
+Router::beforeAll('Controller:method');
+Router::beforeAll('Controller:method','Except_route');
+Router::beforeAll('Controller:method',['Except_route','Outer_route']);
+Router::beforeAll(function(){
+          //
+      });
+```
+
+### after 
+#### Runs after completing work on any route
+```php
+/* Callback, optional except routes (name) */
+Router::afterAll('Controller:method');
+Router::afterAll('Controller:method','Except_route');
+Router::afterAll('Controller:method',['Except_route','Outer_route']);
+
+Router::afterAll(function(){
           //
       });
 ```
@@ -288,7 +313,7 @@ Router::get('/test/{id}/{id2}',function(){
 })->where('id','[0-9]*');
 ```
 
-#### Current route
+### Current route
 ```php
 $route = Router::current();
 $name = Router::currentRouteName();
@@ -297,8 +322,6 @@ $action = Router::currentRouteAction();
 
 ### Run route
 ```php
-use HnrAzevedo\Router\Router;
-
 /* NOTE: in case of error an exception is thrown */
 /* Fires from the URL accessed */
 Router::dispatch();

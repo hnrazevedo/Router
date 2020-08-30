@@ -83,4 +83,11 @@ trait CheckTrait{
         return true;
     }
 
+    protected function hasRouteName(string $name): void
+    {
+        if(array_key_exists($name, $this->routers)){
+            throw new Exception("There is already a route with the name {$name} configured.");
+        }
+    }
+
 }
