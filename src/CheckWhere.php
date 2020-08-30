@@ -31,7 +31,7 @@ trait CheckWhere{
         $routeURI = explode('/',$route['url']);
         $params = [];
         foreach($routeURI as $p => $part){
-            if(!$this->isParameter($part)){
+            if(!$this->isWhered($part,$request[$p])){
                 continue;
             }
                 
@@ -48,6 +48,16 @@ trait CheckWhere{
         }
         
         return $pass;
+    }
+
+    private function isWhered(string $part, string $value): bool
+    {
+        return $this->isParameter($part) && !$this->checkParameterOptional($part,$value);
+    }
+
+    private function checkParameterOptional(string $part, string $value): bool
+    {
+        return (strpos($part,'{?') && empty($value));
     }
 
     protected function isParameter(string $part): bool
