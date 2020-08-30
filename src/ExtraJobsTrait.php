@@ -45,7 +45,7 @@ trait ExtraJobsTrait{
             return $this;
         }
         
-        $this->routers[count($this->routers)-1][$state] = $walking;
+        $this->routers[array_key_last($this->routers)][$state] = $walking;
         return $this;
     }
 
