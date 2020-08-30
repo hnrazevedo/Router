@@ -175,7 +175,7 @@ Router::beforeAll(function(){
       });
 ```
 
-### after 
+### after All
 #### Runs after completing work on any route
 #### NOTE: execute the afterAll method before the after method
 ```php
