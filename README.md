@@ -162,8 +162,9 @@ Router::get('/user/{?id}','Controller:method')
       });
 ```
 
-### beforeAll
+### beforeAll 
 #### Runs before work on any route
+#### NOTE: execute the beforeAll method before the before method
 ```php
 /* Callback, optional except routes (name) */
 Router::beforeAll('Controller:method');
@@ -176,6 +177,7 @@ Router::beforeAll(function(){
 
 ### after 
 #### Runs after completing work on any route
+#### NOTE: execute the afterAll method before the after method
 ```php
 /* Callback, optional except routes (name) */
 Router::afterAll('Controller:method');

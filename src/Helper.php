@@ -105,17 +105,20 @@ trait Helper{
 
     protected function toHiking(array $route)
     {
+        $this->callOnRoute($route,'beforeAll');
         $this->callOnRoute($route,'before');
 
         if(is_string($route['role'])){
             $this->Controller($route['role']);
             $this->callOnRoute($route,'after');
+            $this->callOnRoute($route,'afterAll');
             return true;
         }
 
         call_user_func_array($route['role'],$this->getData()['GET']);
 
         $this->callOnRoute($route,'after');
+        $this->callOnRoute($route,'afterAll');
     }
 
     protected function callOnRoute(array $route,string $state)
