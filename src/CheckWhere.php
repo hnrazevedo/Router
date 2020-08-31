@@ -57,7 +57,7 @@ trait CheckWhere{
 
     private function checkParameterOptional(string $part, string $value): bool
     {
-        return (strpos($part,'{?') && empty($value));
+        return substr($part,0,2) === '{?' && empty($value);
     }
 
     protected function isParameter(string $part): bool
