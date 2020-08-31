@@ -52,7 +52,7 @@ trait CheckWhere{
 
     private function isWhered(string $part, string $value): bool
     {
-        return !$this->isParameter($part) && $this->checkParameterOptional($part,$value);
+        return $this->isParameter($part) && !$this->checkParameterOptional($part,$value);
     }
 
     private function checkParameterOptional(string $part, string $value): bool
