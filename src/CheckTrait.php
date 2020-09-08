@@ -24,13 +24,6 @@ trait CheckTrait{
         }
     }
 
-    protected function checkConfig()
-    {
-        if(!defined('ROUTER_CONFIG')){
-            throw new Exception("Information for loading routes has not been defined.");
-        }
-    }
-
     protected function checkNumparams(array $routeLoop, array $routeRequest)
     {
         return (count($routeLoop) !== count($routeRequest));

@@ -26,8 +26,6 @@ class Router{
     public static function create(): Router
     {
         if(!self::getInstance()->instanced){
-            self::getInstance()->checkConfig();
-            self::getInstance()->import(ROUTER_CONFIG['path']);
             self::getInstance()->instanced = true;
         }
         

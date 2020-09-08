@@ -40,15 +40,6 @@ trait Helper{
         ];
     }
 
-    protected function import(string $path)
-    {
-        foreach (scandir($path) as $routeFile) {
-            if(pathinfo($path.DIRECTORY_SEPARATOR.$routeFile, PATHINFO_EXTENSION) === 'php'){
-                require_once($path. DIRECTORY_SEPARATOR .$routeFile);
-            }
-        }
-    }
-
     protected function ControllerForm($controller, string $method, array $values){
 		$this->checkRole();
         $method = ($method !== 'method') ? $method : $this->getData()['POST']['role'];
@@ -71,7 +62,7 @@ trait Helper{
 
         $this->checkControllmethod($controll);
 
-        $controller = ROUTER_CONFIG['controller.namespace'].'\\'. ucfirst(explode(':',$controll)[0]);
+        $controller = ucfirst(explode(':',$controll)[0]);
         $controller = new $controller();
         $method = explode(':',$controll)[1];
 

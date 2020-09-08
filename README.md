@@ -23,7 +23,7 @@ O Router é um simples abstrator de URL amigável. Seu autor não é profissiona
 Router is available via Composer:
 
 ```bash 
-"hnrazevedo/router": "^1.6"
+"hnrazevedo/router": "^1.7"
 ```
 
 or run
@@ -70,19 +70,6 @@ location / {
 
 Para mais detalhes sobre como usar o Router, veja a pasta de exemplos com detalhes no diretório do componente
 
-### Configure
-
-#### It is necessary to configure the storage directory of the routes
-É necessário configurar o diretório de armazenamento das rotas
-
-```php
-define("ROUTER_CONFIG", [
-    "path" => "/Routes/", //Directory where PHP files with routes are stored
-    "filters.namespace" => "Example\\Filters" // Namespace of your project's filter
-    "controller.namespace" => "Example\\Controllers" // Namespace of your project's controller
-]);
-```
-
 ### Errors
 
 #### In cases of configuration errors or nonexistent pages, the Router will throw an Exception.
@@ -116,35 +103,35 @@ Router::get('/','Application:index');
 
 ### post
 ```php
-Router::post('/controller/method','Controller:method');
+Router::post('/controller/method','Namespaces\\Controller:method');
 ```
 
 ### ajax
 ```php
-Router::ajax('/userList/','User:listme');
+Router::ajax('/userList/','Controller\\User:listme');
 ```
 
 ### filter
 #### Defines a filter, or several, for the route
 ```php
-Router::get('/logout','User:logout')->filter('user_in');
+Router::get('/logout','Controller\\User:logout')->filter('Filter\\User:user_in');
 
-Router::get('/logout','User:logout')->filter(['user_in',...]);
+Router::get('/logout','Controller\\User:logout')->filter(['Filter\\User:user_in',...]);
 ```
 
 ### name
 #### Defines a name for the route, if you want to call dynamically by name
 ```php
-Router::get('/','Application:index')->name('index');
+Router::get('/','Controller\\Application:index')->name('index');
 ```
 
 ### before
 #### Runs before starting the work of the accessed route
 ```php
-Router::get('/user/{?id}','Controller:method')
-      ->before('Controller:method');
+Router::get('/user/{?id}','Namespaces\\Controller:method')
+      ->before('Namespaces\\Controller:method');
 
-Router::get('/user/{?id}','Controller:method')
+Router::get('/user/{?id}','Namespaces\\Controller:method')
       ->before(function(){
           //
       });
@@ -153,10 +140,10 @@ Router::get('/user/{?id}','Controller:method')
 ### after 
 #### Executes after completing the work of the accessed route
 ```php
-Router::get('/user/{?id}','Controller:method')
-      ->after('Controller:method');
+Router::get('/user/{?id}','Namespaces\\Controller:method')
+      ->after('Namespaces\\Controller:method');
 
-Router::get('/user/{?id}','Controller:method')
+Router::get('/user/{?id}','Namespaces\\Controller:method')
       ->after(function(){
           //
       });
@@ -167,9 +154,9 @@ Router::get('/user/{?id}','Controller:method')
 #### NOTE: execute the beforeAll method before the before method
 ```php
 /* Callback, optional except routes (name) */
-Router::beforeAll('Controller:method');
-Router::beforeAll('Controller:method','Except_route');
-Router::beforeAll('Controller:method',['Except_route','Outer_route']);
+Router::beforeAll('Namespaces\\Controller:method');
+Router::beforeAll('Namespaces\\Controller:method','Except_route');
+Router::beforeAll('Namespaces\\Controller:method',['Except_route','Outer_route']);
 Router::beforeAll(function(){
           //
       });
@@ -180,9 +167,9 @@ Router::beforeAll(function(){
 #### NOTE: execute the afterAll method before the after method
 ```php
 /* Callback, optional except routes (name) */
-Router::afterAll('Controller:method');
-Router::afterAll('Controller:method','Except_route');
-Router::afterAll('Controller:method',['Except_route','Outer_route']);
+Router::afterAll('Namespaces\\Controller:method');
+Router::afterAll('Namespaces\\Controller:method','Except_route');
+Router::afterAll('Namespaces\\Controller:method',['Except_route','Outer_route']);
 
 Router::afterAll(function(){
           //
@@ -193,9 +180,9 @@ Router::afterAll(function(){
 #### Set the group to use a common filter or before/after methods
 ```php
 Router::group('/administrator/', function(){
-    Router::post('/controller/','Administrator:execute');
-    Router::get('/pages/index','Administrator:view');
-})->filter('admin')
+    Router::post('/controller/','Controller\\Administrator:execute');
+    Router::get('/pages/index','Controller\\Administrator:view');
+})->filter('Filter\\Admin:is_admin')
   ->before(function(){
       //
   })
@@ -206,11 +193,11 @@ Router::group('/administrator/', function(){
 
 ### REST
 ```php
-Router::delete('pattern','Controller:method');
-Router::get('pattern','Controller:method');
-Router::post('pattern','Controller:method');
-Router::put('pattern','Controller:method');
-Router::patch('pattern','Controller:method');
+Router::delete('pattern','Namespaces\\Controller:method');
+Router::get('pattern','Namespaces\\Controller:method');
+Router::post('pattern','Namespaces\\Controller:method');
+Router::put('pattern','Namespaces\\Controller:method');
+Router::patch('pattern','Namespaces\\Controller:method');
 ```
 
 ## Parameters
@@ -228,10 +215,10 @@ Router::post('/{controller}/{method}', '{controller}:{method}');
 
 ## Optional parameters
 ```php
-Router::get('/user/{?id}','Controller:method');
+Router::get('/user/{?id}','Namespaces\\Controller:method');
 /* Access on HTTP GET '/user' or '/user/1' */
 
-Router::get('/user/{?any}/{?id}','Controller:method')->where([
+Router::get('/user/{?any}/{?id}','Namespaces\\Controller:method')->where([
     'id' => '[0-9]{1,11}'
 ]);
 /* HTTP GET REQUESTS
@@ -242,7 +229,7 @@ Router::get('/user/{?any}/{?id}','Controller:method')->where([
  * /user/anything/abc               -> NOT ACCESS
  */
 
-Router::get('/user/{?id}/{text}','Controller:method')->where([
+Router::get('/user/{?id}/{text}','Namespaces\\Controller:method')->where([
     'id' => '[0-9]{1,11}'
 ]);
 /* HTTP GET REQUESTS
@@ -255,14 +242,14 @@ Router::get('/user/{?id}/{text}','Controller:method')->where([
 ### Protocols
 ```php
 /* Unique protocol */
-Router::get('/my-account','User:my_account')->filter('user_in');
+Router::get('/my-account','Controller\\User:my_account')->filter('Filter\\User:user_in');
 
 /* Multiple protocols */
-Router::match('post|get|ajax','/my-account','User:my_account')->filter('user_in');
+Router::match('post|get|ajax','/my-account','Controller\\User:my_account')->filter('Filter\\User:user_in');
 
 /* All protocols */
 
-Router::any('/my-account','User:my_account')->filter('user_in');
+Router::any('/my-account','Controller\\User:my_account')->filter('Filter\\User:user_in');
 ```
 
 ### Order

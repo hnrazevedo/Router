@@ -12,10 +12,10 @@ Router::get('/{controller}/{method}','{controller}:{method}');
 Router::get('/{controller}/{method}','{controller}:method');
 
 /* Passing value via parameter */
-Router::get('/my-account/{teste}','User:my_account');
+Router::get('/my-account/{teste}','Controller\\User:my_account');
 
 /* Filter example */
-Router::get('/my-account','User:my_account')->filter('User:user_in');
+Router::get('/my-account','Controller\\User:my_account')->filter('Filter\\User:user_in');
 
 /* Accessed by all protocols */
 Router::any('/',function(){

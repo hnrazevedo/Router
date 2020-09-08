@@ -32,9 +32,8 @@ trait FilterTrait{
 
     protected function checkFilClassExist(string $class)
     {
-        if(class_exists(ROUTER_CONFIG['filter.namespace']."\\{$class}")){
-            $filter = ROUTER_CONFIG['filter.namespace']."\\{$class}";
-            return new $filter();
+        if(class_exists($class)){
+            return new $class();
         }
         throw new Exception("Filter {$class} not found.");
     }
