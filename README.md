@@ -91,9 +91,6 @@ Em casos de erros de configuração ou páginas inexistentes, o Router disparara
 - delete: REST requests
 - patch: REST requests
 
-### The routes must be set in a flat file without classes, as they will be imported when creating the object
-As rotas devem ser setadas num arquivo simples sem classes, pois seram importadas na criação do objeto
-
 ## Methods
 
 ### get
