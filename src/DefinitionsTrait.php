@@ -15,10 +15,7 @@ trait DefinitionsTrait{
 
     public static function any(string $uri, $walking): Router
     {
-        self::getInstance()->add($uri, $walking, 'get');
-        self::getInstance()->add($uri, $walking, 'post');
-        self::getInstance()->add($uri, $walking, 'form');
-        return self::getInstance()->add($uri, $walking, 'ajax');
+        return self::getInstance()->add($uri, $walking, 'get')->add($uri, $walking, 'post')->add($uri, $walking, 'form')->add($uri, $walking, 'ajax');
     }
 
     public static function get(string $uri, $walking): Router

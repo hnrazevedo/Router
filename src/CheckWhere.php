@@ -6,18 +6,20 @@ use Exception;
 
 trait CheckWhere{
         
-    protected function checkWhereParam($data)
+    protected function checkWhereParam($data): parent
     {
         if(count($data) === 0){
             throw new Exception('It is necessary to define a condition to be tested.');
         }
+        return $this;
     }
 
-    protected function checkWhereParams($params)
+    protected function checkWhereParams($params): parent
     {
         if(count($params) === 0){
             throw new Exception('The route in question has no parameters to be tested.');
         }
+        return $this;
     }
 
     protected function checkWhere($route, $request): bool
@@ -65,7 +67,7 @@ trait CheckWhere{
         return (substr($part,0,1) === '{' && substr($part,-1) === '}');
     }
 
-    protected function callWhereAdd($data)
+    protected function callWhereAdd($data): parent
     {
         $this->checkWhereParam($data);
         
@@ -92,6 +94,8 @@ trait CheckWhere{
         $route['where'] = (is_array($route['where'])) ? array_merge($route['where'],$params) : $params;
 
         $this->routers[count($this->routers)-1] = $route;
+
+        return $this;
     }
 
 }

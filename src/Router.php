@@ -39,18 +39,13 @@ class Router{
         return self::$instance;
     }
 
-    public function set($url ,$walking , string $protocol): Router
+    public function set(string $url ,$walking , string $protocol): Router
     {
         $this->lastReturn = null;
         
 		$url = (substr($url,0,1) !=='/' and strlen($url) > 0) ? "/{$url}" : $url;
 
-    	foreach($this->routers as $key => $value){
-    		if( md5($this->prefix . $value['url'] . $value['protocol'] ) === md5( $url . $protocol ) ){
-                throw new Exception("There is already a route with the url {$url} and with the {$protocol} protocol configured.");
-            }
-        }
-        
+    	$this->checkExistence($url,$protocol);
         $this->checkTypeRole($walking);
 
 		$route = [
@@ -71,7 +66,7 @@ class Router{
         return self::getInstance();
     }
 
-    public static function group(string $prefix,$callback): Router
+    public static function group(string $prefix, callable $callback): Router
     {
         self::getInstance()->prefix = (substr($prefix,0,1) !== '/') ? "/{$prefix}" : $prefix;
         self::getInstance()->group = sha1(date('d/m/Y h:m:i'));
@@ -84,24 +79,14 @@ class Router{
 
     public static function where(): Router
     {
-        if(self::getInstance()->lastReturn){
-            throw new Exception("It is not possible to define parameter tests for groups of routes.");
-        }
-
-        self::getInstance()->callWhereAdd(func_get_args());
-
-        return self::getInstance();
+        return self::getInstance()->checkInGroup()->callWhereAdd(func_get_args());
     }
 
     public static function name(string $name): Router
     {
-        if(self::getInstance()->lastReturn){
-            throw new Exception("There is no reason to call a {$name} route group.");
-        }
+        self::getInstance()->checkInGroup()->hasRouteName($name);
 
         $currentRoute = end(self::getInstance()->routers);
-
-        self::getInstance()->hasRouteName($name);
 
         if(in_array($name,self::getInstance()->beforeExcepts)){
             $currentRoute['beforeAll'] = null;
@@ -118,37 +103,9 @@ class Router{
         return self::getInstance();
     }
 
-    private function loadFromName(?string $routName = null): bool
-    {
-        if(!is_null($routName)){
-            $currentProtocol = $this->getProtocol();
-
-            $this->checkName($routName);
-    
-            $route = $this->routers[$routName];
-    
-            if(!$this->checkProtocol($route['protocol'], $currentProtocol)){
-                throw new Exception('Page not found.',404);
-            }
-
-            $this->currentRoute = $route;
-            $this->currentRoute['name'] = $routName;
-            $this->loaded = true;
-
-            return true;
-        }
-        return false;
-    }
-
     public static function load(?string $routeName = null): Router
     {
-        $instance = self::create()->getInstance();
-
-        if($instance->loadFromName($routeName)){
-            return $instance;
-        }
-
-		return $instance->loadFromArrays();
+        return (!is_null($routeName)) ? self::create()->getInstance()->loadByName($routeName) : self::create()->getInstance()->loadByArray();
     }
 
     public static function dispatch(?string $routeName = null): bool
@@ -159,34 +116,30 @@ class Router{
             self::load($routeName);
         }
 
-        $instance->checkFiltering($instance->currentRoute);
-        $instance->toHiking($instance->currentRoute);
+        $instance->checkFiltering($instance->currentRoute)->toHiking($instance->currentRoute);
 
         return true;
     }
 
-    public function filter($filters): Router
+    public function middleware($filters): Router
     {
         if($this->lastReturn !== null){
             $currentGroup = end($this->routers)['group'];
 
             foreach ($this->routers as $key => $value) {
-
                 if($value['group'] === $currentGroup){
-                    $currentRoute = $this->addFilter($this->routers[$key],$filters);
-                    $this->routers[$key] = $currentRoute;
+                    $this->routers[$key] = $this->addMiddleware($this->routers[$key],$filters);
                 }
-
             }
             
             return $this;
         }
         
-        $this->routers[count($this->routers)-1] = $this->addFilter(end($this->routers),$filters);
+        $this->routers[count($this->routers)-1] = $this->addMiddleware(end($this->routers),$filters);
         return $this;
     }
 
-    public static function addFilter(array $route, $filter): array
+    public static function addMiddleware(array $route, $filter): array
     {
         if(is_null($route['filters'])){
             $route['filters'] = $filter;

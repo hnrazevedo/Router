@@ -5,7 +5,7 @@ namespace HnrAzevedo\Router;
 use Exception;
 
 trait FilterTrait{
-    protected function checkFiltering(array $route)
+    protected function checkFiltering(array $route): parent
     {
         $filters = (is_array($route['filters'])) ? $route['filters'] : [ $route['filters'] ];
 
@@ -15,6 +15,8 @@ trait FilterTrait{
             }
             $this->checkFilter($filter);
         }
+
+        return $this;
     }
 
     protected function checkFilter(string $filtername)

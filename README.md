@@ -111,12 +111,12 @@ Router::post('/controller/method','Namespaces\\Controller:method');
 Router::ajax('/userList/','Controller\\User:listme');
 ```
 
-### filter
+### middleware
 #### Defines a filter, or several, for the route
 ```php
-Router::get('/logout','Controller\\User:logout')->filter('Filter\\User:user_in');
+Router::get('/logout','Controller\\User:logout')->middleware('Filter\\User:user_in');
 
-Router::get('/logout','Controller\\User:logout')->filter(['Filter\\User:user_in',...]);
+Router::get('/logout','Controller\\User:logout')->middleware(['Filter\\User:user_in',...]);
 ```
 
 ### name
@@ -237,6 +237,20 @@ Router::get('/user/{?id}/{text}','Namespaces\\Controller:method')->where([
  */
 ```
 
+### Regular Expression Constraints
+```php
+Router::get('/test/{id}/{id2}',function(){
+    //
+})->where([
+    'id'=>'[0-9]*',
+    'id2' => '[0-9]*'
+]);
+
+Router::get('/test/{id}/{id2}',function(){
+    //
+})->where('id','[0-9]*');
+```
+
 ## Route definition
 
 ### Protocols
@@ -286,20 +300,6 @@ Router::get('/3',function(){
 Router::get('/{test}',function($test){
     //
 });
-```
-
-### Regular Expression Constraints
-```php
-Router::get('/test/{id}/{id2}',function(){
-    //
-})->where([
-    'id'=>'[0-9]*',
-    'id2' => '[0-9]*'
-]);
-
-Router::get('/test/{id}/{id2}',function(){
-    //
-})->where('id','[0-9]*');
 ```
 
 ### Current route

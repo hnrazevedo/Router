@@ -125,7 +125,7 @@ trait Helper{
         }
     }
 
-    protected function loadFromArrays()
+    protected function loadByArray(): Router
     {
         $currentProtocol = $this->getProtocol();
 
@@ -158,6 +158,23 @@ trait Helper{
         
         $this->currentRoute = null;
 	    throw new Exception('Page not found.',404);
+    }
+
+    protected function loadByName(?string $routName = null): Router
+    {
+        $currentProtocol = $this->getProtocol();
+        $this->checkName($routName);
+        $route = $this->routers[$routName];
+
+        if(!$this->checkProtocol($route['protocol'], $currentProtocol)){
+            throw new Exception('Page not found.',404);
+        }
+
+        $this->currentRoute = $route;
+        $this->currentRoute['name'] = $routName;
+        $this->loaded = true;
+
+        return $this;            
     }
 
 }
