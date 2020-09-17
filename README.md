@@ -309,13 +309,33 @@ $name = Router::currentRouteName();
 $action = Router::currentRouteAction();
 ```
 
+### Run load
+```php
+/* NOTE: in case of error an exception is thrown */
+
+/* Load the route via the URL accessed on the Router object */
+Router::load();
+/* Load the route via the name passed to the Router object */
+Router::load('index');
+
+/* After loading the route it is necessary to fire it */
+Router::load()->dispatch();
+Router::load();
+
+...
+$currentRouter = Router::current();
+...
+
+Router::dispatch();
+```
+
 ### Run route
 ```php
 /* NOTE: in case of error an exception is thrown */
-/* Fires from the URL accessed */
-Router::dispatch();
 
-/* Shoot by name */
+/* Trigger route via URL accessed */
+Router::dispatch();
+/* Trigger route by the given name */
 Router::dispatch('index');
 ```
 
