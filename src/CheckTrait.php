@@ -12,7 +12,7 @@ trait CheckTrait{
         return (strtoupper($expected) === strtoupper($current));
     }
 
-    protected function checkName(string $routeName): Router
+    protected function checkName(string $routeName)
     {
         if(!array_key_exists($routeName,$this->routers)){
             throw new Exception('Page not found.', 404);
@@ -20,7 +20,7 @@ trait CheckTrait{
         return $this;
     }
 
-    protected function checkTypeRole($role): Router
+    protected function checkTypeRole($role)
     {
         if(!is_string($role) && @get_class($role) !== 'Closure' ){
             throw new Exception("Improperly defined route track.");
@@ -53,7 +53,7 @@ trait CheckTrait{
         return !( substr($routeLoop,0,1) === '{' ) and $routeLoop !== $routeRequest;
     }
 
-    protected function checkRole(): Router
+    protected function checkRole()
     {
         if(!array_key_exists('role', $this->getData()['POST'])){
             throw new Exception('O servidor não conseguiu identificar a finalidade deste formulário.');
@@ -61,7 +61,7 @@ trait CheckTrait{
         return $this;
     }
 
-    protected function hasProtocol(array $route, string $currentProtocol): Router
+    protected function hasProtocol(array $route, string $currentProtocol)
     {
         $protocols = ( is_array($route['protocol']) ) ? $route['protocol'] : [ $route['protocol'] ];
 
@@ -84,7 +84,7 @@ trait CheckTrait{
         return true;
     }
 
-    protected function hasRouteName(string $name): Router
+    protected function hasRouteName(string $name)
     {
         if(array_key_exists($name, $this->routers)){
             throw new Exception("There is already a route with the name {$name} configured.");
@@ -92,7 +92,7 @@ trait CheckTrait{
         return $this;
     }
 
-    protected function checkExistence(string $url, string $protocol): Router
+    protected function checkExistence(string $url, string $protocol)
     {
         foreach($this->routers as $key => $value){
     		if( md5($this->prefix . $value['url'] . $value['protocol'] ) === md5( $url . $protocol ) ){
@@ -102,7 +102,7 @@ trait CheckTrait{
         return $this;
     }
 
-    protected function checkInGroup(): Router
+    protected function checkInGroup()
     {
         if($this->lastReturn){
             throw new Exception("At the moment it is not allowed to assign names or tests of parameters in groups..");

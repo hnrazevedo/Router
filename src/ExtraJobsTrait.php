@@ -4,12 +4,12 @@ namespace HnrAzevedo\Router;
 
 trait ExtraJobsTrait{
 
-    public function before($walking): Router
+    public function before($walking)
     {
         return $this->setOnRoute($walking,'before');
     }
 
-    public static function beforeAll($walking, $except = null): Router
+    public static function beforeAll($walking, $except = null)
     {
         $excepts = is_array($except) ? $except : [$except];
         self::getInstance()->beforeExcepts = $excepts;
@@ -17,12 +17,12 @@ trait ExtraJobsTrait{
         return self::getInstance()->setOnRoutes($walking,'beforeAll',$excepts);
     }
 
-    public function after($walking): Router
+    public function after($walking)
     {
         return $this->setOnRoute($walking,'after');
     }
 
-    public static function afterAll($walking, $except = null): Router
+    public static function afterAll($walking, $except = null)
     {
         $excepts = is_array($except) ? $except : [$except];
         self::getInstance()->afterExcepts = $excepts;
@@ -30,7 +30,7 @@ trait ExtraJobsTrait{
         return self::getInstance()->setOnRoutes($walking,'afterAll',$excepts);
     }
 
-    private function setOnRoute($walking, string $state): Router
+    private function setOnRoute($walking, string $state)
     {
         if($this->lastReturn !== null){
             $currentGroup = end($this->routers)['group'];
@@ -49,7 +49,7 @@ trait ExtraJobsTrait{
         return $this;
     }
 
-    private function setOnRoutes($walking, string $state, array $excepts): Router
+    private function setOnRoutes($walking, string $state, array $excepts)
     {
         foreach($this->routers as $r => $route){
             if(!in_array($this->routers,$excepts)){

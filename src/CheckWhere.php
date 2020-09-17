@@ -6,7 +6,7 @@ use Exception;
 
 trait CheckWhere{
         
-    protected function checkWhereParam($data): Router
+    protected function checkWhereParam($data)
     {
         if(count($data) === 0){
             throw new Exception('It is necessary to define a condition to be tested.');
@@ -14,7 +14,7 @@ trait CheckWhere{
         return $this;
     }
 
-    protected function checkWhereParams($params): Router
+    protected function checkWhereParams($params)
     {
         if(count($params) === 0){
             throw new Exception('The route in question has no parameters to be tested.');
@@ -67,7 +67,7 @@ trait CheckWhere{
         return (substr($part,0,1) === '{' && substr($part,-1) === '}');
     }
 
-    protected function callWhereAdd($data): Router
+    protected function callWhereAdd($data)
     {
         $this->checkWhereParam($data);
         
