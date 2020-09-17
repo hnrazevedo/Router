@@ -2,6 +2,8 @@
 
 namespace HnrAzevedo\Router;
 
+use Exception;
+
 trait Helper{
     use CheckTrait, ControllerTrait;
     
@@ -121,6 +123,41 @@ trait Helper{
                 $route[$state]();
             }
         }
+    }
+
+    protected function loadFromArrays()
+    {
+        $currentProtocol = $this->getProtocol();
+
+        foreach(array_reverse($this->routers) as $r => $route){
+
+            $this->currentRoute = $route;
+            $this->currentRoute['name'] = $r;
+
+            if(!$this->checkProtocol($route['protocol'], $currentProtocol)){
+                continue;
+            }
+
+            $this->hasProtocol($route, $currentProtocol);
+
+            $_SERVER['REQUEST_URI'] = (array_key_exists('REQUEST_URI', $_SERVER)) ? $_SERVER['REQUEST_URI'] : '';
+
+
+            $routs = $this->explodeRoutes(
+                (substr($route['url'],strlen($route['url'])-1,1) === '/') , $route['url'],
+                (substr($_SERVER['REQUEST_URI'],strlen($_SERVER['REQUEST_URI'])-1,1) === '/') , $_SERVER['REQUEST_URI']
+            );
+
+            if(!$this->checkToHiking($route, $routs['routeRequest'], $routs['routeLoop'])){
+                continue;
+            }
+
+            $this->loaded = true;
+            return $this;
+        }
+        
+        $this->currentRoute = null;
+	    throw new Exception('Page not found.',404);
     }
 
 }

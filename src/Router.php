@@ -118,7 +118,7 @@ class Router{
         return self::getInstance();
     }
 
-    private function byName(?string $routName): bool
+    private function loadFromName(?string $routName = null): bool
     {
         if(!is_null($routName)){
             $currentProtocol = $this->getProtocol();
@@ -144,41 +144,11 @@ class Router{
     {
         $instance = self::create()->getInstance();
 
-        if($instance->byName($routeName)){
+        if($instance->loadFromName($routeName)){
             return $instance;
         }
 
-		$currentProtocol = $instance->getProtocol();
-
-        foreach(array_reverse($instance->routers) as $r => $route){
-
-            $instance->currentRoute = $route;
-            $instance->currentRoute['name'] = $r;
-
-            if(!$instance->checkProtocol($route['protocol'], $currentProtocol)){
-                continue;
-            }
-
-            $instance->hasProtocol($route, $currentProtocol);
-
-            $_SERVER['REQUEST_URI'] = (array_key_exists('REQUEST_URI', $_SERVER)) ? $_SERVER['REQUEST_URI'] : '';
-
-
-            $routs = $instance->explodeRoutes(
-                (substr($route['url'],strlen($route['url'])-1,1) === '/') , $route['url'],
-                (substr($_SERVER['REQUEST_URI'],strlen($_SERVER['REQUEST_URI'])-1,1) === '/') , $_SERVER['REQUEST_URI']
-            );
-
-            if(!$instance->checkToHiking($route, $routs['routeRequest'], $routs['routeLoop'])){
-                continue;
-            }
-
-            $instance->loaded = true;
-            return $instance;
-        }
-        
-        $instance->currentRoute = null;
-	    throw new Exception('Page not found.',404);
+		return $instance->loadFromArrays();
     }
 
     public static function dispatch(?string $routeName = null): bool

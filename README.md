@@ -23,7 +23,7 @@ O Router é um simples abstrator de URL amigável. Seu autor não é profissiona
 Router is available via Composer:
 
 ```bash 
-"hnrazevedo/router": "^1.7"
+"hnrazevedo/router": "^1.8"
 ```
 
 or run
@@ -309,7 +309,7 @@ $name = Router::currentRouteName();
 $action = Router::currentRouteAction();
 ```
 
-### Run load
+### load
 ```php
 /* NOTE: in case of error an exception is thrown */
 
@@ -319,17 +319,17 @@ Router::load();
 Router::load('index');
 
 /* After loading the route it is necessary to fire it */
-Router::load()->dispatch();
-Router::load();
+/* NOTE: After loading the route, if any dispatch function name is passed, it will be ignored. */
+Router::load('index')->dispatch();
 
+Router::load();
 ...
 $currentRouter = Router::current();
 ...
-
 Router::dispatch();
 ```
 
-### Run route
+### dispatch
 ```php
 /* NOTE: in case of error an exception is thrown */
 
