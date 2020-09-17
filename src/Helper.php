@@ -9,6 +9,8 @@ trait Helper{
     
     private $currentRoute = null;
     protected bool $loaded = false;
+    protected $lastReturn = null;
+    protected ?string $prefix = null;
 
     public static function current(): ?array
     {
