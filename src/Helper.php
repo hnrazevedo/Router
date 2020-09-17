@@ -50,7 +50,7 @@ trait Helper{
         call_user_func_array([$controller,$method],  $data);
     }
 
-    protected function Controller(string $controll): void
+    protected function Controller(string $controll)
     {
         $data = $this->getData();
 
@@ -58,11 +58,7 @@ trait Helper{
             $controll = str_replace('{'.$name.'}',$value,$controll);
         }
 
-        $this->checkControllsettable($controll);
-
-        $this->checkControllexist($controll);
-
-        $this->checkControllmethod($controll);
+        $this->checkControllSettable($controll)->checkControllExist($controll)->checkControllMethod($controll);
 
         $controller = ucfirst(explode(':',$controll)[0]);
         $controller = new $controller();
@@ -74,7 +70,8 @@ trait Helper{
             $data = (array_key_exists('data',$data['POST'])) ? json_decode($data['POST']['data'], true) : $data['GET'];
             call_user_func_array([$controller,$method],  $data);
         }
-       
+
+        return $this;
     }    
 
     protected function explodeRoutes(bool $bar, string $url ,bool $bar_, string $url_): array
@@ -96,22 +93,19 @@ trait Helper{
         return ['routeLoop' => $url, 'routeRequest' => $url_];
     }
 
-    protected function toHiking(array $route)
+    protected function toHiking(array $route): bool
     {
-        $this->callOnRoute($route,'beforeAll');
-        $this->callOnRoute($route,'before');
+        $this->callOnRoute($route,'beforeAll')->callOnRoute($route,'before');
 
         if(is_string($route['role'])){
-            $this->Controller($route['role']);
-            $this->callOnRoute($route,'after');
-            $this->callOnRoute($route,'afterAll');
+            $this->Controller($route['role'])->callOnRoute($route,'after')->callOnRoute($route,'afterAll');
             return true;
         }
 
         call_user_func_array($route['role'],$this->getData()['GET']);
 
-        $this->callOnRoute($route,'after');
-        $this->callOnRoute($route,'afterAll');
+        $this->callOnRoute($route,'after')->callOnRoute($route,'afterAll');
+        return true;
     }
 
     protected function callOnRoute(array $route,string $state)
@@ -123,6 +117,7 @@ trait Helper{
                 $route[$state]();
             }
         }
+        return $this;
     }
 
     protected function loadByArray(): Router
