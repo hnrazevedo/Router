@@ -3,6 +3,7 @@
 namespace HnrAzevedo\Router;
 
 trait ExtraJobsTrait{
+    protected array $routers = [];
 
     public function before($walking)
     {

@@ -5,7 +5,7 @@ namespace HnrAzevedo\Router;
 use Exception;
 
 trait CheckTrait{
-    use FilterTrait, CheckWhere;
+    use FilterTrait, CheckWhere, Helper;
 
     protected function checkProtocol(string $expected, string $current): bool
     {

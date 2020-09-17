@@ -8,6 +8,7 @@ trait Helper{
     use CheckTrait, ControllerTrait;
     
     private $currentRoute = null;
+    protected bool $loaded = false;
 
     public static function current(): ?array
     {
@@ -42,10 +43,11 @@ trait Helper{
         ];
     }
 
-    protected function ControllerForm($controller, string $method, array $values){
+    protected function ControllerForm($controller, string $method, array $values)
+    {
 		$this->checkRole();
         $method = ($method !== 'method') ? $method : $this->getData()['POST']['role'];
-        $data = (array_key_exists('data',$values)) ? json_decode($values['data'], true) : null;
+        $data = (array_key_exists('data',$values)) ? json_decode($values['data'], true) : [];
 
         call_user_func_array([$controller,$method],  $data);
     }
@@ -120,7 +122,7 @@ trait Helper{
         return $this;
     }
 
-    protected function loadByArray(): Router
+    protected function loadByArray()
     {
         $currentProtocol = $this->getProtocol();
 
@@ -155,7 +157,7 @@ trait Helper{
 	    throw new Exception('Page not found.',404);
     }
 
-    protected function loadByName(?string $routName = null): Router
+    protected function loadByName(string $routName)
     {
         $currentProtocol = $this->getProtocol();
         $this->checkName($routName);

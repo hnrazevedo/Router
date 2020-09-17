@@ -15,7 +15,7 @@ Router::get('/{controller}/{method}','{controller}:method');
 Router::get('/my-account/{teste}','Controller\\User:my_account');
 
 /* Filter example */
-Router::get('/my-account','Controller\\User:my_account')->filter('Filter\\User:user_in');
+Router::get('/my-account','Controller\\User:my_account')->middleware('Filter\\User:user_in');
 
 /* Accessed by all protocols */
 Router::any('/',function(){
