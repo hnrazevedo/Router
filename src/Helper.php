@@ -5,7 +5,7 @@ namespace HnrAzevedo\Router;
 use Exception;
 
 trait Helper{
-    use ControllerTrait;
+    use CheckTrait, ControllerTrait;
     
     private $currentRoute = null;
     protected bool $loaded = false;

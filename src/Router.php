@@ -3,7 +3,7 @@
 namespace HnrAzevedo\Router;
 
 class Router{
-    use CheckTrait, DefinitionsTrait, ExtraJobsTrait;
+    use Helper, DefinitionsTrait, ExtraJobsTrait;
 
     private static $instance = null;
     private ?string $group = null;
