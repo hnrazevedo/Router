@@ -2,22 +2,16 @@
 
 namespace HnrAzevedo\Router;
 
-use Exception;
-
 class Router{
     use Helper, CheckTrait, CheckWhere, DefinitionsTrait, ExtraJobsTrait;
 
     private static $instance = null;
-    private array $routers = [];
-    private ?string $prefix = null;
     private ?string $group = null;
-    private $lastReturn = null;
     private $beforeAll = null;
     private $afterAll = null;
     private array $afterExcepts = [];
     private array $beforeExcepts = [];
     private bool $instanced = false;
-    private bool $loaded = false;
 
     public function __construct()
     {

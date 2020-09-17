@@ -11,6 +11,7 @@ trait Helper{
     protected bool $loaded = false;
     protected $lastReturn = null;
     protected ?string $prefix = null;
+    protected array $routers = [];
 
     public static function current(): ?array
     {
