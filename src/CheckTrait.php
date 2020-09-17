@@ -55,7 +55,7 @@ trait CheckTrait{
 
     protected function checkRole()
     {
-        if(!array_key_exists('role', $this->getData()['POST'])){
+        if(!array_key_exists('role', $_POST)){
             throw new Exception('O servidor não conseguiu identificar a finalidade deste formulário.');
         }
         return $this;

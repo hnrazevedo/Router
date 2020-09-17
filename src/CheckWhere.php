@@ -5,6 +5,7 @@ namespace HnrAzevedo\Router;
 use Exception;
 
 trait CheckWhere{
+    protected array $routers = [];
         
     protected function checkWhereParam($data)
     {
