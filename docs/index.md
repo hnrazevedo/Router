@@ -390,7 +390,6 @@ Se você descobrir algum problema relacionado à segurança, envie um e-mail par
 ## Credits
 
 - [Henri Azevedo](https://github.com/hnrazevedo) (Developer)
-- [Robson V. Leite](https://github.com/robsonvleite) (Readme based on your datalayer design)
 
 ## License
 
