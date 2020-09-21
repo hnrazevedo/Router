@@ -10,8 +10,8 @@
     ],
     "require": {
         "php": ">=7.4",
-        "hnrazevedo/filter": "^1.0",
-        "hnrazevedo/validator": "^1.0"
+        "hnrazevedo/filter": "dev-master",
+        "hnrazevedo/validator": "dev-master"
     },
     "minimum-stability":"dev",
     "license":"MIT",
