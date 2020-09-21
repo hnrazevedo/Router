@@ -179,7 +179,7 @@ Router::afterAll(function(){
 Router::group('/administrator/', function(){
     Router::post('/controller/','Controller\\Administrator:execute');
     Router::get('/pages/index','Controller\\Administrator:view');
-})->filter('Filter\\Admin:is_admin')
+})->middleware('Filter\\Admin:is_admin')
   ->before(function(){
       //
   })
@@ -253,14 +253,14 @@ Router::get('/test/{id}/{id2}',function(){
 ### Protocols
 ```php
 /* Unique protocol */
-Router::get('/my-account','Controller\\User:my_account')->filter('Filter\\User:user_in');
+Router::get('/my-account','Controller\\User:my_account')->middleware('Filter\\User:user_in');
 
 /* Multiple protocols */
-Router::match('post|get|ajax','/my-account','Controller\\User:my_account')->filter('Filter\\User:user_in');
+Router::match('post|get|ajax','/my-account','Controller\\User:my_account')->middleware('Filter\\User:user_in');
 
 /* All protocols */
 
-Router::any('/my-account','Controller\\User:my_account')->filter('Filter\\User:user_in');
+Router::any('/my-account','Controller\\User:my_account')->middleware('Filter\\User:user_in');
 ```
 
 ### Order
