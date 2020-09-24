@@ -12,7 +12,7 @@ use HnrAzevedo\Router\Router;
 try{
 
     Router::defineMiddlewares([
-        'Auth'=> \Example\Middleware\Auth::class
+        'Auth2'=> \Example\Middleware\Auth2::class
     ]);
 
     Router::host('https://localhost');

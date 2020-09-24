@@ -6,7 +6,7 @@ use HnrAzevedo\Router\Router;
 /* Filter example */
 Router::get('/my-account',function(){
     echo 'Ok';
-})->middleware('\Example\Middleware\Auth::class');
+})->middleware(['\Example\Middleware\Auth::class','Auth2']);
 
 /* Returning parameters passed via URL in anonymous functions 
 Router::get('/{parameter}/{otherparameter}', function($parameter, $otherparameter){

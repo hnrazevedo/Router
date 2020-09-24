@@ -25,7 +25,7 @@ trait MiddlewareTrait{
     protected function middlewareHandle(string $m)
     {
         $middleware = $this->middlewareExists($m);
-        $middleware->process($this->serverRequest,$this->request);
+        $middleware->process($this->serverRequest, $this->request);
     }
 
     protected function middlewareExists(string $m)
