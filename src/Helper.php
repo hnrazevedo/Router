@@ -6,7 +6,7 @@ use HnrAzevedo\Http\Uri;
 use HnrAzevedo\Http\Factory;
 
 use Exception;
-use HnrAzevedo\Http\Request;
+use HnrAzevedo\Http\Response;
 
 trait Helper{
     use CheckTrait, ControllerTrait;
@@ -102,7 +102,7 @@ trait Helper{
         return ['routeLoop' => $url, 'routeRequest' => $url_];
     }
 
-    protected function toHiking(array $route): bool
+    protected function toHiking(array $route, Response $response): bool
     {
         $this->callOnRoute($route,'beforeAll')->callOnRoute($route,'before');
 
@@ -111,7 +111,7 @@ trait Helper{
             return true;
         }
 
-        call_user_func_array($route['role'],$this->getData()['GET']);
+        call_user_func_array($route['role'],[$this->getData()['GET'],$response]);
 
         $this->callOnRoute($route,'after')->callOnRoute($route,'afterAll');
         return true;

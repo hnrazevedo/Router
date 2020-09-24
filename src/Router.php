@@ -121,7 +121,8 @@ class Router{
             self::load($routeName);
         }
 
-        $instance->checkMiddleware($instance->currentRoute)->toHiking($instance->currentRoute);
+        $instance->toHiking($instance->currentRoute,$instance->checkMiddleware($instance->currentRoute));
+        
     }
 
     public function middleware($middlewares): Router

@@ -9,9 +9,14 @@ use HnrAzevedo\Http\Response;
 
 class RequestHandler implements RequestHandlerInterface
 {
+    private static Response $response;
+
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $response = new Response();
-        return $response;
+        if(!isset(self::$response)){
+            self::$response = new Response();
+        }
+
+        return self::$response;
     }
 }

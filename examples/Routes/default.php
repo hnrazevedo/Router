@@ -1,10 +1,13 @@
 <?php
 
+use HnrAzevedo\Http\Response;
 use HnrAzevedo\Router\Router;
 
 
 /* Filter example */
-Router::get('/my-account',function(){
+Router::get('/my-account',function(array $data, Response $response){
+    echo '<pre>';
+    var_dump($response);
     echo 'Ok';
 })->middleware(['\Example\Middleware\Auth::class','Auth2']);
 

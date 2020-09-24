@@ -3,6 +3,7 @@
 namespace HnrAzevedo\Router;
 
 use Exception;
+use HnrAzevedo\Http\Response;
 
 trait MiddlewareTrait{
     protected array $middlewares = [];
@@ -16,16 +17,16 @@ trait MiddlewareTrait{
                 continue;
             }
 
-            $this->middlewareHandle($middleware);
+            return $this->middlewareHandle($middleware);
         }
 
-        return $this;
+        return new Response();
     }
 
     protected function middlewareHandle(string $m)
     {
         $middleware = $this->middlewareExists($m);
-        $middleware->process($this->serverRequest, $this->request);
+        return $middleware->process($this->serverRequest, $this->request);
     }
 
     protected function middlewareExists(string $m)
