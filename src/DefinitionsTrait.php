@@ -3,9 +3,9 @@
 namespace HnrAzevedo\Router;
 
 trait DefinitionsTrait{
-    private static $instance = null;
+    private static Router $instance;
 
-    public static function match(string $protocols, string $uri, $walking)
+    public static function match(string $protocols, string $uri, $walking): Router
     {
         foreach(explode('|',$protocols) as $protocol){
             self::getInstance()->add($uri, $walking, $protocol);
@@ -13,52 +13,52 @@ trait DefinitionsTrait{
         return self::$instance;
     }
 
-    public static function any(string $uri, $walking)
+    public static function any(string $uri, $walking): Router
     {
         return self::getInstance()->add($uri, $walking, 'get')->add($uri, $walking, 'post')->add($uri, $walking, 'form')->add($uri, $walking, 'ajax');
     }
 
-    public static function get(string $uri, $walking)
+    public static function get(string $uri, $walking): Router
     {
         return self::getInstance()->add($uri, $walking, 'get');
     }
 
-    public static function post(string $uri, $walking)
+    public static function post(string $uri, $walking): Router
     {
         return self::getInstance()->add($uri, $walking, 'post');
     }
 
-    public static function ajax(string $uri, $walking)
+    public static function ajax(string $uri, $walking): Router
     {
         return self::getInstance()->add($uri, $walking, 'ajax');
     }
 
-    public static function put(string $uri, $walking)
+    public static function put(string $uri, $walking): Router
     {
         return self::getInstance()->add($uri, $walking, 'put');
     }
 
-    public static function patch(string $uri, $walking)
+    public static function patch(string $uri, $walking): Router
     {
         return self::getInstance()->add($uri, $walking, 'patch');
     }
 
-    public static function options(string $uri, $walking)
+    public static function options(string $uri, $walking): Router
     {
         return self::getInstance()->add($uri, $walking, 'options');
     }
 
-    public static function delete(string $uri, $walking)
+    public static function delete(string $uri, $walking): Router
     {
         return self::getInstance()->add($uri, $walking, 'delete');
     }
 
-    public static function form(string $uri, $walking)
+    public static function form(string $uri, $walking): Router
     {
         return self::getInstance()->add($uri, $walking, 'form');
     }
 
-    public static function add(string $uri, $walking, string $protocol)
+    public static function add(string $uri, $walking, string $protocol): Router
     {
         return self::getInstance()->set($uri, $walking, $protocol);
     }

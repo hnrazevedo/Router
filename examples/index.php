@@ -3,12 +3,19 @@
 session_start();
 
 require __DIR__.'/../vendor/autoload.php';
+require __DIR__.'/Routes/default.php';
 
 use HnrAzevedo\Router\Router;
 
 /* NOTE: in case of error an exception is thrown */
 
 try{
+
+    Router::defineMiddlewares([
+        'Auth'=> \Example\Middleware\Auth::class
+    ]);
+
+    Router::host('https://localhost');
     
     Router::dispatch();
 

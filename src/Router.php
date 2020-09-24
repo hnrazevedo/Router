@@ -2,16 +2,21 @@
 
 namespace HnrAzevedo\Router;
 
+use HnrAzevedo\Http\ServerRequest;
+
 class Router{
     use Helper, DefinitionsTrait, ExtraJobsTrait;
 
-    private static $instance = null;
+    private static Router $instance;
     private ?string $group = null;
     private $beforeAll = null;
     private $afterAll = null;
     private array $afterExcepts = [];
     private array $beforeExcepts = [];
     private bool $instanced = false;
+    private string $host = '';
+    private RequestHandler $request;
+    private ServerRequest $serverRequest;
 
     public function __construct()
     {
@@ -29,8 +34,14 @@ class Router{
 
     public static function getInstance(): Router
     {
-        self::$instance = (is_null(self::$instance)) ? new self() : self::$instance;
+        self::$instance = (!isset(self::$instance)) ? new self() : self::$instance;
         return self::$instance;
+    }
+
+    public static function host(string $host): Router
+    {
+        self::getInstance()->host = $host;
+        return self::getInstance();
     }
 
     public function set(string $url ,$walking , string $protocol): Router
@@ -46,7 +57,7 @@ class Router{
 			'url' => $this->prefix.$url,
 			'role' => $walking,
 			'protocol' => $protocol,
-            'filters' => null,
+            'middlewares' => null,
             'where' => null,
             'before' => null,
             'beforeAll' => $this->beforeAll,
@@ -102,7 +113,7 @@ class Router{
         return (!is_null($routeName)) ? self::create()->getInstance()->loadByName($routeName) : self::create()->getInstance()->loadByArray();
     }
 
-    public static function dispatch(?string $routeName = null): bool
+    public static function dispatch(?string $routeName = null)
     {
         $instance = self::create()->getInstance();
 
@@ -110,48 +121,52 @@ class Router{
             self::load($routeName);
         }
 
-        $instance->checkFiltering($instance->currentRoute)->toHiking($instance->currentRoute);
-
-        return true;
+        $instance->checkMiddleware($instance->currentRoute)->toHiking($instance->currentRoute);
     }
 
-    public function middleware($filters): Router
+    public function middleware($middlewares): Router
     {
         if($this->lastReturn !== null){
             $currentGroup = end($this->routers)['group'];
 
             foreach ($this->routers as $key => $value) {
                 if($value['group'] === $currentGroup){
-                    $this->routers[$key] = $this->addMiddleware($this->routers[$key],$filters);
+                    $this->routers[$key] = $this->addMiddleware($this->routers[$key],$middlewares);
                 }
             }
             
             return $this;
         }
         
-        $this->routers[count($this->routers)-1] = $this->addMiddleware(end($this->routers),$filters);
+        $this->routers[count($this->routers)-1] = $this->addMiddleware(end($this->routers),$middlewares);
         return $this;
     }
 
     public static function addMiddleware(array $route, $filter): array
     {
-        if(is_null($route['filters'])){
-            $route['filters'] = $filter;
+        if(is_null($route['middlewares'])){
+            $route['middlewares'] = $filter;
             return $route;
         }
 
-        $filters = (is_array($filter)) ? $filter : [0 => $filter];
+        $middlewares = (is_array($filter)) ? $filter : [0 => $filter];
 
-        if(is_array($route['filters'])){
-            foreach ($route['filters'] as $key => $value) {
-                $filters[] = $value;
+        if(is_array($route['middlewares'])){
+            foreach ($route['middlewares'] as $key => $value) {
+                $middlewares[] = $value;
             }
         }else{
-            $filters[] = $route['filters'];
+            $middlewares[] = $route['middlewares'];
         }
 
-        $route['filters'] = $filters;
+        $route['middlewares'] = $middlewares;
         return $route;
+    }
+
+    public static function defineMiddlewares(array $middlewares): Router
+    {
+        self::getInstance()->middlewares = $middlewares;
+        return self::getInstance();
     }
 
 }

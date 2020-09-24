@@ -10,7 +10,7 @@
     ],
     "require": {
         "php": ">=7.4",
-        "hnrazevedo/filter": "dev-master",
+        "hnrazevedo/http": "dev-master",
         "hnrazevedo/validator": "dev-master"
     },
     "minimum-stability":"dev",
@@ -19,7 +19,7 @@
         "psr-4": {
             "HnrAzevedo\\Router\\":"src/",
             "Example\\Controllers\\":"examples/Controllers/",
-            "Example\\Filters\\":"examples/Filters/"
+            "Example\\Middleware\\":"examples/Middleware/"
         }
     }
 }

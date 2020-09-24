@@ -2,7 +2,11 @@
 
 namespace HnrAzevedo\Router;
 
+use HnrAzevedo\Http\Uri;
+use HnrAzevedo\Http\Factory;
+
 use Exception;
+use HnrAzevedo\Http\Request;
 
 trait Helper{
     use CheckTrait, ControllerTrait;
@@ -138,10 +142,10 @@ trait Helper{
                 continue;
             }
 
+
             $this->hasProtocol($route, $currentProtocol);
 
             $_SERVER['REQUEST_URI'] = (array_key_exists('REQUEST_URI', $_SERVER)) ? $_SERVER['REQUEST_URI'] : '';
-
 
             $routs = $this->explodeRoutes(
                 (substr($route['url'],strlen($route['url'])-1,1) === '/') , $route['url'],
@@ -151,7 +155,10 @@ trait Helper{
             if(!$this->checkToHiking($route, $routs['routeRequest'], $routs['routeLoop'])){
                 continue;
             }
-
+            
+            $this->request = new RequestHandler($route['protocol'],new Uri($this->host.$route['url']));  
+            $this->serverRequest = (new Factory())->createServerRequest($route['protocol'],new Uri($this->host.$route['url']));          
+            
             $this->loaded = true;
             return $this;
         }
