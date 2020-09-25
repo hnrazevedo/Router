@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/hnrazevedo/Http.git",
-                "reference": "3330d21af5ab21f4fcb7955e83af57f4ed99773e"
+                "reference": "882919c0fa61c43731108275744fbf413a48348b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hnrazevedo/Http/zipball/3330d21af5ab21f4fcb7955e83af57f4ed99773e",
-                "reference": "3330d21af5ab21f4fcb7955e83af57f4ed99773e",
+                "url": "https://api.github.com/repos/hnrazevedo/Http/zipball/882919c0fa61c43731108275744fbf413a48348b",
+                "reference": "882919c0fa61c43731108275744fbf413a48348b",
                 "shasum": ""
             },
             "require": {
@@ -44,7 +44,7 @@
                     "role": "Developer"
                 }
             ],
-            "time": "2020-09-24T18:54:45+00:00"
+            "time": "2020-09-25T01:10:52+00:00"
         },
         {
             "name": "hnrazevedo/validator",

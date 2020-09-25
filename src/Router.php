@@ -2,7 +2,6 @@
 
 namespace HnrAzevedo\Router;
 
-use HnrAzevedo\Http\ServerRequest;
 
 class Router{
     use Helper, DefinitionsTrait, ExtraJobsTrait;
@@ -15,8 +14,6 @@ class Router{
     private array $beforeExcepts = [];
     private bool $instanced = false;
     private string $host = '';
-    private RequestHandler $request;
-    private ServerRequest $serverRequest;
 
     public function __construct()
     {
@@ -121,8 +118,8 @@ class Router{
             self::load($routeName);
         }
 
-        $instance->toHiking($instance->currentRoute,$instance->checkMiddleware($instance->currentRoute));
-        
+        $instance->executeMiddleware($instance->currentRoute)->run($instance->currentRoute);
+
     }
 
     public function middleware($middlewares): Router

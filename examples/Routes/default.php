@@ -5,9 +5,9 @@ use HnrAzevedo\Router\Router;
 
 
 /* Filter example */
-Router::get('/my-account',function(array $data, Response $response){
+Router::get('/my-account',function(array $data){
     echo '<pre>';
-    var_dump($response);
+    var_dump($data);
     echo 'Ok';
 })->middleware(['\Example\Middleware\Auth::class','Auth2']);
 
