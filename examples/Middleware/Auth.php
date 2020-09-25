@@ -11,7 +11,7 @@ class Auth extends Middleware{
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         if(!array_key_exists('user',$_SESSION)){
-            $this->error = 'Usuário não logado.';
+            $this->error = 'The user must be logged in to the system';
         }
 
         return parent::process($request, $handler);

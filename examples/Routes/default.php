@@ -9,7 +9,7 @@ Router::get('/my-account',function(array $data){
     echo '<pre>';
     var_dump($data);
     echo 'Ok';
-})->middleware(['\Example\Middleware\Auth::class','Auth2']);
+})->middleware(['\Example\Middleware\Auth::class','Lasted']);
 
 /* Returning parameters passed via URL in anonymous functions 
 Router::get('/{parameter}/{otherparameter}', function($parameter, $otherparameter){
