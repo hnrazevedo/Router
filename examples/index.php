@@ -11,20 +11,20 @@ use HnrAzevedo\Router\Router;
 
 try{
 
-    Router::defineMiddlewares([
+    /*Router::defineMiddlewares([
         'Lasted'=> \Example\Middleware\Lasted::class
-    ]);
+    ]);*/
 
-    Router::host('https://localhost');
+    Router::defineHost('https://localhost');
     
-    Router::dispatch();
+    Router::run();
 
     /* Return current route */
-    $router = Router::current();
+    $currentRoute = Router::current();
     /* Return current name route*/
-    $name = Router::currentRouteName();
+    $name = Router::currentName();
     /* Return current action route */
-    $action = Router::currentRouteAction();
+    $action = Router::currentAction();
 
 }catch(Exception $er){
 

@@ -3,51 +3,49 @@
 namespace HnrAzevedo\Router;
 
 use Exception;
+use Psr\Http\Server\MiddlewareInterface;
+use HnrAzevedo\Http\Response;
 use HnrAzevedo\Http\ServerRequest;
-use HnrAzevedo\Http\Uri;
-use HnrAzevedo\Http\Factory;
 
 trait MiddlewareTrait{
     protected array $middlewares = [];
-    protected RequestHandler $request;
-    protected ServerRequest $serverRequest;
 
-    protected function executeMiddleware(array $route)
+    protected function executeMiddleware(array $middlewares, ServerRequest $serverRequest, RequestHandler $request): Response
     {
-        $this->request = new RequestHandler($route['protocol'],new Uri($this->host.$route['url']));  
-        $this->serverRequest = (new Factory())->createServerRequest($route['protocol'],new Uri($this->host.$route['url'])); 
-
-        $middlewares = (is_array($route['middlewares'])) ? $route['middlewares'] : [ $route['middlewares'] ];
-
+        $response = new Response();
         foreach($middlewares as $middleware){
             if(is_null($middleware)){
                 continue;
             }
 
-            $this->middlewareHandle($middleware);
+            $response = $this->middlewareHandle($this->middlewareExists($middleware), $serverRequest, $request, $response);
         }
 
-        return $this;
+        return $response;
     }
 
-    protected function middlewareHandle(string $m)
+    protected function middlewareHandle(MiddlewareInterface $middleware, ServerRequest $serverRequest, RequestHandler $request, Response $response): Response
     {
-        $middleware = $this->middlewareExists($m);
-        return $middleware->process($this->serverRequest, $this->request);
+        return $middleware->process($serverRequest, $request);
     }
 
-    protected function middlewareExists(string $m)
+    protected function middlewareExists(string $middleware)
     {
-        if(class_exists(str_replace('::class','',$m))){
-            $m = str_replace('::class','',$m);
-            return new $m();
+        if(class_exists(str_replace('::class','',$middleware))){
+            $middleware = str_replace('::class','',$middleware);
+            return $this->getMiddleware($middleware);
         }
 
-        if(array_key_exists($m,$this->middlewares)){
-            return new $this->middlewares[$m]();
+        if(array_key_exists($middleware,$this->middlewares)){
+            return $this->getMiddleware($this->middlewares[$middleware]);
         }
 
-        throw new Exception("Middleware {$m} not found.");
+        throw new Exception("Middleware {$middleware} not found.");
+    }
+
+    private function getMiddleware(string $class): MiddlewareInterface
+    {
+        return new $class();
     }
 
 }

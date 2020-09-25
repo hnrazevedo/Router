@@ -2,6 +2,9 @@
 
 namespace HnrAzevedo\Router;
 
+use HnrAzevedo\Http\Uri;
+use HnrAzevedo\Http\Factory;
+use HnrAzevedo\Http\Response;
 
 class Router{
     use Helper, DefinitionsTrait, ExtraJobsTrait;
@@ -60,7 +63,8 @@ class Router{
             'beforeAll' => $this->beforeAll,
             'after' => null,
             'afterAll' => $this->afterAll,
-            'group' => self::getInstance()->group
+            'group' => self::getInstance()->group,
+            'response' => null
 		];
 
 		$this->routers[] = $route;		
@@ -118,7 +122,15 @@ class Router{
             self::load($routeName);
         }
 
-        $instance->executeMiddleware($instance->currentRoute)->run($instance->currentRoute);
+        $instance->currentRoute['response'] = (new RequestHandler())->setGlobalMiddlewares($instance->middlewares)
+                                                                    ->setMiddlewares($instance->currentRoute['middlewares'])
+                                                                    ->handle(
+            (new Factory())->createServerRequest(
+                $instance->currentRoute['protocol'],
+                new Uri($instance->host.$instance->currentRoute['url']))
+        );
+
+        $instance->run($instance->currentRoute);
 
     }
 
@@ -140,14 +152,14 @@ class Router{
         return $this;
     }
 
-    public static function addMiddleware(array $route, $filter): array
+    public static function addMiddleware(array $route, $middleware): array
     {
         if(is_null($route['middlewares'])){
-            $route['middlewares'] = $filter;
+            $route['middlewares'] = $middleware;
             return $route;
         }
 
-        $middlewares = (is_array($filter)) ? $filter : [0 => $filter];
+        $middlewares = (is_array($middleware)) ? $middleware : [0 => $middleware];
 
         if(is_array($route['middlewares'])){
             foreach ($route['middlewares'] as $key => $value) {
@@ -165,6 +177,15 @@ class Router{
     {
         self::getInstance()->middlewares = $middlewares;
         return self::getInstance();
+    }
+
+    public static function getResponse(): Response
+    {
+        $instance = self::create()->getInstance();
+        if(!isset($instance->currentRoute)){
+            throw new \InvalidArgumentException('Route not yet loaded');
+        }
+        return $instance->currentRoute['response'];
     }
 
 }

@@ -9,14 +9,32 @@ use HnrAzevedo\Http\Response;
 
 class RequestHandler implements RequestHandlerInterface
 {
-    private static Response $response;
+    use MiddlewareTrait;
+
+    protected array $routeMiddlewares = [];
+
+    public function setMiddlewares(array $middlewares): RequestHandler
+    {
+        foreach($middlewares as $middleware){
+            if(is_null($middleware)){
+                continue;
+            }
+            $this->middlewareExists($middleware);
+        }
+
+        $this->routeMiddlewares = $middlewares;
+        return $this;
+    }
+
+    public function setGlobalMiddlewares(array $middlewares): RequestHandler
+    {
+        $this->middlewares = $middlewares;
+        return $this;
+    }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        if(!isset(self::$response)){
-            self::$response = new Response();
-        }
-
-        return self::$response;
+        $clone = clone $this;
+        return $this->executeMiddleware($this->routeMiddlewares, $request, $clone);
     }
 }
