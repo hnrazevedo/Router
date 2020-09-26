@@ -2,10 +2,15 @@
 
 namespace HnrAzevedo\Router;
 
-
-use Exception;
-
 trait Helper{
+    protected static Router $instance;
+
+    public static function getInstance(): Router
+    {
+        self::$instance = (!isset(self::$instance)) ? new Router() : self::$instance;
+        return self::$instance;
+    }
+    /*
     use CheckTrait, ControllerTrait;
     
     private $currentRoute = null;
@@ -176,6 +181,6 @@ trait Helper{
         $this->loaded = true;
 
         return $this;            
-    }
+    }*/
 
 }

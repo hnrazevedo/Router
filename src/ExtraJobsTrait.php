@@ -3,61 +3,73 @@
 namespace HnrAzevedo\Router;
 
 trait ExtraJobsTrait{
-    protected array $routers = [];
+    use Helper, CheckTrait;
 
-    public function before($walking)
+    protected array $beforeExcepts = [];
+    protected array $afterExcepts = [];
+
+    public static function before($closure): Router
     {
-        return $this->setOnRoute($walking,'before');
+        return self::addInRoute('before',$closure);
     }
 
-    public static function beforeAll($walking, $except = null)
+    public static function after($closure): Router
     {
-        $excepts = is_array($except) ? $except : [$except];
-        self::getInstance()->beforeExcepts = $excepts;
-        self::getInstance()->beforeAll = $walking;
-        return self::getInstance()->setOnRoutes($walking,'beforeAll',$excepts);
+        return self::addInRoute('after',$closure);
     }
 
-    public function after($walking)
+    public static function beforeAll($closure, $excepts): Router
     {
-        return $this->setOnRoute($walking,'after');
+        self::getInstance()->beforeExcepts = (is_array($excepts)) ? $excepts : [ $excepts ];
+        self::getInstance()->beforeAll = $closure;
+        return self::getInstance();
     }
 
-    public static function afterAll($walking, $except = null)
+    public static function afterAll($closure, $excepts): Router
     {
-        $excepts = is_array($except) ? $except : [$except];
-        self::getInstance()->afterExcepts = $excepts;
-        self::getInstance()->afterAll = $walking;
-        return self::getInstance()->setOnRoutes($walking,'afterAll',$excepts);
+        self::getInstance()->afterExcepts = (is_array($excepts)) ? $excepts : [ $excepts ];
+        self::getInstance()->afterAll = $closure;
+        return self::getInstance();
     }
 
-    private function setOnRoute($walking, string $state)
+    public static function beforeGroup($closure, $excepts): Router
     {
-        if($this->lastReturn !== null){
-            $currentGroup = end($this->routers)['group'];
-
-            foreach ($this->routers as $key => $value) {
-
-                if($value['group'] === $currentGroup){
-                    $this->routers[$key][$state] = $walking;
-                }
-
-            }
-            return $this;
-        }
-        
-        $this->routers[array_key_last($this->routers)][$state] = $walking;
-        return $this;
+        return self::addInRoutes('before', $closure, $excepts);
     }
 
-    private function setOnRoutes($walking, string $state, array $excepts)
+    public static function afterGroup($closure, $excepts): Router
     {
-        foreach($this->routers as $r => $route){
-            if(!in_array($this->routers,$excepts)){
-                $this->routers[$r][$state] = $walking;
+        var_dump(1);
+        return self::addInRoutes('after', $closure, $excepts);
+    }
+
+    private static function addInRoutes(string $state, $closure, $excepts): Router
+    {
+        self::getInstance()->isInPseudGroup();
+        $excepts = (is_array($excepts)) ? $excepts : [ $excepts ];
+        $group = self::getInstance()->inSave()['group'];
+
+        foreach(self::getInstance()->routes as $r => $route){
+            if($route['group'] === $group && !in_array($r,$excepts)){
+                self::getInstance()->routes[$r][$state] = (is_null($route[$state])) ? [ $closure ] : array_merge($route[$state], [ $closure ]); 
             }
         }
-        return $this;
+
+        return self::getInstance();
     }
 
+    private static function addInRoute(string $state, $closure): Router
+    {
+        $route = self::getInstance()->inSave();
+        $state = (!is_null($route[$state])) ? [ $closure ] : array_merge($route[$state], [ $closure ]);
+        $route[$state] = $state;
+        self::getInstance()->updateRoute($route,array_key_last(self::getInstance()->routes));
+        return self::getInstance();
+    }
+
+    private static function updateRoute(array $route, $key): Router
+    {
+        self::getInstance()->routes[$key] = $route;
+        return self::getInstance();
+    }
 }
