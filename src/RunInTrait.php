@@ -2,48 +2,47 @@
 
 namespace HnrAzevedo\Router;
 
-trait ExtraJobsTrait{
+trait RunInTrait{
     use Helper, CheckTrait;
 
     protected array $beforeExcepts = [];
     protected array $afterExcepts = [];
 
-    public static function before($closure): Router
+    public static function before($closure): RouterInterface
     {
         return self::addInRoute('before',$closure);
     }
 
-    public static function after($closure): Router
+    public static function after($closure): RouterInterface
     {
         return self::addInRoute('after',$closure);
     }
 
-    public static function beforeAll($closure, $excepts): Router
+    public static function beforeAll($closure, $excepts): RouterInterface
     {
         self::getInstance()->beforeExcepts = (is_array($excepts)) ? $excepts : [ $excepts ];
         self::getInstance()->beforeAll = $closure;
         return self::getInstance();
     }
 
-    public static function afterAll($closure, $excepts): Router
+    public static function afterAll($closure, $excepts): RouterInterface
     {
         self::getInstance()->afterExcepts = (is_array($excepts)) ? $excepts : [ $excepts ];
         self::getInstance()->afterAll = $closure;
         return self::getInstance();
     }
 
-    public static function beforeGroup($closure, $excepts): Router
+    public static function beforeGroup($closure, $excepts): RouterInterface
     {
         return self::addInRoutes('before', $closure, $excepts);
     }
 
-    public static function afterGroup($closure, $excepts): Router
+    public static function afterGroup($closure, $excepts): RouterInterface
     {
-        var_dump(1);
         return self::addInRoutes('after', $closure, $excepts);
     }
 
-    private static function addInRoutes(string $state, $closure, $excepts): Router
+    private static function addInRoutes(string $state, $closure, $excepts): RouterInterface
     {
         self::getInstance()->isInPseudGroup();
         $excepts = (is_array($excepts)) ? $excepts : [ $excepts ];
@@ -58,18 +57,13 @@ trait ExtraJobsTrait{
         return self::getInstance();
     }
 
-    private static function addInRoute(string $state, $closure): Router
+    private static function addInRoute(string $state, $closure): RouterInterface
     {
         $route = self::getInstance()->inSave();
         $state = (!is_null($route[$state])) ? [ $closure ] : array_merge($route[$state], [ $closure ]);
         $route[$state] = $state;
-        self::getInstance()->updateRoute($route,array_key_last(self::getInstance()->routes));
+        self::updateRoute($route,array_key_last(self::getInstance()->routes));
         return self::getInstance();
     }
 
-    private static function updateRoute(array $route, $key): Router
-    {
-        self::getInstance()->routes[$key] = $route;
-        return self::getInstance();
-    }
 }

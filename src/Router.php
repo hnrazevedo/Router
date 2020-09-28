@@ -2,34 +2,20 @@
 
 namespace HnrAzevedo\Router;
 
-use Psr\Http\Server\RequestHandlerInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use HnrAzevedo\Http\Response;
 
 class Router implements RouterInterface{
-    use DefinitionsTrait, ExtraJobsTrait, CheckTrait;
+    use DefinitionsTrait, RunInTrait, CheckTrait, OwnerTrait, MiddlewareTrait, WhereTrait;
 
     private array $currentRoute = [];
     private \Closure $beforeAll;
     private \Closure $afterAll;
-    private string $host;
+    private string $host = '';
     private string $prefix = '';
     private bool $loaded = false;
-
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
-    {
-        return new Response();
-    }
 
     public static function defineHost(string $host): Router
     {
         self::getInstance()->host = $host;
-        return self::getInstance();
-    }
-
-    public static function middleware(string $middleware): Router
-    {
         return self::getInstance();
     }
 
@@ -44,8 +30,6 @@ class Router implements RouterInterface{
         return self::getInstance();
     }
 
-    
-
     public static function group(string $prefix, \Closure $closure): Router
     {
         self::getInstance()->prefix = $prefix;
@@ -55,11 +39,6 @@ class Router implements RouterInterface{
 
         self::getInstance()->group = null;
         self::getInstance()->prefix = null;
-        return self::getInstance();
-    }
-
-    public static function where(string $param, string $expression): Router
-    {
         return self::getInstance();
     }
 
@@ -81,58 +60,38 @@ class Router implements RouterInterface{
         return self::getInstance()->currentRoute['action'];
     }
 
-    public static function load(): Router
+    public static function load(): RouterInterface
     {
         self::getInstance()->loaded = true;
-        return self::getInstance();
+
+        foreach(self::getInstance()->routes as $r => $route){
+            self::getInstance()->currentRoute = $route;
+            self::getInstance()->currentRoute['name'] = $r;
+
+            try{
+                self::getInstance()->checkMethod($route, $_SERVER['REQUEST_METHOD']);
+                self::getInstance()->checkData($route['uri']->getPath(), $_SERVER['REQUEST_URI']);
+                
+                return self::getInstance();
+            }catch(\Exception $er){
+                continue;
+            }
+        }
+        
+        self::getInstance()->currentRoute = [];
+        throw new \Exception('Page not found', 404);
     }
 
-    public static function run(): Router
+    public static function run(): RouterInterface
     {
         if(!self::getInstance()->loaded){
             self::getInstance()->load();
         }
+
+        echo '<pre>';
+        var_dump(self::getInstance()->currentRoute['uri']->getPath());
         // ...
         return self::getInstance();
     }
-
-    // Extra functions
-    
-
-    public function loadIn(string $name): Router
-    {
-        $this->hasRouteName($name);
-        $this->loaded = true;
-        return $this;
-    }
-
-    public function runIn(string $name): Router
-    {
-        $this->hasRouteName($name);
-
-        if(!$this->loaded){
-            $this->loadIn($name);
-        }
-        
-        return $this;
-    }
-
-    private function hasCurrentRoute(): void
-    {
-        if(!isset($this->currentRoute)){
-            throw new \RuntimeException('Route not yet loaded');
-        }
-    }
-
-    private function unsetRoute($key): Router
-    {
-        unset($this->routes[$key]);
-        return $this;
-    }
-
-    private function inSave(): array
-    {
-        return end($this->routers);
-    }
-    
+   
 }

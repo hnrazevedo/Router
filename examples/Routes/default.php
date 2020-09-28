@@ -3,7 +3,7 @@
 use HnrAzevedo\Router\Router;
 
 /* Returning parameters passed via URL in anonymous functions */
-Router::get('/{parameter}/{otherparameter}', function($parameter, $otherparameter){
+Router::match('GET|POST|AJAX','/{parameter}/{otherparameter}', function($parameter, $otherparameter){
     echo "Parameter 1:{$parameter}, Parameter 2:{$otherparameter}.";
 });
 
@@ -19,7 +19,7 @@ Router::get('/my-account/{teste}','Controller\\User:my_account');
 
 
 
-Router::get('/my-account',function(){
+Router::get('/my-account1',function(){
     echo 'is Ok!';
 })->middleware(['\Example\Middleware\Auth::class','Lasted']);
 

@@ -2,50 +2,47 @@
 
 namespace HnrAzevedo\Router;
 
-use Exception;
-use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface;
 use HnrAzevedo\Http\Response;
-use HnrAzevedo\Http\ServerRequest;
 
 trait MiddlewareTrait{
-    protected array $middlewares = [];
+    use Helper;
 
-    protected function executeMiddleware(array $middlewares, ServerRequest $serverRequest, RequestHandler $request): Response
+    protected static array $globalMiddlewares = [];
+
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $response = new Response();
+        return new Response();
+    }
+
+    public static function globalMiddlewares(array $middlewares): RouterInterface
+    {
         foreach($middlewares as $middleware){
-            if(is_null($middleware)){
-                continue;
+            if(!class_exists($middleware)){
+                throw new \RuntimeException("Middleware class {$middleware} not exists");
             }
-
-            $response = $this->middlewareHandle($this->middlewareExists($middleware), $serverRequest, $request, $response);
         }
-
-        return $response;
+        self::getInstance()->middlewares = $middlewares;
+        return self::getInstance();
     }
 
-    protected function middlewareHandle(MiddlewareInterface $middleware, ServerRequest $serverRequest, RequestHandler $request, Response $response): Response
+    public static function middleware($middlewares): RouterInterface
     {
-        return $middleware->process($serverRequest, $request);
+        $middlewares = (is_array($middlewares)) ? $middlewares : [ $middlewares ];
+        $route = self::getInstance()->inSave();
+        $route['middlewares'] = (is_array($route['middlewares'])) ? array_merge($route['middlewares'],$middlewares) : $middlewares;
+        self::getInstance()->updateRoute($route,array_key_last(self::getInstance()->routes));
+        return self::getInstance();
     }
 
-    protected function middlewareExists(string $middleware)
+    private static function existMiddleware(string $name): void
     {
-        if(class_exists(str_replace('::class','',$middleware))){
-            $middleware = str_replace('::class','',$middleware);
-            return $this->getMiddleware($middleware);
+        if(!class_exists($name) && !array_key_exists($name,self::$globalMiddlewares)){
+            throw new \RuntimeException("Middleware {$name} does not exist");
         }
-
-        if(array_key_exists($middleware,$this->middlewares)){
-            return $this->getMiddleware($this->middlewares[$middleware]);
-        }
-
-        throw new Exception("Middleware {$middleware} not found.");
     }
 
-    private function getMiddleware(string $class): MiddlewareInterface
-    {
-        return new $class();
-    }
 
 }

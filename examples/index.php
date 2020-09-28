@@ -11,9 +11,9 @@ use HnrAzevedo\Router\Router;
 
 try{
 
-    /*Router::defineMiddlewares([
+    Router::globalMiddlewares([
         'Lasted'=> \Example\Middleware\Lasted::class
-    ]);*/
+    ]);
 
     Router::defineHost('https://localhost');
     

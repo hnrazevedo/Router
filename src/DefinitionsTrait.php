@@ -9,56 +9,54 @@ trait DefinitionsTrait{
     
     protected array $routes = [];
     
-    public static function get(string $uri, $closure): Router
+    public static function get(string $uri, $closure): RouterInterface
     {
         return self::set('get',$uri,$closure);
     }
 
-    public static function post(string $uri, $closure): Router
+    public static function post(string $uri, $closure): RouterInterface
     {
         return self::set('post',$uri,$closure);
     }
 
-    public static function ajax(string $uri, $closure): Router
+    public static function ajax(string $uri, $closure): RouterInterface
     {
         return self::set('ajax',$uri,$closure);
     }
 
-    public static function delete(string $uri, $closure): Router
+    public static function delete(string $uri, $closure): RouterInterface
     {
         return self::set('delete',$uri,$closure);
     }
 
-    public static function put(string $uri, $closure): Router
+    public static function put(string $uri, $closure): RouterInterface
     {
         return self::set('put',$uri,$closure);
     }
 
-    public static function patch(string $uri, $closure): Router
+    public static function patch(string $uri, $closure): RouterInterface
     {
         return self::set('patch',$uri,$closure);
     }
 
-    public static function match(string $method, string $uri, $closure): Router
+    public static function match(string $method, string $uri, $closure): RouterInterface
     {
-        foreach(explode('|',$method) as $method){
-            self::set($method, $uri, $closure);
-        }
+        self::set($method, $uri, $closure);
         return self::getInstance();
     }
 
-    public static function any(string $uri, $closure): Router
+    public static function any(string $uri, $closure): RouterInterface
     {
         return self::set('*',$uri,$closure);
     }
 
-    private static function set(string $method, string $uri, $closure): Router
+    private static function set(string $method, string $uri, $closure): RouterInterface
     {   
         $uri = (substr($uri,0,1) !=='/' and strlen($uri) > 0) ? "/{$uri}" : $uri;
         
         self::checkDuplicity($uri,$method);
         
-		self::getInstance()->routers[] = [
+		self::getInstance()->routes[] = [
 			'uri' => new Uri(self::getInstance()->host.self::getInstance()->prefix.$uri),
 			'action' => $closure,
 			'method' => strtoupper($method),
@@ -75,8 +73,8 @@ trait DefinitionsTrait{
 
     private static function checkDuplicity(string $uri, string $method): void
     {
-        foreach(self::getInstance()->routers as $route){
-    		if( md5($route['url'].$route['protocol']) === md5($uri.$method) ){
+        foreach(self::getInstance()->routes as $route){
+    		if( md5($route['uri'].$route['method']) === md5($uri.$method) ){
                 throw new \RuntimeException("There is already a route with the URI {$uri} and with the {$method} METHOD configured.");
             }
         }

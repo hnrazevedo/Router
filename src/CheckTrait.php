@@ -3,37 +3,50 @@
 namespace HnrAzevedo\Router;
 
 trait CheckTrait{
-
     protected array $routers = [];
-    protected array $routesNames = [];
+    protected array $routesName = [];
     protected ?string $group = null;
     
-    private function hasRouteName(string $name): void
+    protected function hasRouteName(string $name): void
     {
         if(!isset($this->routesName[$name])){
             throw new \RuntimeException("There is no route named with {$name}");
         }
     }
 
-    private function isInNameGroup(): void
+    protected function isInNameGroup(): void
     {
         if(!is_null($this->group)){
             throw new \RuntimeException("It is not allowed to assign names to groups");
         }
     }
 
-    private function isInPseudGroup(): void
+    protected function isInPseudGroup(): void
     {
         if(!is_null($this->group)){
-            throw new \RuntimeException("To assign actions before or after the execution of the route, use beforeGroup / afterGroup");
+            throw new \RuntimeException("To assign actions before or after the execution of the route, use beforeGroup or afterGroup");
         }
     }
 
-    private function existRouteName(string $name): void
+    protected function existRouteName(string $name): void
     {
         if(isset($this->routesName[$name])){
             throw new \RuntimeException("There is already a route named with {$name}");
         }
+    }
+
+    protected function checkMethod(array $route, $method): void
+    {
+        $hasMethod = false;
+        foreach(explode('|',$route['method']) as $routeMethod){
+            if(@preg_match("/{$routeMethod}/",$method) == true || $method === '*'){
+                $hasMethod = true;
+            }
+        }
+        if(!$hasMethod){
+            throw new \Exception('This route is not released for the accessed method');
+        }
+        
     }
 
 }

@@ -34,16 +34,18 @@ interface RouterInterface extends MiddlewareInterface{
     public static function defineHost(string $host): RouterInterface;
 
     /* Setting middleware */
-    public static function middleware(string $middleware): RouterInterface;
+    public static function globalMiddlewares(array $middlewares): RouterInterface;
+    
+    public static function middleware($middlewares): RouterInterface;
 
     /* Define name */
     public static function name(string $name): RouterInterface;
 
     public static function before($closure): RouterInterface;
 
-    public static function afterGroup($closure): RouterInterface;
+    public static function afterGroup($closure, $excepts): RouterInterface;
 
-    public static function beforeGroup($closure): RouterInterface;
+    public static function beforeGroup($closure, $excepts): RouterInterface;
 
     public static function after($closure): RouterInterface;
 
@@ -53,7 +55,7 @@ interface RouterInterface extends MiddlewareInterface{
 
     public static function group(string $prefix, Closure $closure): RouterInterface;
 
-    public static function where(string $param, string $expression): RouterInterface;
+    public static function where(array $wheres): RouterInterface;
 
     public static function current(): array;
 
