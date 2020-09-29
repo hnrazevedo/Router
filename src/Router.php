@@ -71,14 +71,15 @@ class Router implements RouterInterface
     {
         self::getInstance()->loaded = true;
 
+        self::getInstance()->sortRoutes();
+
         foreach(self::getInstance()->routes as $r => $route){
             self::getInstance()->currentRoute = $route;
             self::getInstance()->currentRoute['name'] = $r;
 
             try{
                 self::getInstance()->checkMethod($route, $_SERVER['REQUEST_METHOD']);
-                self::getInstance()->checkData($route['uri']->getPath(), $_SERVER['REQUEST_URI']);
-                self::getInstance()->sortRoutes();                
+                self::getInstance()->checkData($route, $_SERVER['REQUEST_URI']);
                 return self::getInstance();
             }catch(\Exception $er){
                 continue;
@@ -95,8 +96,8 @@ class Router implements RouterInterface
             self::getInstance()->load();
         }
 
-        //echo '<pre>';
-        //var_dump(self::getInstance()->currentRoute['uri']->getPath());
+        echo '<pre>';
+        var_dump(urldecode(self::getInstance()->currentRoute['uri']->getPath()));
         // ...
         return self::getInstance();
     }
