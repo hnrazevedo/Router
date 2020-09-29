@@ -24,7 +24,7 @@ trait MiddlewareTrait
                 throw new \RuntimeException("Middleware class {$middleware} not exists");
             }
         }
-        self::getInstance()->globalMiddlewares = $middlewares;
+        self::$globalMiddlewares = $middlewares;
         return self::getInstance();
     }
 

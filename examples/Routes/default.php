@@ -2,6 +2,15 @@
 
 use HnrAzevedo\Router\Router;
 
+
+Router::beforeAll(function(){
+    echo 'beforeAll<br>';
+},['testes']);
+
+Router::afterAll(function(){
+    echo 'afterAll<br>';
+},['testes']);
+
 /* Returning parameters passed via URL in anonymous functions */
 Router::match('GET|POST|AJAX','/{parameter}/{otherparameter}', function($parameter, $otherparameter){
     echo "Parameter 1:{$parameter}, Parameter 2:{$otherparameter}.";
@@ -18,7 +27,7 @@ Router::get('/my-account','Controller\\User:my_account');
 Router::get('/my-account/teste/teste','Controller\\User:my_account')->where([
     'teste'=>'[a-zA-Z]{1,10}',
     'teste2' => '[0-9]{1}'
-]);
+])->name('testes');
 
 Router::get('/my-account/{:teste}/{teste2}','Controller\\User:my_account')->where([
     'teste'=>'[a-zA-Z]{1,10}',

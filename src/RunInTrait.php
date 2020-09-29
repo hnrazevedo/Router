@@ -8,6 +8,8 @@ trait RunInTrait
 
     protected array $beforeExcepts = [];
     protected array $afterExcepts = [];
+    protected \Closure $beforeAll;
+    protected \Closure $afterAll;
 
     public static function before($closure): RouterInterface
     {

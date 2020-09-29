@@ -14,11 +14,8 @@ class Router implements RouterInterface
         PrioritizeTrait;
 
     private array $currentRoute = [];
-    private \Closure $beforeAll;
-    private \Closure $afterAll;
     private string $host = '';
     private string $prefix = '';
-    private bool $loaded = false;
 
     public static function defineHost(string $host): Router
     {
@@ -96,8 +93,26 @@ class Router implements RouterInterface
             self::getInstance()->load();
         }
 
+        
+        self::getInstance()->executeBeforeAll();
         // ...
+        self::getInstance()->executeAfterAll();
+        
         return self::getInstance();
+    }
+
+    private function executeBeforeAll(): void
+    {
+        if(!in_array($this->currentName(),$this->beforeExcepts)){
+            ($this->beforeAll)();
+        }
+    }
+
+    private function executeAfterAll(): void
+    {
+        if(!in_array($this->currentName(),$this->afterExcepts)){
+            ($this->afterAll)();
+        }
     }
    
 }
