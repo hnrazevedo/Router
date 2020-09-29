@@ -6,6 +6,8 @@ trait WhereTrait
 {
     use Helper;
 
+    private array $parameters = [];
+
     public static function where(array $wheres): Router
     {
         $route = self::getInstance()->inSave();
@@ -17,6 +19,8 @@ trait WhereTrait
     protected function checkData(array $route, string $uriPath): void
     {
         $this->checkCount($route['uri']->getPath(), $uriPath);
+    
+        $this->parameters = [];
 
         $uriPath .= (substr($uriPath,strlen($uriPath)-1) !== '/') ? '/' : '';
 
@@ -38,6 +42,8 @@ trait WhereTrait
         if(!$corretRoute){
             throw new \Exception('continue');
         }
+
+        $_REQUEST = array_merge($_REQUEST,$this->parameters);
     }
 
     private function replaceParam(array $where, string $ref, string $value): string
@@ -45,6 +51,7 @@ trait WhereTrait
         if(((substr($ref,0,1) === '{') && (substr($ref,strlen($ref)-1) === '}'))) {
             if(array_key_exists(str_replace(['{:','{','}'],'',$ref),$where)){
                 $this->matchParam($where, $ref, $value);
+                $this->parameters[str_replace(['{:','{','}'],'',$ref)] = $value;
             }
             return $value;
         } 

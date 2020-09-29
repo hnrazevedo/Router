@@ -63,8 +63,8 @@ trait DefinitionsTrait
 			'method' => strtoupper($method),
             'middlewares' => null,
             'where' => null,
-            'before' => null,
-            'after' => null,
+            'before' => [],
+            'after' => [],
             'group' => self::getInstance()->group,
             'response' => null
         ];

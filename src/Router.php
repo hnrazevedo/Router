@@ -2,6 +2,7 @@
 
 namespace HnrAzevedo\Router;
 
+use HnrAzevedo\Http\Uri;
 
 class Router implements RouterInterface
 {
@@ -76,7 +77,7 @@ class Router implements RouterInterface
 
             try{
                 self::getInstance()->checkMethod($route, $_SERVER['REQUEST_METHOD']);
-                self::getInstance()->checkData($route, $_SERVER['REQUEST_URI']);
+                self::getInstance()->checkData($route, (new Uri($_SERVER['REQUEST_URI']))->getPath());
                 return self::getInstance();
             }catch(\Exception $er){
                 continue;
@@ -93,26 +94,19 @@ class Router implements RouterInterface
             self::getInstance()->load();
         }
 
-        
-        self::getInstance()->executeBeforeAll();
+        echo '<pre>';        
+        self::getInstance()->executeBefore();
         // ...
-        self::getInstance()->executeAfterAll();
+
+        //var_dump(urldecode(self::getInstance()->current()['uri']->getPath()));
+
+        var_dump($_REQUEST);
+
+        //var_dump(self::getInstance()->current());
+
+        self::getInstance()->executeAfter();
         
         return self::getInstance();
-    }
-
-    private function executeBeforeAll(): void
-    {
-        if(!in_array($this->currentName(),$this->beforeExcepts)){
-            ($this->beforeAll)();
-        }
-    }
-
-    private function executeAfterAll(): void
-    {
-        if(!in_array($this->currentName(),$this->afterExcepts)){
-            ($this->afterAll)();
-        }
     }
    
 }

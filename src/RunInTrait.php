@@ -63,10 +63,57 @@ trait RunInTrait
     private static function addInRoute(string $state, $closure): RouterInterface
     {
         $route = self::getInstance()->inSave();
-        $state = (!is_null($route[$state])) ? [ $closure ] : array_merge($route[$state], [ $closure ]);
-        $route[$state] = $state;
+        $route[$state] = (!is_null($route[$state])) ? [ $closure ] : array_merge($route[$state], [ $closure ]);
         self::updateRoute($route,array_key_last(self::getInstance()->routes));
         return self::getInstance();
+    }
+
+    protected function executeBefore(): void
+    {
+        if(!in_array($this->currentName(),$this->beforeExcepts)){
+            ($this->beforeAll)();
+        }
+
+        $this->executeState('before');
+    }
+
+    protected function executeAfter(): void
+    {
+        if(!in_array($this->currentName(),$this->afterExcepts)){
+            ($this->afterAll)();
+        }
+
+        $this->executeState('after');
+    }
+
+    private function executeState(string $stage): void
+    {
+        foreach($this->current()[$stage] as $state){
+            if(is_callable($state)){
+                $state();
+                continue;
+            }
+
+            $this->executeController($state);
+        }
+    }
+
+    private function executeController(string $controllerMeth): void
+    {
+        $routeURI = str_replace(['{:','{','}'],'',urldecode($this->current()['uri']->getPath()));
+
+        $controller = (string) explode('@',$controllerMeth)[0];
+        $method = (string) explode('@',$controllerMeth)[1];
+
+        if(!class_exists($controller)){
+            throw new \RuntimeException("Controller not found in route URI {$routeURI}");
+        }
+
+        if(!method_exists($controller, $method)){
+            throw new \RuntimeException("Method {$method} not found in controller {$controller} in route URI {$routeURI}");
+        }
+
+        (new $controller())->$method();
     }
 
 }
