@@ -4,7 +4,7 @@ namespace HnrAzevedo\Router;
 
 trait CheckTrait
 {
-    protected array $routers = [];
+    protected array $routes = [];
     protected array $routesName = [];
     protected ?string $group = null;
     
@@ -40,7 +40,7 @@ trait CheckTrait
     {
         $hasMethod = false;
         foreach(explode('|',$route['method']) as $routeMethod){
-            if(@preg_match("/{$routeMethod}/",$method) == true || $method === '*'){
+            if(@preg_match("/{$routeMethod}/",$method) !== 0 || $method === '*'){
                 $hasMethod = true;
             }
         }

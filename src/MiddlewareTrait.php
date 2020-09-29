@@ -5,7 +5,6 @@ namespace HnrAzevedo\Router;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use HnrAzevedo\Http\Response;
 
 trait MiddlewareTrait
 {
@@ -15,7 +14,7 @@ trait MiddlewareTrait
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        return new Response();
+        return new $handler->handle($request);
     }
 
     public static function globalMiddlewares(array $middlewares): RouterInterface
@@ -25,7 +24,7 @@ trait MiddlewareTrait
                 throw new \RuntimeException("Middleware class {$middleware} not exists");
             }
         }
-        self::getInstance()->middlewares = $middlewares;
+        self::getInstance()->globalMiddlewares = $middlewares;
         return self::getInstance();
     }
 

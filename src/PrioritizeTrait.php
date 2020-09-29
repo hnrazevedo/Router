@@ -49,6 +49,5 @@ trait PrioritizeTrait{
         }
         ksort($kRoutes);
         $this->routes = $kRoutes;
-
     }
 }

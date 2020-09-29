@@ -32,7 +32,7 @@ class Router implements RouterInterface
         self::getInstance()->existRouteName($name);
         $route = self::getInstance()->inSave();
         $route['name'] = $name;
-        self::getInstance()->routesNames[$name] = $name;
+        self::getInstance()->routesName[$name] = $name;
         self::getInstance()->unsetRoute(count(self::getInstance()->routes)-1)->updateRoute($route,$name);
         return self::getInstance();
     }
@@ -96,8 +96,6 @@ class Router implements RouterInterface
             self::getInstance()->load();
         }
 
-        echo '<pre>';
-        var_dump(urldecode(self::getInstance()->currentRoute['uri']->getPath()));
         // ...
         return self::getInstance();
     }

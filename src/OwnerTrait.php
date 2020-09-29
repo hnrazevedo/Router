@@ -4,15 +4,16 @@ namespace HnrAzevedo\Router;
 
 trait OwnerTrait
 {
+    protected bool $loaded = false;
 
-    public function loadIn(string $name): RouterInterface
+    public function loadIn(string $name)
     {
         $this->hasRouteName($name);
         $this->loaded = true;
         return $this;
     }
 
-    public function runIn(string $name): RouterInterface
+    public function runIn(string $name)
     {
         $this->hasRouteName($name);
 
@@ -30,7 +31,7 @@ trait OwnerTrait
         }
     }
 
-    public function unsetRoute($key): RouterInterface
+    public function unsetRoute($key)
     {
         unset($this->routes[$key]);
         return $this;
