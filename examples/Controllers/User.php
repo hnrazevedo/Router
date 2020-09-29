@@ -8,7 +8,7 @@ class User extends Controller{
 
     public function requereLogin($username, $password): void
     {
-        echo "{$username} - {$password}";
+        //echo "{$username} - {$password}";
     }
 
 }

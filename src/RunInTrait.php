@@ -2,7 +2,8 @@
 
 namespace HnrAzevedo\Router;
 
-trait RunInTrait{
+trait RunInTrait
+{
     use Helper, CheckTrait;
 
     protected array $beforeExcepts = [];

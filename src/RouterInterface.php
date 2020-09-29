@@ -8,12 +8,10 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-interface RouterInterface extends MiddlewareInterface{
-
-    /* MiddlewareInterface  */
+interface RouterInterface extends MiddlewareInterface
+{
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface;
     
-    /* Setting routes */
     public static function get(string $uri, $closure): RouterInterface;
 
     public static function post(string $uri, $closure): RouterInterface;
@@ -30,15 +28,12 @@ interface RouterInterface extends MiddlewareInterface{
 
     public static function any(string $uri, $closure): RouterInterface;
 
-    /* Define host */
     public static function defineHost(string $host): RouterInterface;
 
-    /* Setting middleware */
     public static function globalMiddlewares(array $middlewares): RouterInterface;
     
     public static function middleware($middlewares): RouterInterface;
 
-    /* Define name */
     public static function name(string $name): RouterInterface;
 
     public static function before($closure): RouterInterface;

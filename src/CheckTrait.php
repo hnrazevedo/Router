@@ -2,7 +2,8 @@
 
 namespace HnrAzevedo\Router;
 
-trait CheckTrait{
+trait CheckTrait
+{
     protected array $routers = [];
     protected array $routesName = [];
     protected ?string $group = null;

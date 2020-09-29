@@ -7,7 +7,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use HnrAzevedo\Http\Response;
 
-trait MiddlewareTrait{
+trait MiddlewareTrait
+{
     use Helper;
 
     protected static array $globalMiddlewares = [];

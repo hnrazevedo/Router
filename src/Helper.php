@@ -2,7 +2,8 @@
 
 namespace HnrAzevedo\Router;
 
-trait Helper{
+trait Helper
+{
     protected static Router $instance;
 
     public static function getInstance(): RouterInterface

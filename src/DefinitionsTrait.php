@@ -4,7 +4,8 @@ namespace HnrAzevedo\Router;
 
 use HnrAzevedo\Http\Uri;
 
-trait DefinitionsTrait{
+trait DefinitionsTrait
+{
     use Helper;
     
     protected array $routes = [];

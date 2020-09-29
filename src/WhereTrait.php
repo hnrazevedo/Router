@@ -2,7 +2,8 @@
 
 namespace HnrAzevedo\Router;
 
-trait WhereTrait{
+trait WhereTrait
+{
     use Helper;
 
     public static function where(array $wheres): Router

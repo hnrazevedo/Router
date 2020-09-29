@@ -2,7 +2,8 @@
 
 namespace HnrAzevedo\Router;
 
-trait OwnerTrait{
+trait OwnerTrait
+{
 
     public function loadIn(string $name): RouterInterface
     {

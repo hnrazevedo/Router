@@ -4,7 +4,7 @@ use HnrAzevedo\Router\Router;
 
 /* Returning parameters passed via URL in anonymous functions */
 Router::match('GET|POST|AJAX','/{parameter}/{otherparameter}', function($parameter, $otherparameter){
-    echo "Parameter 1:{$parameter}, Parameter 2:{$otherparameter}.";
+    //echo "Parameter 1:{$parameter}, Parameter 2:{$otherparameter}.";
 });
 
 /* Passing controller and/or method via parameter in URL */
@@ -26,4 +26,4 @@ Router::get('/my-account1',function(){
 /* Accessed by all protocols */
 Router::any('/',function(){
     //
-});
+})->name('index');

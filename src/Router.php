@@ -3,8 +3,15 @@
 namespace HnrAzevedo\Router;
 
 
-class Router implements RouterInterface{
-    use DefinitionsTrait, RunInTrait, CheckTrait, OwnerTrait, MiddlewareTrait, WhereTrait;
+class Router implements RouterInterface
+{
+    use DefinitionsTrait, 
+        RunInTrait, 
+        CheckTrait, 
+        OwnerTrait, 
+        MiddlewareTrait, 
+        WhereTrait,
+        PrioritizeTrait;
 
     private array $currentRoute = [];
     private \Closure $beforeAll;
@@ -26,7 +33,7 @@ class Router implements RouterInterface{
         $route = self::getInstance()->inSave();
         $route['name'] = $name;
         self::getInstance()->routesNames[$name] = $name;
-        self::getInstance()->unsetRoute(count(self::getInstance()->routes))->updateRoute($route,$name);
+        self::getInstance()->unsetRoute(count(self::getInstance()->routes)-1)->updateRoute($route,$name);
         return self::getInstance();
     }
 
@@ -71,7 +78,7 @@ class Router implements RouterInterface{
             try{
                 self::getInstance()->checkMethod($route, $_SERVER['REQUEST_METHOD']);
                 self::getInstance()->checkData($route['uri']->getPath(), $_SERVER['REQUEST_URI']);
-                
+                self::getInstance()->sortRoutes();                
                 return self::getInstance();
             }catch(\Exception $er){
                 continue;
@@ -88,8 +95,8 @@ class Router implements RouterInterface{
             self::getInstance()->load();
         }
 
-        echo '<pre>';
-        var_dump(self::getInstance()->currentRoute['uri']->getPath());
+        //echo '<pre>';
+        //var_dump(self::getInstance()->currentRoute['uri']->getPath());
         // ...
         return self::getInstance();
     }
