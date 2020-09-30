@@ -24,13 +24,18 @@ trait Helper
 
     public static function defineHost(string $host): Router
     {
-        self::getInstance()->host = $host;
+        self::getInstance()->setHost($host);
         return self::getInstance();
     }
 
     protected function inSave(): array
     {
         return end($this->routes);
+    }
+
+    protected function setHost(string $host): void
+    {
+        $this->host = $host;
     }
 
     protected function getHost(): string

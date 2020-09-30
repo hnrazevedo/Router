@@ -4,7 +4,7 @@ namespace HnrAzevedo\Router;
 
 trait OwnerTrait
 {
-    use Helper;
+    use Helper, CheckTrait;
 
     protected bool $loaded = false;
 

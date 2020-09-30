@@ -12,7 +12,8 @@ class Router implements RouterInterface
         OwnerTrait, 
         MiddlewareTrait, 
         WhereTrait,
-        PrioritizeTrait;
+        PrioritizeTrait,
+        CurrentTrait;
 
     private array $currentRoute = [];
     private ?\Exception $error = null;
@@ -38,24 +39,6 @@ class Router implements RouterInterface
         self::getInstance()->setGroup(null);
         self::getInstance()->setPrefix('');
         return self::getInstance();
-    }
-
-    public static function current(): array
-    {
-        self::getInstance()->hasCurrentRoute();
-        return self::getInstance()->currentRoute;
-    }
-
-    public static function currentName(): string
-    {
-        self::getInstance()->hasCurrentRoute();
-        return self::getInstance()->currentRoute['name'];
-    }
-
-    public static function currentAction()
-    {
-        self::getInstance()->hasCurrentRoute();
-        return self::getInstance()->currentRoute['action'];
     }
 
     public static function load(): RouterInterface

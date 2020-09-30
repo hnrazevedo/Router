@@ -81,9 +81,7 @@ trait WhereTrait
 
     private function matchParam(array $where, string $ref, string $value): void
     {
-        echo 3;
         if(substr($ref,0,2) === '{' || $value !== ''){
-            echo 1;
             if(!preg_match("/^{$where[str_replace(['{:','{','}'],'',$ref)]}$/",$value)){
                 echo 2;
                 throw new \Exception('continue');

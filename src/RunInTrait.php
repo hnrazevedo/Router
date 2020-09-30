@@ -4,12 +4,48 @@ namespace HnrAzevedo\Router;
 
 trait RunInTrait
 {
-    use Helper, CheckTrait;
+    use Helper, 
+        CheckTrait, 
+        CurrentTrait;
 
     protected array $beforeExcepts = [];
     protected array $afterExcepts = [];
     protected \Closure $beforeAll;
     protected \Closure $afterAll;
+
+    protected function getState(string $state, bool $except = false)
+    {
+        if($state === 'before'){
+            return ($except) ? $this->beforeExcepts : $this->beforeAll;
+        }
+
+        if($state === 'after'){
+            return ($except) ? $this->afterExcepts : $this->afterAll;
+        }
+    }
+
+    protected function setState(string $state, $settable, bool $except = false): bool
+    {
+        if($state === 'before'){
+            if($except){
+                $this->beforeExcepts = $settable;
+                return true;
+            }
+
+            $this->beforeAll = $settable;
+            return true;
+        }
+
+        if($state === 'after'){
+            if($except){
+                $this->afterExcepts = $settable;
+                return true;
+            }
+            
+            $this->afterAll = $settable;
+            return true;
+        }
+    }
 
     public static function before($closure): RouterInterface
     {
@@ -23,15 +59,15 @@ trait RunInTrait
 
     public static function beforeAll($closure, $excepts): RouterInterface
     {
-        self::getInstance()->beforeExcepts = (is_array($excepts)) ? $excepts : [ $excepts ];
-        self::getInstance()->beforeAll = $closure;
+        self::getInstance()->setState('before', (is_array($excepts)) ? $excepts : [ $excepts ] ,true);
+        self::getInstance()->setState('before', $closure, false);
         return self::getInstance();
     }
 
     public static function afterAll($closure, $excepts): RouterInterface
     {
-        self::getInstance()->afterExcepts = (is_array($excepts)) ? $excepts : [ $excepts ];
-        self::getInstance()->afterAll = $closure;
+        self::getInstance()->setState('after', (is_array($excepts)) ? $excepts : [ $excepts ] ,true);
+        self::getInstance()->setState('after', $closure, false);
         return self::getInstance();
     }
 
@@ -81,8 +117,8 @@ trait RunInTrait
 
     protected function executeBefore(): void
     {
-        if(!in_array($this->currentName(),$this->beforeExcepts)){
-            ($this->beforeAll)();
+        if(!in_array($this->currentName(),$this->getState('before', true))){
+            ($this->getState('before', false))();
         }
 
         $this->executeState('before');
@@ -90,8 +126,8 @@ trait RunInTrait
 
     protected function executeAfter(): void
     {
-        if(!in_array($this->currentName(),$this->afterExcepts)){
-            ($this->afterAll)();
+        if(!in_array($this->currentName(),$this->getState('after', true))){
+            ($this->getState('after', false))();
         }
 
         $this->executeState('after');
@@ -112,7 +148,8 @@ trait RunInTrait
     private function executeController(string $controllerMeth): void
     {
         if(count(explode('@',$controllerMeth)) !== 2){
-            throw new \RuntimeException('Misconfigured route action');
+            $path = urldecode($this->current()['uri']->getPath());
+            throw new \RuntimeException("Misconfigured route action ({$path})");
         }
 
         $controller = (string) explode('@',$controllerMeth)[0];
