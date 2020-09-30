@@ -12,7 +12,7 @@ trait WhereTrait
     {
         $route = self::getInstance()->inSave();
         $route['where'] = (is_array($route['where'])) ? array_merge($route['where'],$wheres) : $wheres;
-        self::getInstance()->updateRoute($route,array_key_last(self::getInstance()->routes));
+        self::getInstance()->updateRoute($route,array_key_last(self::getInstance()->getRoutes()));
         return self::getInstance();
     }
 

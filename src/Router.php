@@ -15,15 +15,8 @@ class Router implements RouterInterface
         PrioritizeTrait;
 
     private array $currentRoute = [];
-    private string $host = '';
     private string $prefix = '';
     private ?\Exception $error = null;
-
-    public static function defineHost(string $host): Router
-    {
-        self::getInstance()->host = $host;
-        return self::getInstance();
-    }
 
     public static function name(string $name): Router
     {
@@ -32,7 +25,7 @@ class Router implements RouterInterface
         $route = self::getInstance()->inSave();
         $route['name'] = $name;
         self::getInstance()->routesName[$name] = $name;
-        self::getInstance()->unsetRoute(array_key_last(self::getInstance()->routes))->updateRoute($route,$name);
+        self::getInstance()->unsetRoute(array_key_last(self::getInstance()->getRoutes()))->updateRoute($route,$name);
         return self::getInstance();
     }
 
@@ -71,7 +64,7 @@ class Router implements RouterInterface
         self::getInstance()->loaded = true;
         self::getInstance()->sortRoutes();
 
-        foreach(self::getInstance()->routes as $r => $route){
+        foreach(self::getInstance()->getRoutes() as $r => $route){
             self::getInstance()->currentRoute = $route;
             self::getInstance()->currentRoute['name'] = $r;
 

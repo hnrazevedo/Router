@@ -4,7 +4,8 @@ namespace HnrAzevedo\Router;
 
 trait CheckTrait
 {
-    protected array $routes = [];
+    use Helper;
+    
     protected array $routesName = [];
     protected ?string $group = null;
     

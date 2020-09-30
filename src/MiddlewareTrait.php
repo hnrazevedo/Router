@@ -33,7 +33,7 @@ trait MiddlewareTrait
         $middlewares = (is_array($middlewares)) ? $middlewares : [ $middlewares ];
         $route = self::getInstance()->inSave();
         $route['middlewares'] = (is_array($route['middlewares'])) ? array_merge($route['middlewares'],$middlewares) : $middlewares;
-        self::getInstance()->updateRoute($route,array_key_last(self::getInstance()->routes));
+        self::getInstance()->updateRoute($route,array_key_last(self::getInstance()->getRoutes()));
         return self::getInstance();
     }
 

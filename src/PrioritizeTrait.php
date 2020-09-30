@@ -2,16 +2,16 @@
 
 namespace HnrAzevedo\Router;
 
-trait PrioritizeTrait{
-
-    protected array $routes = [];
-
+trait PrioritizeTrait
+{
+    use Helper;
+    
     protected function sortRoutes(): void
     {
         $staticRoutes = [];
         $paramRoutes = [];
 
-        foreach($this->routes as $r => $route){
+        foreach($this->getRoutes() as $r => $route){
 
             $path = urldecode($route['uri']->getPath());
 
@@ -47,6 +47,6 @@ trait PrioritizeTrait{
             }
         }
         ksort($kRoutes);
-        $this->routes = $kRoutes;
+        $this->setRoutes($kRoutes);
     }
 }

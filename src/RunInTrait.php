@@ -62,9 +62,9 @@ trait RunInTrait
         $excepts = (is_array($excepts)) ? $excepts : [ $excepts ];
         $group = self::getInstance()->inSave()['group'];
 
-        foreach(self::getInstance()->routes as $r => $route){
+        foreach(self::getInstance()->getRoutes() as $r => $route){
             if($route['group'] === $group && !in_array($r,$excepts)){
-                self::getInstance()->routes[$r][$state] = (is_null($route[$state])) ? [ $closure ] : array_merge($route[$state], [ $closure ]); 
+                self::getInstance()->getRoutes()[$r][$state] = (is_null($route[$state])) ? [ $closure ] : array_merge($route[$state], [ $closure ]); 
             }
         }
 
@@ -75,7 +75,7 @@ trait RunInTrait
     {
         $route = self::getInstance()->inSave();
         $route[$state] = (!is_null($route[$state])) ? [ $closure ] : array_merge($route[$state], [ $closure ]);
-        self::updateRoute($route,array_key_last(self::getInstance()->routes));
+        self::updateRoute($route,array_key_last(self::getInstance()->getRoutes()));
         return self::getInstance();
     }
 

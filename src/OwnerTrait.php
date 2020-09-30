@@ -4,6 +4,8 @@ namespace HnrAzevedo\Router;
 
 trait OwnerTrait
 {
+    use Helper;
+
     protected bool $loaded = false;
 
     public function loadIn(string $name)
@@ -33,7 +35,9 @@ trait OwnerTrait
 
     public function unsetRoute($key)
     {
-        unset($this->routes[$key]);
+        $routes = $this->getRoutes();
+        unset($routes[$key]);
+        $this->setRoutes($routes);
         return $this;
     }
 

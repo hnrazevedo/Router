@@ -8,8 +8,6 @@ trait DefinitionsTrait
 {
     use Helper;
     
-    protected array $routes = [];
-    
     public static function get(string $uri, $closure): RouterInterface
     {
         return self::set('get',$uri,$closure);
@@ -57,8 +55,9 @@ trait DefinitionsTrait
         
         self::checkDuplicity($uri,$method);
         
-		self::getInstance()->routes[] = [
-			'uri' => new Uri(self::getInstance()->host.self::getInstance()->prefix.$uri),
+        $routes = self::getInstance()->getRoutes();
+        $routes[] = [
+			'uri' => new Uri(self::getInstance()->getHost().self::getInstance()->prefix.$uri),
 			'action' => $closure,
 			'method' => strtoupper($method),
             'middlewares' => null,
@@ -68,13 +67,15 @@ trait DefinitionsTrait
             'group' => self::getInstance()->group,
             'response' => null
         ];
+
+        self::getInstance()->setRoutes($routes);
         	
         return self::getInstance();
     }
 
     private static function checkDuplicity(string $uri, string $method): void
     {
-        foreach(self::getInstance()->routes as $route){
+        foreach(self::getInstance()->getRoutes() as $route){
     		if( md5($route['uri'].$route['method']) === md5($uri.$method) ){
                 throw new \RuntimeException("There is already a route with the URI {$uri} and with the {$method} METHOD configured.");
             }
