@@ -11,19 +11,24 @@ trait CurrentTrait
     public static function current(): array
     {
         self::getInstance()->hasCurrentRoute();
-        return self::getInstance()->currentRoute;
+        return self::getInstance()->getCurrent();
     }
 
     public static function currentName(): string
     {
         self::getInstance()->hasCurrentRoute();
-        return self::getInstance()->currentRoute['name'];
+        return self::getInstance()->getCurrent()['name'];
     }
 
     public static function currentAction()
     {
         self::getInstance()->hasCurrentRoute();
-        return self::getInstance()->currentRoute['action'];
+        return self::getInstance()->getCurrent()['action'];
+    }
+
+    protected function getCurrent(): array
+    {
+        return $this->currentRoute;
     }
     
 }
