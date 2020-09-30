@@ -57,14 +57,14 @@ trait DefinitionsTrait
         
         $routes = self::getInstance()->getRoutes();
         $routes[] = [
-			'uri' => new Uri(self::getInstance()->getHost().self::getInstance()->prefix.$uri),
+			'uri' => new Uri(self::getInstance()->getHost().self::getInstance()->getPrefix().$uri),
 			'action' => $closure,
 			'method' => strtoupper($method),
             'middlewares' => null,
             'where' => null,
             'before' => [],
             'after' => [],
-            'group' => self::getInstance()->group,
+            'group' => self::getInstance()->getGroup(),
             'response' => null
         ];
 

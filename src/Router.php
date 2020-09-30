@@ -15,7 +15,6 @@ class Router implements RouterInterface
         PrioritizeTrait;
 
     private array $currentRoute = [];
-    private string $prefix = '';
     private ?\Exception $error = null;
 
     public static function name(string $name): Router
@@ -31,13 +30,13 @@ class Router implements RouterInterface
 
     public static function group(string $prefix, \Closure $closure): Router
     {
-        self::getInstance()->prefix = $prefix;
-        self::getInstance()->group = sha1(date('d/m/Y h:m:i'));
+        self::getInstance()->setPrefix($prefix);
+        self::getInstance()->setGroup(sha1(date('d/m/Y h:m:i')));
 
         $closure();
 
-        self::getInstance()->group = null;
-        self::getInstance()->prefix = null;
+        self::getInstance()->setGroup(null);
+        self::getInstance()->setPrefix('');
         return self::getInstance();
     }
 

@@ -7,7 +7,6 @@ trait CheckTrait
     use Helper;
     
     protected array $routesName = [];
-    protected ?string $group = null;
     
     protected function hasRouteName(string $name): void
     {
@@ -18,14 +17,14 @@ trait CheckTrait
 
     protected function isInNameGroup(): void
     {
-        if(!is_null($this->group)){
+        if(!is_null($this->getGroup())){
             throw new \RuntimeException("It is not allowed to assign names to groups");
         }
     }
 
     protected function isInPseudGroup(): void
     {
-        if(!is_null($this->group)){
+        if(!is_null($this->getGroup())){
             throw new \RuntimeException("To assign actions before or after the execution of the route, use beforeGroup or afterGroup");
         }
     }

@@ -7,6 +7,8 @@ trait Helper
     protected array $routes = [];
     protected static Router $instance;
     protected string $host = '';
+    private string $prefix = '';
+    protected ?string $group = null;
 
     public static function getInstance(): RouterInterface
     {
@@ -46,4 +48,23 @@ trait Helper
         $this->routes =  $routes;
     }
 
+    protected function getGroup(): ?string
+    {
+        return $this->group;
+    }
+
+    protected function setGroup(?string $group): void
+    {
+        $this->group = $group;
+    }
+
+    protected function getPrefix(): ?string
+    {
+        return $this->prefix;
+    }
+
+    protected function setPrefix(string $prefix): void
+    {
+        $this->prefix = $prefix;
+    }
 }

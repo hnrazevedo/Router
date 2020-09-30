@@ -51,12 +51,22 @@ trait WhereTrait
         if(((substr($ref,0,1) === '{') && (substr($ref,strlen($ref)-1) === '}'))) {
             $this->parameters[str_replace(['{:','{','}'],'',$ref)] = $value;
 
+            $this->checkValueRequire($ref,$value);
+
             if(array_key_exists(str_replace(['{:','{','}'],'',$ref),$where)){
                 $this->matchParam($where, $ref, $value);
             }
+
             return $value;
         } 
         return $ref;
+    }
+
+    private function checkValueRequire(string $ref, string $value): void
+    {
+        if(substr($ref,0,2) !== '{:' && strlen($value) === 0){
+            throw new \Exception('continue');
+        }
     }
 
     private function checkCount(string $routePath, string $uriPath): void
@@ -71,8 +81,11 @@ trait WhereTrait
 
     private function matchParam(array $where, string $ref, string $value): void
     {
-        if(substr($ref,0,2) === '{:' || $value !== ''){
+        echo 3;
+        if(substr($ref,0,2) === '{' || $value !== ''){
+            echo 1;
             if(!preg_match("/^{$where[str_replace(['{:','{','}'],'',$ref)]}$/",$value)){
+                echo 2;
                 throw new \Exception('continue');
             }
         }
