@@ -4,11 +4,11 @@ use HnrAzevedo\Router\Router;
 
 
 Router::beforeAll(function(){
-    echo 'beforeAll<br>';
+    echo '<br><b>beforeAll</b><br>';
 },['testes']);
 
 Router::afterAll(function(){
-    echo 'afterAll<br>';
+    echo '<br><b>afterAll</b><br>';
 },['testes']);
 
 Router::match('GET|POST|AJAX','/{parameter}/{otherparameter}', function($parameter, $otherparameter){
@@ -35,9 +35,7 @@ Router::get('/my-account/{:teste}','Controller\\User:my_account')->where([
     'teste'=>'[a-zA-Z]{1,10}'
 ]);
 
-Router::get('/my-account1',function(){
-    echo 'is Ok!';
-})->middleware(['\Example\Middleware\Auth::class','Lasted']);
+Router::get('/my-account1/{param1}/{param2}','\Example\Controllers@requireLogin');//->middleware(['\Example\Middleware\Auth::class','Lasted']);
 
 Router::any('/',function(){
     //

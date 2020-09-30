@@ -49,5 +49,11 @@ trait PrioritizeTrait{
         }
         ksort($kRoutes);
         $this->routes = $kRoutes;
+
+        echo '<pre>';
+        foreach($kRoutes as $r => $route){
+            var_dump($r . ' - '. urldecode($route['uri']->getPath()));
+        }
+        echo '<br>';
     }
 }

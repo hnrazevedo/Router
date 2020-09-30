@@ -2,13 +2,11 @@
 
 namespace Example\Controllers;
 
-use HnrAzevedo\Router\Controller;
+class User{
 
-class User extends Controller{
-
-    public function requereLogin($username, $password): void
+    public function requireLogin($param, $param2): void
     {
-        //echo "{$username} - {$password}";
+        echo "{$param} - {$param2}";
     }
 
 }
