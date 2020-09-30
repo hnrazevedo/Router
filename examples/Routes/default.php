@@ -26,8 +26,7 @@ Router::get('/3my-account','Controller\\User:my_account')->before(function(){
 Router::get('/4my-account/teste/teste','Controller\\User:my_account')->name('2');
 
 Router::get('/5my-account/{:teste}/{teste2}',function($teste, $teste2){
-    var_dump($teste);
-    var_dump($teste2);
+    echo $teste.'-'.$teste2;
 })->where([
     'teste'=>'[a-zA-Z]{1,10}',
     'teste2'=>'[a-zA-Z]{1,10}'
