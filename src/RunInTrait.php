@@ -19,9 +19,7 @@ trait RunInTrait
             return ($except) ? $this->beforeExcepts : $this->beforeAll;
         }
 
-        if($state === 'after'){
-            return ($except) ? $this->afterExcepts : $this->afterAll;
-        }
+        return ($except) ? $this->afterExcepts : $this->afterAll;
     }
 
     protected function setState(string $state, $settable, bool $except = false): bool
@@ -36,15 +34,13 @@ trait RunInTrait
             return true;
         }
 
-        if($state === 'after'){
-            if($except){
-                $this->afterExcepts = $settable;
-                return true;
-            }
-            
-            $this->afterAll = $settable;
+        if($except){
+            $this->afterExcepts = $settable;
             return true;
         }
+            
+        $this->afterAll = $settable;
+        return true;
     }
 
     public static function before($closure): RouterInterface
@@ -117,7 +113,7 @@ trait RunInTrait
 
     protected function executeBefore(): void
     {
-        if(!in_array($this->currentName(),$this->getState('before', true))){
+        if(!in_array($this->currentName(), (array) $this->getState('before', true))){
             ($this->getState('before', false))();
         }
 
@@ -126,7 +122,7 @@ trait RunInTrait
 
     protected function executeAfter(): void
     {
-        if(!in_array($this->currentName(),$this->getState('after', true))){
+        if(!in_array($this->currentName(), (array) $this->getState('after', true))){
             ($this->getState('after', false))();
         }
 

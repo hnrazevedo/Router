@@ -15,7 +15,6 @@ class Router implements RouterInterface
         PrioritizeTrait,
         CurrentTrait;
 
-    private array $currentRoute = [];
     private ?\Exception $error = null;
 
     public static function name(string $name): Router

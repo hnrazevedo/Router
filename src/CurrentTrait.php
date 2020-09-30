@@ -5,6 +5,8 @@ namespace HnrAzevedo\Router;
 trait CurrentTrait{
     use Helper;
 
+    protected array $currentRoute = [];
+
     public static function current(): array
     {
         self::getInstance()->hasCurrentRoute();

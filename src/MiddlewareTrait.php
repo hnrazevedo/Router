@@ -14,7 +14,7 @@ trait MiddlewareTrait
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        return new $handler->handle($request);
+        return $handler->handle($request);
     }
 
     public static function globalMiddlewares(array $middlewares): RouterInterface
