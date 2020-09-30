@@ -32,7 +32,7 @@ class Router implements RouterInterface
         $route = self::getInstance()->inSave();
         $route['name'] = $name;
         self::getInstance()->routesName[$name] = $name;
-        self::getInstance()->unsetRoute(count(self::getInstance()->routes)-1)->updateRoute($route,$name);
+        self::getInstance()->unsetRoute(array_key_last(self::getInstance()->routes))->updateRoute($route,$name);
         return self::getInstance();
     }
 
@@ -69,7 +69,6 @@ class Router implements RouterInterface
     public static function load(): RouterInterface
     {
         self::getInstance()->loaded = true;
-
         self::getInstance()->sortRoutes();
 
         foreach(self::getInstance()->routes as $r => $route){

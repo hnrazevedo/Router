@@ -3,6 +3,7 @@
 use HnrAzevedo\Router\Router;
 
 
+
 Router::beforeAll(function(){
     echo '<br><b>beforeAll</b><br>';
 },['testes']);
@@ -11,19 +12,20 @@ Router::afterAll(function(){
     echo '<br><b>afterAll</b><br>';
 },['testes']);
 
-Router::match('GET|POST|AJAX','/{parameter}/{otherparameter}', function($parameter, $otherparameter){
+
+Router::match('GET|POST|AJAX','/{1parameter}/{otherparameter}', function($parameter, $otherparameter){
     echo "Parameter 1:{$parameter}, Parameter 2:{$otherparameter}.";
 });
 
-Router::get('/{controller}/{method}','{controller}:{method}');
+Router::get('/{2controller}/{method}','{controller}:{method}');
 
-Router::get('/my-account','Controller\\User:my_account')->before(function(){
+Router::get('/3my-account','Controller\\User:my_account')->before(function(){
     echo '1';
 });
 
-Router::get('/my-account/teste/teste','Controller\\User:my_account')->name('2');
+Router::get('/4my-account/teste/teste','Controller\\User:my_account')->name('2');
 
-Router::get('/my-account/{:teste}/{teste2}',function($teste, $teste2){
+Router::get('/5my-account/{:teste}/{teste2}',function($teste, $teste2){
     var_dump($teste);
     var_dump($teste2);
 })->where([
@@ -31,12 +33,15 @@ Router::get('/my-account/{:teste}/{teste2}',function($teste, $teste2){
     'teste2'=>'[a-zA-Z]{1,10}'
 ]);
 
-Router::get('/my-account/{:teste}','Controller\\User:my_account')->where([
+
+Router::get('/6my-accounttttt/{param1}/{param2}','\Example\Controllers\User@requireLogin');
+//->middleware(['\Example\Middleware\Auth::class','Lasted']);
+
+Router::get('/5my-account/{:teste}','Controller\\User:my_account')->where([
     'teste'=>'[a-zA-Z]{1,10}'
 ]);
 
-Router::get('/my-account1/{param1}/{param2}','\Example\Controllers@requireLogin');//->middleware(['\Example\Middleware\Auth::class','Lasted']);
 
-Router::any('/',function(){
+Router::any('/8',function(){
     //
 })->name('index');

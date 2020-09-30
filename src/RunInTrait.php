@@ -120,7 +120,7 @@ trait RunInTrait
 
         $this->checkControllerMeth($controllerMeth);
 
-        (new $controller())->$method();
+        call_user_func_array([(new $controller()),$method], $_REQUEST);
     }
 
     private function checkControllerMeth(string $controllerMeth): void

@@ -49,9 +49,10 @@ trait WhereTrait
     private function replaceParam(array $where, string $ref, string $value): string
     {
         if(((substr($ref,0,1) === '{') && (substr($ref,strlen($ref)-1) === '}'))) {
+            $this->parameters[str_replace(['{:','{','}'],'',$ref)] = $value;
+
             if(array_key_exists(str_replace(['{:','{','}'],'',$ref),$where)){
                 $this->matchParam($where, $ref, $value);
-                $this->parameters[str_replace(['{:','{','}'],'',$ref)] = $value;
             }
             return $value;
         } 
