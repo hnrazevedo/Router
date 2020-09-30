@@ -18,7 +18,9 @@ trait Helper
 
     protected static function updateRoute(array $route, $key): RouterInterface
     {
-        self::getInstance()->getRoutes()[$key] = $route;
+        $routeG = self::getInstance()->getRoutes();
+        $routeG[$key] = $route;
+        self::getInstance()->setRoutes($routeG);
         return self::getInstance();
     }
 

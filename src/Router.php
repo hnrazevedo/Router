@@ -45,6 +45,11 @@ class Router implements RouterInterface
         self::getInstance()->loaded = true;
         self::getInstance()->sortRoutes();
 
+        echo '<pre>';
+        foreach(self::getInstance()->getRoutes() as $r => $route){
+            var_dump($r . ' - '. urldecode($route['uri']->getPath()));
+        }
+
         foreach(self::getInstance()->getRoutes() as $r => $route){
             self::getInstance()->currentRoute = $route;
             self::getInstance()->currentRoute['name'] = $r;

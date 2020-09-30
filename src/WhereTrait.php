@@ -83,7 +83,6 @@ trait WhereTrait
     {
         if(substr($ref,0,2) === '{' || $value !== ''){
             if(!preg_match("/^{$where[str_replace(['{:','{','}'],'',$ref)]}$/",$value)){
-                echo 2;
                 throw new \Exception('continue');
             }
         }
