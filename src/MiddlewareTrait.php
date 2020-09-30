@@ -43,6 +43,5 @@ trait MiddlewareTrait
             throw new \RuntimeException("Middleware {$name} does not exist");
         }
     }
-
-
+    
 }

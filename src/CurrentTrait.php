@@ -2,7 +2,8 @@
 
 namespace HnrAzevedo\Router;
 
-trait CurrentTrait{
+trait CurrentTrait
+{
     use Helper;
 
     protected array $currentRoute = [];
