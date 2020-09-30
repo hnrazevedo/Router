@@ -45,6 +45,17 @@ trait RunInTrait
         return self::addInRoutes('after', $closure, $excepts);
     }
 
+    protected function executeRouteAction(): bool
+    {
+        if(is_callable($this->current()['action'])){        
+            call_user_func_array($this->current()['action'], $_REQUEST);
+            return true;
+        }
+
+        $this->executeController($this->current()['action']);
+        return true;
+    }
+
     private static function addInRoutes(string $state, $closure, $excepts): RouterInterface
     {
         self::getInstance()->isInPseudGroup();
@@ -100,6 +111,20 @@ trait RunInTrait
 
     private function executeController(string $controllerMeth): void
     {
+        if(count(explode('@',$controllerMeth)) !== 2){
+            throw new \RuntimeException('Misconfigured route action');
+        }
+
+        $controller = (string) explode('@',$controllerMeth)[0];
+        $method = (string) explode('@',$controllerMeth)[1];
+
+        $this->checkControllerMeth($controllerMeth);
+
+        (new $controller())->$method();
+    }
+
+    private function checkControllerMeth(string $controllerMeth): void
+    {
         $routeURI = str_replace(['{:','{','}'],'',urldecode($this->current()['uri']->getPath()));
 
         $controller = (string) explode('@',$controllerMeth)[0];
@@ -112,8 +137,7 @@ trait RunInTrait
         if(!method_exists($controller, $method)){
             throw new \RuntimeException("Method {$method} not found in controller {$controller} in route URI {$routeURI}");
         }
-
-        (new $controller())->$method();
+        
     }
 
 }

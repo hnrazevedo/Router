@@ -44,7 +44,7 @@ trait PrioritizeTrait{
         foreach($routes as $r => $route){
             if(array_key_exists('name',$route)){
                 unset($kRoutes[$r]);
-                $kRoutes[$route['name']] = $route;
+                $kRoutes["'{$route['name']}'"] = $route;
             }
         }
         ksort($kRoutes);

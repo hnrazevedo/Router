@@ -21,12 +21,12 @@ Router::get('/my-account','Controller\\User:my_account')->before(function(){
     echo '1';
 });
 
-Router::get('/my-account/teste/teste','Controller\\User:my_account')->where([
-    'teste'=>'[a-zA-Z]{1,10}',
-    'teste2' => '[0-9]{1}'
-])->name('testes');
+Router::get('/my-account/teste/teste','Controller\\User:my_account')->name('2');
 
-Router::get('/my-account/{:teste}/{teste2}','Controller\\User:my_account')->where([
+Router::get('/my-account/{:teste}/{teste2}',function($teste, $teste2){
+    var_dump($teste);
+    var_dump($teste2);
+})->where([
     'teste'=>'[a-zA-Z]{1,10}',
     'teste2'=>'[a-zA-Z]{1,10}'
 ]);

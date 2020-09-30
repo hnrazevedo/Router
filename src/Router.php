@@ -17,6 +17,7 @@ class Router implements RouterInterface
     private array $currentRoute = [];
     private string $host = '';
     private string $prefix = '';
+    private ?\Exception $error = null;
 
     public static function defineHost(string $host): Router
     {
@@ -94,19 +95,26 @@ class Router implements RouterInterface
             self::getInstance()->load();
         }
 
-        echo '<pre>';        
         self::getInstance()->executeBefore();
-        // ...
-
-        //var_dump(urldecode(self::getInstance()->current()['uri']->getPath()));
-
-        var_dump($_REQUEST);
-
-        //var_dump(self::getInstance()->current());
-
+        
+        try{
+            self::getInstance()->executeRouteAction();
+        }catch(\Exception $er){
+            self::getInstance()->error = $er;
+        }
+        
         self::getInstance()->executeAfter();
         
+        self::getInstance()->checkError();
+
         return self::getInstance();
+    }
+
+    private function checkError(): void
+    {
+        if(isset($this->error)){
+            throw $this->error;
+        }
     }
    
 }
