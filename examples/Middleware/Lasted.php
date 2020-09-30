@@ -1,6 +1,6 @@
 <?php
 
-namespace Example\Middleware;
+namespace HnrAzevedo\Router\Example\Middleware;
 
 use Exception;
 use Psr\Http\Message\ServerRequestInterface;

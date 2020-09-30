@@ -12,7 +12,7 @@ use HnrAzevedo\Router\Router;
 try{
 
     Router::globalMiddlewares([
-        'Lasted'=> \Example\Middleware\Lasted::class
+        'Lasted'=> \HnrAzevedo\Router\Example\Middleware\Lasted::class
     ]);
 
     Router::defineHost('https://localhost');

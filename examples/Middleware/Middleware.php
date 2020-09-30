@@ -1,6 +1,6 @@
 <?php
 
-namespace Example\Middleware;
+namespace HnrAzevedo\Router\Example\Middleware;
 
 use HnrAzevedo\Http\Response;
 use Psr\Http\Message\ServerRequestInterface;

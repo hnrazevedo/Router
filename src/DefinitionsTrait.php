@@ -56,7 +56,14 @@ trait DefinitionsTrait
         self::checkDuplicity($uri,$method);
         
         $routes = self::getInstance()->getRoutes();
-        $routes[] = [
+
+        $index = sha1(date('d/m/Y H:i:s').count($routes));
+
+        while(array_key_exists($index,$routes)){
+            $index = sha1(date('d/m/Y H:i:s').rand(count($routes)));
+        }
+
+        $routes[$index] = [
 			'uri' => new Uri(self::getInstance()->getHost().self::getInstance()->getPrefix().$uri),
 			'action' => $closure,
 			'method' => strtoupper($method),
