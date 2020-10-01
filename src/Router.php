@@ -68,6 +68,8 @@ class Router implements RouterInterface
             self::getInstance()->load();
         }
 
+        self::getInstance()->handleMiddlewares();
+
         self::getInstance()->executeBefore();
         
         try{

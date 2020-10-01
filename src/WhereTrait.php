@@ -11,8 +11,8 @@ trait WhereTrait
     public static function where(array $wheres): Router
     {
         $route = self::getInstance()->inSave();
-        $route['where'] = (is_array($route['where'])) ? array_merge($route['where'],$wheres) : $wheres;
-        self::getInstance()->updateRoute($route,array_key_last(self::getInstance()->getRoutes()));
+        $route['where'] = (is_array($route['where'])) ? array_merge($route['where'], $wheres) : $wheres;
+        self::getInstance()->updateRoute($route, array_key_last(self::getInstance()->getRoutes()));
         return self::getInstance();
     }
 
@@ -22,15 +22,15 @@ trait WhereTrait
     
         $this->parameters = [];
 
-        $uriPath .= (substr($uriPath,strlen($uriPath)-1) !== '/') ? '/' : '';
+        $uriPath .= (substr($uriPath, strlen($uriPath)-1) !== '/') ? '/' : '';
 
-        $routePath = explode('/',urldecode($route['uri']->getPath()));
+        $routePath = explode('/', urldecode($route['uri']->getPath()));
         unset($routePath[0]);
-        $uriPath = explode('/',urldecode($uriPath));
+        $uriPath = explode('/', urldecode($uriPath));
         unset($uriPath[0]);
 
         $corretRoute = true;
-        foreach($routePath as $r => $routeFrag){
+        foreach ($routePath as $r => $routeFrag){
             $where = is_array($route['where']) ? $route['where'] : [];
             $routeFrag = $this->replaceParam($where, $routeFrag, $uriPath[$r]);
 

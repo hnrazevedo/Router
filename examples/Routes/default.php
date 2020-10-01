@@ -33,8 +33,8 @@ Router::get('/5my-account/{:teste}/{teste2}',function($teste, $teste2){
 ]);
 
 
-Router::get('/6my-accounttttt/{param1}/{param2}','HnrAzevedo\Router\Example\Controllers\User@requireLogin');
-//->middleware(['\Example\Middleware\Auth::class','Lasted']);
+Router::get('/6my-accounttttt/{param1}/{param2}','HnrAzevedo\Router\Example\Controllers\User@requireLogin')
+      ->middleware([HnrAzevedo\Router\Example\Middleware\Auth::class,'Lasted']);
 
 Router::get('/7my-account/{:teste}','Controller\\User:my_account')->where([
     'teste'=>'[a-zA-Z]{1,10}'

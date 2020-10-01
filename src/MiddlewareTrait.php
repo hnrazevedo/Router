@@ -2,6 +2,8 @@
 
 namespace HnrAzevedo\Router;
 
+use HnrAzevedo\Http\Factory;
+use HnrAzevedo\Http\ServerRequest;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -10,7 +12,8 @@ trait MiddlewareTrait
 {
     use Helper;
 
-    protected static array $globalMiddlewares = [];
+    protected array $globalMiddlewares = [];
+    protected ServerRequest $serverRequest;
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
@@ -24,8 +27,13 @@ trait MiddlewareTrait
                 throw new \RuntimeException("Middleware class {$middleware} not exists");
             }
         }
-        self::$globalMiddlewares = $middlewares;
+        self::getInstance()->setGlobalMiddlewares($middlewares);
         return self::getInstance();
+    }
+
+    protected function setGlobalMiddlewares(array $middlewares): void
+    {
+        $this->globalMiddlewares = $middlewares;
     }
 
     public static function middleware($middlewares): RouterInterface
@@ -41,6 +49,18 @@ trait MiddlewareTrait
     {
         if(!class_exists($name) && !array_key_exists($name,self::$globalMiddlewares)){
             throw new \RuntimeException("Middleware {$name} does not exist");
+        }
+    }
+
+    protected function handleMiddlewares(): void
+    {
+        $factory = new Factory();
+
+        $this->serverRequest = (!isset($this->serverRequest)) ? $factory->createServerRequest($_SERVER['REQUEST_METHOD'], $this->current()['uri'],['route' => $this->current()]) : $this->serverRequest;
+        foreach ($this->current()['middlewares'] as $middleware){
+            $middleware = (class_exists($middleware)) ? new $middleware() : new $this->globalMiddlewares[$middleware]();
+            $middleware->proccess($this->serverRequest, new class );
+            var_dump($middleware);
         }
     }
     
