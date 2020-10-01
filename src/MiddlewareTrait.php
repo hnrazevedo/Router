@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace HnrAzevedo\Router;
 
 use HnrAzevedo\Http\Factory;

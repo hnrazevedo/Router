@@ -7,9 +7,16 @@ echo '<pre>';
 require __DIR__.'/../vendor/autoload.php';
 require __DIR__.'/Routes/default.php';
 
+use HnrAzevedo\Http\Factory;
+
 use HnrAzevedo\Router\Router;
 
 try{
+
+
+
+
+
 
     Router::globalMiddlewares([
         'Lasted'=> \HnrAzevedo\Router\Example\Middleware\Lasted::class
@@ -19,11 +26,19 @@ try{
     
     Router::run();
 
-    /* Return current route */
+    /**
+     * @return array
+     */ 
     $currentRoute = Router::current();
-    /* Return current name route*/
+
+    /**
+     * @return string
+     */ 
     $name = Router::currentName();
-    /* Return current action route */
+
+    /**
+     * @return Closure|string
+     */ 
     $action = Router::currentAction();
 
 }catch(Exception $er){

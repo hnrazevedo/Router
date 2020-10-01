@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace HnrAzevedo\Router;
 
 use HnrAzevedo\Http\Uri;
 
-class Router implements RouterInterface
+final class Router implements RouterInterface
 {
     use DefinitionsTrait, 
         RunInTrait, 
