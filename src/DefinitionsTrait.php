@@ -67,7 +67,7 @@ trait DefinitionsTrait
 			'uri' => new Uri(self::getInstance()->getHost().self::getInstance()->getPrefix().$uri),
 			'action' => $closure,
 			'method' => strtoupper($method),
-            'middlewares' => null,
+            'middlewares' => [],
             'where' => null,
             'before' => [],
             'after' => [],

@@ -14,13 +14,12 @@ class Lasted extends Middleware{
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-
-        echo '11111111111';
+        var_dump('Lasted');
         if(!isset($this->error)){
             throw new Exception("Access not belonged: {$this->error}");
         }
 
-        return parent::process($request, $handler);
+        return $handler->handle($request, $handler);
     }
 
 }

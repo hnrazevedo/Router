@@ -13,11 +13,12 @@ class Auth extends Middleware{
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
+        var_dump('Auth');
         if(!array_key_exists('user',$_SESSION)){
             $this->error = 'The user must be logged in to the system';
         }
 
-        return parent::process($request, $handler);
+        return $handler->handle($request, $handler);
     }
 
 }
