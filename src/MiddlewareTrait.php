@@ -50,7 +50,7 @@ trait MiddlewareTrait
                 continue;
             }
 
-            $route['middlewares'] = array_merge($route['middlewares'], $wheres);
+            $route['middlewares'] = array_merge($route['middlewares'], $middlewares);
             self::getInstance()->updateRoute($route, array_key_last(self::getInstance()->getRoutes()));
         }
         return self::getInstance();
