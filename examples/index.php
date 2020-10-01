@@ -2,5 +2,5 @@
 
 echo '<pre>';
 
-//require "DefaultUseExample.php";
-require "MiddlewareExample.php";
+require "DefaultUseExample.php";
+//require "MiddlewareExample.php";

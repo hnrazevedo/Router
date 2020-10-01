@@ -317,7 +317,7 @@ Router::load('index');
 
 /* After loading the route it is necessary to fire it */
 /* NOTE: After loading the route, if any dispatch function name is passed, it will be ignored. */
-Router::load('index')->dispatch();
+Router::load('index')->run();
 
 Router::load();
 ...
@@ -331,54 +331,11 @@ Router::dispatch();
 /* NOTE: in case of error an exception is thrown */
 
 /* Trigger route via URL accessed */
-Router::dispatch();
+Router::run();
 /* Trigger route by the given name */
-Router::dispatch('index');
+Router::run('index');
 ```
 
-## Controller
-```php
-namespace Example\Controllers;
-
-class User{
-
-    public function my_account(/* form inputs */): void
-    {
-        //
-    }
-
-}
-```
-
-### Router Controller
-
-#### If you want to validate your Ajax form or request data automatically or the need to do it on your controller, extend your HnrAzevedo\Router\Controller controller
-Caso você queira validar seus dados de formulários ou de requisições Ajax automáticamente nem a necessidade de faze-lo em seu controlador, extenda seu controlador de HnrAzevedo\Router\Controller
-
-```php
-namespace Example\Controllers;
-
-use HnrAzevedo\Router\Controller;
-
-class User extends Controller{
-
-    public function my_account($another): void
-    {
-        //
-    }
-
-}
-```
-#### For more information on how to validate your data automatically see https://github.com/hnrazevedo/Validator
-Para mais informações de como validar seus dados automáticamente consulte https://github.com/hnrazevedo/Validator
-
-### NOTE: To validate your data automatically, it is necessary that the route is defined as follows {controller}: method (static "method" syntax), and pass the desired function via dataForm with the name "role" in your data
-Para validar seus dados automaticamente, é necessário que a rota seja definida da seguinte forma {controller}:method (sintax "method" estático), e passar a função deseja via dataForm com o nome "role" em seus dados
-
-## Route Filter
-
-#### To create filters for your routes, see https://github.com/hnrazevedo/Filter.
-Para criar filtros para suas rotas, consulte https://github.com/hnrazevedo/Filter.
 
 
 ## Support
