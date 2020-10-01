@@ -13,8 +13,23 @@ trait WhereTrait
     public static function where(array $wheres): Router
     {
         $route = self::getInstance()->inSave();
-        $route['where'] = (is_array($route['where'])) ? array_merge($route['where'], $wheres) : $wheres;
+        $route['where'] = array_merge($route['where'], $wheres);
         self::getInstance()->updateRoute($route, array_key_last(self::getInstance()->getRoutes()));
+        return self::getInstance();
+    }
+
+    public static function groupWhere(array $wheres, array $excepts): Router
+    {
+        $group = self::getInstance()->inSave()['group'];
+        foreach(self::getInstance()->getRoutes() as $r => $route){
+            if($route['group'] !== $group || in_array($route['name'], $excepts)){
+                continue;
+            }
+
+            $route['where'] = array_merge($route['where'], $wheres);
+            self::getInstance()->updateRoute($route, array_key_last(self::getInstance()->getRoutes()));
+        }
+        
         return self::getInstance();
     }
 

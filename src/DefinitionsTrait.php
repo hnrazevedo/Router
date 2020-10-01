@@ -70,11 +70,12 @@ trait DefinitionsTrait
 			'action' => $closure,
 			'method' => strtoupper($method),
             'middlewares' => [],
-            'where' => null,
+            'where' => [],
             'before' => [],
             'after' => [],
             'group' => self::getInstance()->getGroup(),
-            'response' => null
+            'response' => null,
+            'name' => $index
         ];
 
         self::getInstance()->setRoutes($routes);

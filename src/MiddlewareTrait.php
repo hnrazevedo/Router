@@ -12,7 +12,7 @@ use Psr\Http\Message\ResponseInterface;
 
 trait MiddlewareTrait
 {
-    use Helper, CurrentTrait;
+    use Helper, CurrentTrait, RunInTrait;
 
     protected array $globalMiddlewares = [];
     protected ServerRequest $serverRequest;
@@ -34,9 +34,19 @@ trait MiddlewareTrait
         $this->globalMiddlewares = $middlewares;
     }
 
-    public static function middleware($middlewares): RouterInterface
+    public static function middleware(array $middlewares): RouterInterface
+    {
+        $route = self::getInstance()->inSave();
+        $route['middlewares'] = (is_array($route['middlewares'])) ? array_merge($route['middlewares'],$middlewares) : $middlewares;
+        self::getInstance()->updateRoute($route,array_key_last(self::getInstance()->getRoutes()));
+        return self::getInstance();
+    }
+
+    public static function groupMiddlewares(array $middlewares, array $excepts): RouterInterface
     {
         $middlewares = (is_array($middlewares)) ? $middlewares : [ $middlewares ];
+
+
         $route = self::getInstance()->inSave();
         $route['middlewares'] = (is_array($route['middlewares'])) ? array_merge($route['middlewares'],$middlewares) : $middlewares;
         self::getInstance()->updateRoute($route,array_key_last(self::getInstance()->getRoutes()));
@@ -71,7 +81,20 @@ trait MiddlewareTrait
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        return $this->next($handler)->handle($request);
+        if(!$this->getInstance()->loaded){
+            $this->getInstance()->load();
+        }
+
+        $route = $this->getInstance()->current();
+        if(!empty($route)){
+            $route['action'] = function(){
+                $this->getInstance()->executeBefore();
+                $this->getInstance()->executeRouteAction($this->getInstance()->current()['action']);
+                $this->getInstance()->executeAfter();
+            };
+        }
+
+        return $this->next($handler)->handle($request->withAttribute('route',$route));
     }
 
     private function next(RequestHandlerInterface $defaultHandler): RequestHandlerInterface

@@ -17,23 +17,31 @@ final class Router implements RouterInterface
         PrioritizeTrait,
         CurrentTrait;
 
+    private array $groupsName = [];
     private ?\Exception $error = null;
 
     public static function name(string $name): Router
     {
-        self::getInstance()->isInNameGroup();
         self::getInstance()->existRouteName($name);
         $route = self::getInstance()->inSave();
         $route['name'] = $name;
         self::getInstance()->routesName[$name] = $name;
-        self::getInstance()->unsetRoute(array_key_last(self::getInstance()->getRoutes()))->updateRoute($route,$name);
+        self::getInstance()->unsetRoute(array_key_last(self::getInstance()->getRoutes()))->updateRoute($route, $name);
         return self::getInstance();
     }
 
     public static function group(string $prefix, \Closure $closure): Router
     {
+        $id = sha1(date('d/m/Y h:m:i'));
+        while(array_key_exists($id, self::getInstance()->groupsName)){
+            $id = sha1(date('d/m/Y h:m:i').$id);
+        }
+
+        self::getInstance()->groupsName[$id] = $id;
+        
         self::getInstance()->setPrefix($prefix);
-        self::getInstance()->setGroup(sha1(date('d/m/Y h:m:i')));
+        
+        self::getInstance()->setGroup($id);
 
         $closure();
 
@@ -61,7 +69,10 @@ final class Router implements RouterInterface
         }
         
         self::getInstance()->currentRoute = [];
-        throw new \Exception('Page not found', 404);
+
+        self::getInstance()->error = new \Exception('Not found', 404);
+
+        return self::getInstance();
     }
 
     public static function run(): RouterInterface
@@ -70,12 +81,14 @@ final class Router implements RouterInterface
             self::getInstance()->load();
         }
 
+        self::getInstance()->checkError();
+
         self::getInstance()->handleMiddlewares();
 
         self::getInstance()->executeBefore();
         
         try{
-            self::getInstance()->executeRouteAction();
+            self::getInstance()->executeRouteAction(self::getInstance()->current()['action']);
         }catch(\Exception $er){
             self::getInstance()->error = $er;
         }

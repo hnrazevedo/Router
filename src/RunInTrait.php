@@ -79,14 +79,14 @@ trait RunInTrait
         return self::addInRoutes('after', $closure, $excepts);
     }
 
-    protected function executeRouteAction(): bool
+    protected function executeRouteAction($action): bool
     {
-        if(is_callable($this->current()['action'])){        
-            call_user_func_array($this->current()['action'], $_REQUEST);
+        if(is_callable($action)){        
+            call_user_func_array($action, $_REQUEST);
             return true;
         }
 
-        $this->executeController($this->current()['action']);
+        $this->executeController($action);
         return true;
     }
 
@@ -124,11 +124,11 @@ trait RunInTrait
 
     protected function executeAfter(): void
     {
+        $this->executeState('after');
+
         if(!in_array($this->currentName(), (array) $this->getState('after', true))){
             ($this->getState('after', false))();
         }
-
-        $this->executeState('after');
     }
 
     private function executeState(string $stage): void

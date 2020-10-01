@@ -68,7 +68,7 @@ interface RouterInterface extends MiddlewareInterface
     /**
      * @return self
      */
-    public static function middleware($middlewares): RouterInterface;
+    public static function middleware(array $middlewares): RouterInterface;
 
     /**
      * @return self
@@ -109,6 +109,16 @@ interface RouterInterface extends MiddlewareInterface
      * @return self
      */
     public static function group(string $prefix, Closure $closure): RouterInterface;
+
+    /**
+     * @return self
+     */
+    public static function groupWhere(array $where, array $excepts): RouterInterface;
+
+    /**
+     * @return self
+     */
+    public static function groupMiddlewares(array $middlewares, array $excepts): RouterInterface;
 
     /**
      * @return self
