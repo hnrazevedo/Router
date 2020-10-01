@@ -11,11 +11,17 @@ trait Helper
     protected string $host = '';
     private string $prefix = '';
     protected ?string $group = null;
+    protected bool $loaded = false;
 
     public static function getInstance(): RouterInterface
     {
         self::$instance = (!isset(self::$instance)) ? new Router() : self::$instance;
         return self::$instance;
+    }
+
+    protected function loaded(): bool
+    {
+        return $this->loaded;
     }
 
     protected static function updateRoute(array $route, $key): RouterInterface

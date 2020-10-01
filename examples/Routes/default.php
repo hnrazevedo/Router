@@ -139,12 +139,17 @@ Router::group('/admin', function(){
     ]);
 });
 
-
 Router::group('/admin2', function(){
     Router::get('/users/{teste}', function($teste){
         echo $teste;
     })->name('teste');
-})->groupWhere([
+})
+/**
+ * Defining regular expression testicles for group members
+ * @param array $expressions
+ * @param array $excepts
+ */
+->groupWhere([
     'teste'=>'[a-zA-Z]*'
 ],[]);
 

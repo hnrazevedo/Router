@@ -44,12 +44,15 @@ trait MiddlewareTrait
 
     public static function groupMiddlewares(array $middlewares, array $excepts): RouterInterface
     {
-        $middlewares = (is_array($middlewares)) ? $middlewares : [ $middlewares ];
+        $group = self::getInstance()->inSave()['group'];
+        foreach(self::getInstance()->getRoutes() as $r => $route){
+            if($route['group'] !== $group || in_array($route['name'], $excepts)){
+                continue;
+            }
 
-
-        $route = self::getInstance()->inSave();
-        $route['middlewares'] = (is_array($route['middlewares'])) ? array_merge($route['middlewares'],$middlewares) : $middlewares;
-        self::getInstance()->updateRoute($route,array_key_last(self::getInstance()->getRoutes()));
+            $route['middlewares'] = array_merge($route['middlewares'], $wheres);
+            self::getInstance()->updateRoute($route, array_key_last(self::getInstance()->getRoutes()));
+        }
         return self::getInstance();
     }
 
@@ -81,7 +84,7 @@ trait MiddlewareTrait
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        if(!$this->getInstance()->loaded){
+        if(!$this->getInstance()->loaded()){
             $this->getInstance()->load();
         }
 

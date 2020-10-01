@@ -8,8 +8,6 @@ trait OwnerTrait
 {
     use Helper, CheckTrait;
 
-    protected bool $loaded = false;
-
     public function loadIn(string $name)
     {
         $this->hasRouteName($name);
@@ -21,7 +19,7 @@ trait OwnerTrait
     {
         $this->hasRouteName($name);
 
-        if(!$this->loaded){
+        if(!$this->loaded()){
             $this->loadIn($name);
         }
         
