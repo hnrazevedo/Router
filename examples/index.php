@@ -9,8 +9,6 @@ require __DIR__.'/Routes/default.php';
 
 use HnrAzevedo\Router\Router;
 
-/* NOTE: in case of error an exception is thrown */
-
 try{
 
     Router::globalMiddlewares([
@@ -30,6 +28,6 @@ try{
 
 }catch(Exception $er){
 
-    die("Code Error: {$er->getCode()}, Line: {$er->getLine()}, File: {$er->getFile()}, Message: {$er->getMessage()}.");
+    die("Code Error: {$er->getCode()}<br>Line: {$er->getLine()}<br>File: {$er->getFile()}<br>Message: {$er->getMessage()}.");
 
 }

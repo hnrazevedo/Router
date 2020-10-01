@@ -4,14 +4,13 @@ namespace HnrAzevedo\Router;
 
 use HnrAzevedo\Http\Factory;
 use HnrAzevedo\Http\ServerRequest;
-use HnrAzevedo\Http\Response;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 trait MiddlewareTrait
 {
-    use Helper;
+    use Helper, CurrentTrait;
 
     protected array $globalMiddlewares = [];
     protected ServerRequest $serverRequest;
