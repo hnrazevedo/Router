@@ -10,16 +10,15 @@
     ],
     "require": {
         "php": ">=7.4",
-        "hnrazevedo/http": "dev-master",
-        "hnrazevedo/validator": "dev-master"
+        "hnrazevedo/http": "dev-master"
     },
     "minimum-stability":"dev",
     "license":"MIT",
     "autoload": {
         "psr-4": {
             "HnrAzevedo\\Router\\":"src/",
-            "Example\\Controllers\\":"examples/Controllers/",
-            "Example\\Middleware\\":"examples/Middleware/"
+            "HnrAzevedo\\Router\\Example\\Controllers\\":"examples/Controllers/",
+            "HnrAzevedo\\Router\\Example\\Middleware\\":"examples/Middleware/"
         }
     }
 }

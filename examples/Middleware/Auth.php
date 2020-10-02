@@ -1,11 +1,14 @@
 <?php
 
-namespace Example\Middleware;
+namespace HnrAzevedo\Router\Example\Middleware;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
+/** 
+  * @property string $error
+  */ 
 class Auth extends Middleware{
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
@@ -14,7 +17,7 @@ class Auth extends Middleware{
             $this->error = 'The user must be logged in to the system';
         }
 
-        return parent::process($request, $handler);
+        return $handler->handle($request);
     }
 
 }

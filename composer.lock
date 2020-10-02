@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a6c59322d24d158cea4d891f00ddc3cd",
+    "content-hash": "212254274e7c013cc848165bd5e07813",
     "packages": [
         {
             "name": "hnrazevedo/http",
@@ -45,44 +45,6 @@
                 }
             ],
             "time": "2020-09-25T01:10:52+00:00"
-        },
-        {
-            "name": "hnrazevedo/validator",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/hnrazevedo/Validator.git",
-                "reference": "c44634ec5fa5b7d2723898ad8a29817d8773dd48"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/hnrazevedo/Validator/zipball/c44634ec5fa5b7d2723898ad8a29817d8773dd48",
-                "reference": "c44634ec5fa5b7d2723898ad8a29817d8773dd48",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.4"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "HnrAzevedo\\Validator\\": "src/",
-                    "Example\\Rules\\": "examples/Rules/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Henri Mateus Santos de Azevedo",
-                    "email": "hnr.azevedo@gmail.com",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Validator is a simple data validation component.",
-            "time": "2020-09-21T12:09:51+00:00"
         },
         {
             "name": "psr/http-factory",
@@ -297,8 +259,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "hnrazevedo/http": 20,
-        "hnrazevedo/validator": 20
+        "hnrazevedo/http": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

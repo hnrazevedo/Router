@@ -1,181 +1,85 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace HnrAzevedo\Router;
 
-
-use Exception;
-
-trait Helper{
-    use CheckTrait, ControllerTrait;
-    
-    private $currentRoute = null;
+trait Helper
+{
+    protected array $routes = [];
+    protected static Router $instance;
+    protected string $host = '';
+    private string $prefix = '';
+    protected ?string $group = null;
     protected bool $loaded = false;
-    protected $lastReturn = null;
-    protected ?string $prefix = null;
-    protected array $routers = [];
 
-    public static function current(): ?array
+    public static function getInstance(): RouterInterface
     {
-        return self::getInstance()->currentRoute;
+        self::$instance = (!isset(self::$instance)) ? new Router() : self::$instance;
+        return self::$instance;
     }
 
-    public static function currentRouteName(): ?string
+    protected function loaded(): bool
     {
-        return self::getInstance()->currentRoute['name'];
+        return $this->loaded;
     }
 
-    public static function currentRouteAction()
+    protected static function updateRoute(array $route, $key): RouterInterface
     {
-        return self::getInstance()->currentRoute['role'];
-    }
-    
-    protected function getProtocol(): string
-    {
-        $protocol = ((isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest')) ? 'ajax' : 'get';
-        $protocol = (array_key_existS('HTTP_REQUESTED_METHOD',$_SERVER)) ? strtolower($_SERVER['HTTP_REQUESTED_METHOD']) : $protocol;
-            
-        return $protocol;
+        $routeG = self::getInstance()->getRoutes();
+        $routeG[$key] = $route;
+        self::getInstance()->setRoutes($routeG);
+        return self::getInstance();
     }
 
-    protected function getData(): ?array
+    public static function defineHost(string $host): Router
     {
-        return [
-            'POST' => $_POST,
-            'GET' => $_GET,
-            'FILES' => $_FILES,
-            'PROTOCOL' => $this->getProtocol()
-        ];
+        self::getInstance()->setHost($host);
+        return self::getInstance();
     }
 
-    protected function ControllerForm($controller, string $method, array $values)
+    protected function inSave(): array
     {
-		$this->checkRole();
-        $method = ($method !== 'method') ? $method : $this->getData()['POST']['role'];
-        $data = (array_key_exists('data',$values)) ? json_decode($values['data'], true) : [];
-
-        call_user_func_array([$controller,$method],  $data);
+        return end($this->routes);
     }
 
-    protected function Controller(string $controll)
+    protected function setHost(string $host): void
     {
-        $data = $this->getData();
-
-        foreach ($data['GET'] as $name => $value) {
-            $controll = str_replace('{'.$name.'}',$value,$controll);
-        }
-
-        $this->checkControllSettable($controll)->checkControllExist($controll)->checkControllMethod($controll);
-
-        $controller = ucfirst(explode(':',$controll)[0]);
-        $controller = new $controller();
-        $method = explode(':',$controll)[1];
-
-        if( ($this->getProtocol() == 'form') ){
-            $this->ControllerForm($controller, $method, $data['POST']);
-        }else {
-            $data = (array_key_exists('data',$data['POST'])) ? json_decode($data['POST']['data'], true) : $data['GET'];
-            call_user_func_array([$controller,$method],  $data);
-        }
-
-        return $this;
-    }    
-
-    protected function explodeRoutes(bool $bar, string $url ,bool $bar_, string $url_): array
-    {   
-        $url = $bar ? substr($url, 0, -1) : $url ;
-        $url = explode('/',$url);
-
-        $url_ = $bar_ ? substr($url_, 0, -1) : $url_ ;
-        $url_ = explode('/',$url_);
-
-        foreach($url as $ur => $u){
-            if(substr($u,0,2) === '{?'){
-                if(!array_key_exists($ur,$url_)){
-                    $url_[$ur] = '';
-                };
-            }
-        }
-
-        return ['routeLoop' => $url, 'routeRequest' => $url_];
+        $this->host = $host;
     }
 
-    protected function run(array $route): bool
+    protected function getHost(): string
     {
-        $this->callOnRoute($route,'beforeAll')->callOnRoute($route,'before');
-
-        if(is_string($route['role'])){
-            $this->Controller($route['role'])->callOnRoute($route,'after')->callOnRoute($route,'afterAll');
-            return true;
-        }
-
-        call_user_func_array($route['role'],[$this->getData()['GET']]);
-
-        $this->callOnRoute($route,'after')->callOnRoute($route,'afterAll');
-        return true;
+        return $this->host;
     }
 
-    protected function callOnRoute(array $route,string $state)
+    protected function getRoutes(): array
     {
-        if($route[$state] !== null){
-            if(is_string($route[$state])){
-                $this->Controller($route[$state]);
-            }else{
-                $route[$state]();
-            }
-        }
-        return $this;
+        return $this->routes;
     }
 
-    protected function loadByArray()
+    protected function setRoutes(array $routes): void
     {
-        $currentProtocol = $this->getProtocol();
-
-        foreach(array_reverse($this->routers) as $r => $route){
-
-            $this->currentRoute = $route;
-            $this->currentRoute['name'] = $r;
-
-            if(!$this->checkProtocol($route['protocol'], $currentProtocol)){
-                continue;
-            }
-
-
-            $this->hasProtocol($route, $currentProtocol);
-
-            $_SERVER['REQUEST_URI'] = (array_key_exists('REQUEST_URI', $_SERVER)) ? $_SERVER['REQUEST_URI'] : '';
-
-            $routs = $this->explodeRoutes(
-                (substr($route['url'],strlen($route['url'])-1,1) === '/') , $route['url'],
-                (substr($_SERVER['REQUEST_URI'],strlen($_SERVER['REQUEST_URI'])-1,1) === '/') , $_SERVER['REQUEST_URI']
-            );
-
-            if(!$this->checkToHiking($route, $routs['routeRequest'], $routs['routeLoop'])){
-                continue;
-            }         
-            
-            $this->loaded = true;
-            return $this;
-        }
-        
-        $this->currentRoute = null;
-	    throw new Exception('Page not found.',404);
+        $this->routes =  $routes;
     }
 
-    protected function loadByName(string $routName)
+    protected function getGroup(): ?string
     {
-        $currentProtocol = $this->getProtocol();
-        $this->checkName($routName);
-        $route = $this->routers[$routName];
-
-        if(!$this->checkProtocol($route['protocol'], $currentProtocol)){
-            throw new Exception('Page not found.',404);
-        }
-
-        $this->currentRoute = $route;
-        $this->currentRoute['name'] = $routName;
-        $this->loaded = true;
-
-        return $this;            
+        return $this->group;
     }
 
+    protected function setGroup(?string $group): void
+    {
+        $this->group = $group;
+    }
+
+    protected function getPrefix(): ?string
+    {
+        return $this->prefix;
+    }
+
+    protected function setPrefix(string $prefix): void
+    {
+        $this->prefix = $prefix;
+    }
 }

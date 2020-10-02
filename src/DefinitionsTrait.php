@@ -1,66 +1,95 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace HnrAzevedo\Router;
 
-trait DefinitionsTrait{
-    private static Router $instance;
+use HnrAzevedo\Http\Uri;
 
-    public static function match(string $protocols, string $uri, $walking): Router
+trait DefinitionsTrait
+{
+    use Helper;
+    
+    public static function get(string $uri, $closure): RouterInterface
     {
-        foreach(explode('|',$protocols) as $protocol){
-            self::getInstance()->add($uri, $walking, $protocol);
+        return self::set('get',$uri,$closure);
+    }
+
+    public static function post(string $uri, $closure): RouterInterface
+    {
+        return self::set('post',$uri,$closure);
+    }
+
+    public static function ajax(string $uri, $closure): RouterInterface
+    {
+        return self::set('ajax',$uri,$closure);
+    }
+
+    public static function delete(string $uri, $closure): RouterInterface
+    {
+        return self::set('delete',$uri,$closure);
+    }
+
+    public static function put(string $uri, $closure): RouterInterface
+    {
+        return self::set('put',$uri,$closure);
+    }
+
+    public static function patch(string $uri, $closure): RouterInterface
+    {
+        return self::set('patch',$uri,$closure);
+    }
+
+    public static function match(string $method, string $uri, $closure): RouterInterface
+    {
+        self::set($method, $uri, $closure);
+        return self::getInstance();
+    }
+
+    public static function any(string $uri, $closure): RouterInterface
+    {
+        return self::set('*',$uri,$closure);
+    }
+
+    private static function set(string $method, string $uri, $closure): RouterInterface
+    {   
+        $uri = (substr($uri,0,1) !=='/' and strlen($uri) > 0) ? "/{$uri}" : $uri;
+        
+        self::checkDuplicity($uri,$method);
+        
+        $routes = self::getInstance()->getRoutes();
+
+        $index = sha1(date('d/m/Y H:i:s').count($routes));
+
+        while(array_key_exists($index,$routes)){
+            $index = sha1(date('d/m/Y H:i:s').rand(count($routes)));
         }
-        return self::$instance;
+
+        $routes[$index] = [
+			'uri' => new Uri(self::getInstance()->getHost().self::getInstance()->getPrefix().$uri),
+			'action' => $closure,
+			'method' => strtoupper($method),
+            'middlewares' => [],
+            'where' => [],
+            'before' => [],
+            'after' => [],
+            'group' => self::getInstance()->getGroup(),
+            'response' => null,
+            'name' => $index
+        ];
+
+        self::getInstance()->setRoutes($routes);
+        	
+        return self::getInstance();
     }
 
-    public static function any(string $uri, $walking): Router
+    private static function checkDuplicity(string $uri, string $method): void
     {
-        return self::getInstance()->add($uri, $walking, 'get')->add($uri, $walking, 'post')->add($uri, $walking, 'form')->add($uri, $walking, 'ajax');
-    }
-
-    public static function get(string $uri, $walking): Router
-    {
-        return self::getInstance()->add($uri, $walking, 'get');
-    }
-
-    public static function post(string $uri, $walking): Router
-    {
-        return self::getInstance()->add($uri, $walking, 'post');
-    }
-
-    public static function ajax(string $uri, $walking): Router
-    {
-        return self::getInstance()->add($uri, $walking, 'ajax');
-    }
-
-    public static function put(string $uri, $walking): Router
-    {
-        return self::getInstance()->add($uri, $walking, 'put');
-    }
-
-    public static function patch(string $uri, $walking): Router
-    {
-        return self::getInstance()->add($uri, $walking, 'patch');
-    }
-
-    public static function options(string $uri, $walking): Router
-    {
-        return self::getInstance()->add($uri, $walking, 'options');
-    }
-
-    public static function delete(string $uri, $walking): Router
-    {
-        return self::getInstance()->add($uri, $walking, 'delete');
-    }
-
-    public static function form(string $uri, $walking): Router
-    {
-        return self::getInstance()->add($uri, $walking, 'form');
-    }
-
-    public static function add(string $uri, $walking, string $protocol): Router
-    {
-        return self::getInstance()->set($uri, $walking, $protocol);
+        foreach(self::getInstance()->getRoutes() as $route){
+    		if( md5($route['uri'].$route['method']) === md5($uri.$method) ){
+                throw new \RuntimeException("There is already a route with the URI {$uri} and with the {$method} METHOD configured.");
+            }
+        }
     }
 
 }
