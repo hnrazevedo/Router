@@ -4,29 +4,29 @@
 [![Latest Version](https://img.shields.io/github/v/tag/hnrazevedo/Router?label=version&style=flat-square)](https://github.com/hnrazevedo/Router/releases)
 [![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/quality/g/hnrazevedo/Router?style=flat-square)](https://scrutinizer-ci.com/g/hnrazevedo/Router/?branch=master)
 [![Build Status](https://img.shields.io/scrutinizer/build/g/hnrazevedo/Router?style=flat-square)](https://scrutinizer-ci.com/g/hnrazevedo/Router/build-status/master)
-[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 [![PHP from Packagist](https://img.shields.io/packagist/php-v/hnrazevedo/Router?style=flat-square)](https://packagist.org/packages/hnrazevedo/Router)
 [![Total Downloads](https://img.shields.io/packagist/dt/hnrazevedo/Router?style=flat-square)](https://packagist.org/packages/hnrazevedo/Router)
 
-##### Router is a simple friendly URL abstractor. Its author is not a professional in the development area, just someone in the Technology area who is improving his knowledge.
+##### The Router is a simple friendly URL abstractor. It can be used in an easy and practical way, either individually statically, or together as middleware. Its author is not a professional in the development area, just someone in the area of ​​Technology who is improving his knowledge.
 
-O Router é um simples abstrator de URL amigável. Seu autor não é profissional da área de desenvolvimento, apenas alguem da área de Tecnologia que está aperfeiçoando seus conhecimentos.
+O Router é um simples abstrator de URL amigável. Ele pode ser utilizada de maneira fácil e pratica, tanto individualmente de forma estática, quanto em conjunto como middleware. Seu autor não é um profissional da área de desenvolvimento, apenas alguem da área de Tecnologia que está aperfeiçoando seus conhecimentos.
 
-### Highlights
+## Highlights
 
 - Easy to set up (Fácil de configurar)
-- Simple controller interface (Interface de controlador simples)
+- Follows standard PSR-15 (Segue padrão o PSR-15)
 - Composer ready (Pronto para o composer)
 
 ## Installation
 
-Router is available via Composer:
+Router is available via composer.json:
 
 ```bash 
-"hnrazevedo/router": "^1.8"
+"hnrazevedo/router": "^2.0"
 ```
 
-or run
+or in at terminal
 
 ```bash
 composer require hnrazevedo/router
@@ -66,23 +66,25 @@ location / {
 
 ## Documentation
 
-##### For details on how to use the Router, see the sample folder with details in the component directory
+#### For more details on the use and configuration of the Router, see the example folder with details on component targeting
 
-Para mais detalhes sobre como usar o Router, veja a pasta de exemplos com detalhes no diretório do componente
+Para mais detalhes sobre a utilização e configuração do Router, veja a pasta de exemplos com detalhes no diretório do componente
 
 ### Errors
 
-#### In cases of configuration errors or nonexistent pages, the Router will throw an Exception.
-Em casos de erros de configuração ou páginas inexistentes, o Router disparara uma Exception.
+#### In the static use of the Router, if an inexistent page error is returned, an Exception will be thrown
+#### When used as middleware, a 404 response is returned
 
-### Router methods
+Na utilização estática do Router, caso retorne erro de página inexistente, será lançada uma Exception
+Na utilização como middleware, é retornado uma resposta 404
+
+### Access methods
 
 #### Available protocols
 
 - get: URL access or get method
 - post: post method
 - ajax: called fetch or XMLHttpRequest
-- form: called fetch or XMLHttpRequest (with Requested-Method defined in the header as form)
 
 #### REST request
 - post: REST request
@@ -91,44 +93,50 @@ Em casos de erros de configuração ou páginas inexistentes, o Router disparara
 - delete: REST requests
 - patch: REST requests
 
-## Methods
+
+### Router methods
 
 ### get
 ```php
-Router::get('/','Application:index');
+Router::get('/','App\Controller\Application@method');
 ```
 
 ### post
 ```php
-Router::post('/controller/method','Namespaces\\Controller:method');
+Router::post('/controller/method','App\Controller\Application@method');
 ```
 
 ### ajax
 ```php
-Router::ajax('/userList/','Controller\\User:listme');
+Router::ajax('/userList','foo\bar\User@listme');
 ```
 
 ### middleware
-#### Defines a filter, or several, for the route
 ```php
-Router::get('/logout','Controller\\User:logout')->middleware('Filter\\User:user_in');
 
-Router::get('/logout','Controller\\User:logout')->middleware(['Filter\\User:user_in',...]);
+Router::globalMiddlewares([
+    'Authorization'=> \App\Middlewares\Authorization::class
+])
+
+Router::get('/foo','foo\bar\User@method')->middleware([
+    \App\Middlewares\Authentication::class,
+    'Authorization'
+]);
 ```
 
 ### name
 #### Defines a name for the route, if you want to call dynamically by name
 ```php
-Router::get('/','Controller\\Application:index')->name('index');
+Router::get('/','foo@bar')->name('index');
 ```
 
 ### before
 #### Runs before starting the work of the accessed route
 ```php
-Router::get('/user/{?id}','Namespaces\\Controller:method')
-      ->before('Namespaces\\Controller:method');
+Router::get('/foo/bar','foo@bar')
+      ->before('foo@beforeMethod');
 
-Router::get('/user/{?id}','Namespaces\\Controller:method')
+Router::get('/foo/bar','foo@bar')
       ->before(function(){
           //
       });
@@ -137,10 +145,10 @@ Router::get('/user/{?id}','Namespaces\\Controller:method')
 ### after 
 #### Executes after completing the work of the accessed route
 ```php
-Router::get('/user/{?id}','Namespaces\\Controller:method')
-      ->after('Namespaces\\Controller:method');
+Router::get('/bar/foo','bar@foo')
+      ->after('bar@afterMethod');
 
-Router::get('/user/{?id}','Namespaces\\Controller:method')
+Router::get('/bar/foo','bar@foo')
       ->after(function(){
           //
       });
@@ -150,42 +158,82 @@ Router::get('/user/{?id}','Namespaces\\Controller:method')
 #### Runs before work on any route
 #### NOTE: execute the beforeAll method before the before method
 ```php
-/* Callback, optional except routes (name) */
-Router::beforeAll('Namespaces\\Controller:method');
-Router::beforeAll('Namespaces\\Controller:method','Except_route');
-Router::beforeAll('Namespaces\\Controller:method',['Except_route','Outer_route']);
+/**
+ * @param \Closure|string $action
+ * @param array $excepts
+ */
+Router::beforeAll('foo@bar',[]);
+Router::beforeAll('foo@bar',['Except_route','Outer_route']);
 Router::beforeAll(function(){
           //
-      });
+      },[]);
 ```
 
 ### after All
 #### Runs after completing work on any route
 #### NOTE: execute the afterAll method before the after method
 ```php
-/* Callback, optional except routes (name) */
-Router::afterAll('Namespaces\\Controller:method');
-Router::afterAll('Namespaces\\Controller:method','Except_route');
-Router::afterAll('Namespaces\\Controller:method',['Except_route','Outer_route']);
-
+/**
+ * @param \Closure|string $action
+ * @param array $excepts
+ */
+Router::afterAll('bar@foo',[]);
+Router::afterAll('bar@foo',['Except_route','Outer_route']);
 Router::afterAll(function(){
           //
-      });
+      },[]);
 ```
 
 ### group
 #### Set the group to use a common filter or before/after methods
 ```php
-Router::group('/administrator/', function(){
-    Router::post('/controller/','Controller\\Administrator:execute');
-    Router::get('/pages/index','Controller\\Administrator:view');
-})->middleware('Filter\\Admin:is_admin')
-  ->before(function(){
-      //
-  })
-  ->after(function(){
-      //
-  });
+/**
+ * @param string $prefix
+ * @param \Closure $definitions
+ */
+Router::group('/foo', function(){
+    Router::post('/bar','foo@bar');
+});
+```
+
+### groupMiddleware
+#### Defines middleware for all group members
+```php
+/**
+ * @param array $middlewares
+ * @param array $excepts
+ */
+Router::group('/foo', function(){
+    //
+})->groupMiddleware([
+    'Authorization'
+],[]);
+```
+
+
+### beforeGroup | afterGroup
+#### Defines actions to be taken before and after any group member is triggered
+```php
+/**
+ * @param \Closure|string $action
+ * @param array $excepts
+ */
+Router::group('/foo', function(){
+    Router::post('/bar','foo@bar');
+})->beforeGroup(function(){
+    //
+},[]);
+
+/**
+ * @param \Closure|string $action
+ * @param array $excepts
+ */
+Router::group('/foo', function(){
+    Router::post('/bar','foo@bar');
+})->afterGroup(function(){
+    //
+},[]);
+
 ```
 
 ### REST
@@ -199,39 +247,22 @@ Router::patch('pattern','Namespaces\\Controller:method');
 
 ## Parameters
 ```php
-Router::get('/{parameter}', function($parameter){
+Router::get('/{param}', function($param){
     //
 });
 
-Router::get('/{parameter}/{outerparameter}', function($parameter, $outerParameter){
+Router::get('/{param}/{param2}', function($param, $param2){
     //
 });
-
-Router::post('/{controller}/{method}', '{controller}:{method}');
 ```
 
 ## Optional parameters
 ```php
-Router::get('/user/{?id}','Namespaces\\Controller:method');
-/* Access on HTTP GET '/user' or '/user/1' */
+Router::get('/foo/{?id}','foo@bar');
 
-Router::get('/user/{?any}/{?id}','Namespaces\\Controller:method')->where([
-    'id' => '[0-9]{1,11}'
-]);
-/* HTTP GET REQUESTS
- * /user                            -> ACCESS
- * /user/anything                   -> ACCESS
- * /user/anything/1                 -> ACCESS
- * /user/anything/123456789011111   -> NOT ACCESS
- * /user/anything/abc               -> NOT ACCESS
- */
+Router::get('/foo/{?any}/{?id}','foo@baz');
 
-Router::get('/user/{?id}/{text}','Namespaces\\Controller:method')->where([
-    'id' => '[0-9]{1,11}'
-]);
-/* HTTP GET REQUESTS
- * IMPORTANT: Access only if all parameters are passed
- */
+Router::get('/user/{?id}/{text}','foo@bat');
 ```
 
 ### Regular Expression Constraints
@@ -239,13 +270,16 @@ Router::get('/user/{?id}/{text}','Namespaces\\Controller:method')->where([
 Router::get('/test/{id}/{id2}',function(){
     //
 })->where([
-    'id'=>'[0-9]*',
+    'id'=>'[0-9]{1,11}',
     'id2' => '[0-9]*'
 ]);
 
-Router::get('/test/{id}/{id2}',function(){
+Router::group('/bar', function(){
     //
-})->where('id','[0-9]*');
+})->groupWhere([
+    'id'=>'[0-9]{1,11}',
+    'id2' => '[0-9]*'
+]);
 ```
 
 ## Route definition
@@ -253,56 +287,22 @@ Router::get('/test/{id}/{id2}',function(){
 ### Protocols
 ```php
 /* Unique protocol */
-Router::get('/my-account','Controller\\User:my_account')->middleware('Filter\\User:user_in');
+Router::get('/get','foo@bar');
 
 /* Multiple protocols */
-Router::match('post|get|ajax','/my-account','Controller\\User:my_account')->middleware('Filter\\User:user_in');
+Router::match('POST|get|AjAx','/my-account','baz@bar');
 
 /* All protocols */
-
-Router::any('/my-account','Controller\\User:my_account')->middleware('Filter\\User:user_in');
+Router::any('/any','all@met');
 ```
 
-### Order
-
-#### Correct way of defining routes
-```php
-/* Access via anything except /1 and /3 */
-Router::get('/{test}',function($test){
-    //
-});
-/* Acess via /1 */
-Router::get('/1',function(){
-    //
-});
-/* Acess via /3 */
-Router::get('/3',function(){
-    //
-});
-```
-
-#### Incorrect way of defining routes
-```php
-/* It will never be accessed */
-Router::get('/1',function(){
-    //
-});
-
-/* It will never be accessed */
-Router::get('/3',function(){
-    //
-});
-
-/* Access via anything */
-Router::get('/{test}',function($test){
-    //
-});
-```
 
 ### Current route
 ```php
 $route = Router::current();
+
 $name = Router::currentRouteName();
+
 $action = Router::currentRouteAction();
 ```
 
@@ -317,69 +317,28 @@ Router::load('index');
 
 /* After loading the route it is necessary to fire it */
 /* NOTE: After loading the route, if any dispatch function name is passed, it will be ignored. */
-Router::load('index')->dispatch();
+Router::load('index')->run();
 
 Router::load();
-...
 $currentRouter = Router::current();
-...
-Router::dispatch();
+Router::run();
 ```
 
-### dispatch
+### run
 ```php
 /* NOTE: in case of error an exception is thrown */
 
 /* Trigger route via URL accessed */
-Router::dispatch();
+Router::run();
 /* Trigger route by the given name */
-Router::dispatch('index');
+Router::run('index');
 ```
 
-## Controller
-```php
-namespace Example\Controllers;
+### Definition order
 
-class User{
+#### Routing loading is a priority with static routes (without parameters)
 
-    public function my_account(/* form inputs */): void
-    {
-        //
-    }
-
-}
-```
-
-### Router Controller
-
-#### If you want to validate your Ajax form or request data automatically or the need to do it on your controller, extend your HnrAzevedo\Router\Controller controller
-Caso você queira validar seus dados de formulários ou de requisições Ajax automáticamente nem a necessidade de faze-lo em seu controlador, extenda seu controlador de HnrAzevedo\Router\Controller
-
-```php
-namespace Example\Controllers;
-
-use HnrAzevedo\Router\Controller;
-
-class User extends Controller{
-
-    public function my_account($another): void
-    {
-        //
-    }
-
-}
-```
-#### For more information on how to validate your data automatically see https://github.com/hnrazevedo/Validator
-Para mais informações de como validar seus dados automáticamente consulte https://github.com/hnrazevedo/Validator
-
-### NOTE: To validate your data automatically, it is necessary that the route is defined as follows {controller}: method (static "method" syntax), and pass the desired function via dataForm with the name "role" in your data
-Para validar seus dados automaticamente, é necessário que a rota seja definida da seguinte forma {controller}:method (sintax "method" estático), e passar a função deseja via dataForm com o nome "role" em seus dados
-
-## Route Filter
-
-#### To create filters for your routes, see https://github.com/hnrazevedo/Filter.
-Para criar filtros para suas rotas, consulte https://github.com/hnrazevedo/Filter.
-
+O carregamento das rotas é prioritário com as rotas estáticas (sem paramêtros)
 
 ## Support
 
