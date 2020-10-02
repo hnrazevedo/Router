@@ -6,7 +6,8 @@ namespace HnrAzevedo\Router;
 
 trait OwnerTrait
 {
-    use Helper, CheckTrait;
+    use Helper,
+        CheckTrait;
 
     public function loadIn(string $name)
     {

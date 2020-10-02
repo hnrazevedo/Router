@@ -12,7 +12,9 @@ use Psr\Http\Message\ResponseInterface;
 
 trait MiddlewareTrait
 {
-    use Helper, CurrentTrait, RunInTrait;
+    use Helper,
+        CurrentTrait,
+        RunInTrait;
 
     protected array $globalMiddlewares = [];
     protected ServerRequest $serverRequest;

@@ -50,9 +50,14 @@ final class Router implements RouterInterface
         return self::getInstance();
     }
 
-    public static function load(): RouterInterface
+    public static function load(?string $name = null): RouterInterface
     {
         self::getInstance()->loaded = true;
+
+        if(null !== $name){
+            return self::getInstance()->loadByName($name);
+        }
+
         self::getInstance()->sortRoutes();
 
         foreach(self::getInstance()->getRoutes() as $r => $route){
@@ -75,10 +80,10 @@ final class Router implements RouterInterface
         return self::getInstance();
     }
 
-    public static function run(): RouterInterface
+    public static function run(?string $name = null): RouterInterface
     {
         if(!self::getInstance()->loaded){
-            self::getInstance()->load();
+            self::getInstance()->load($name);
         }
 
         self::getInstance()->checkError();
@@ -105,6 +110,13 @@ final class Router implements RouterInterface
         if(isset($this->error)){
             throw $this->error;
         }
+    }
+
+    private function loadByName(string $name): RouterInterface
+    {
+        $this->hasRouteName($name);
+        $this->currentRoute = $this->getRoutes()[$name];
+        return $this;
     }
    
 }

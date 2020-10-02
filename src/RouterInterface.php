@@ -143,10 +143,10 @@ interface RouterInterface extends MiddlewareInterface
     /**
      * @return self
      */
-    public static function load(): RouterInterface;
+    public static function load(?string $name = null): RouterInterface;
 
     /**
      * @return self
      */ 
-    public static function run(): RouterInterface;
+    public static function run(?string $name = null): RouterInterface;
 }
