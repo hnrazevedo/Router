@@ -23,7 +23,7 @@ O Router é um simples abstrator de URL amigável. Ele pode ser utilizada de man
 Router is available via composer.json:
 
 ```bash 
-"hnrazevedo/router": "^2.1"
+"hnrazevedo/router": "^2.2"
 ```
 
 or in at terminal
@@ -85,6 +85,18 @@ Na utilização como middleware, é retornado uma resposta 404
 - get: URL access or get method
 - post: post method
 - ajax: called fetch or XMLHttpRequest
+
+#### Ajax
+
+#### To use the Ajax call, it is necessary to define REQUEST_METHOD as AJAX:
+
+Para utilizar a chamada Ajax, é necessário a definição do REQUEST_METHOD como AJAX:
+```html
+<form>
+    <input type="hidden" name="REQUEST_METHOD" value="AJAX" />
+    ...
+</form>
+```
 
 #### REST request
 - post: REST request

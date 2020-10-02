@@ -60,12 +60,14 @@ final class Router implements RouterInterface
 
         self::getInstance()->sortRoutes();
 
+        $requestMethod = (isset($_REQUEST['REQUEST_METHOD'])) ? $_REQUEST['REQUEST_METHOD'] : $_SERVER['REQUEST_METHOD'];
+
         foreach(self::getInstance()->getRoutes() as $r => $route){
             self::getInstance()->currentRoute = $route;
             self::getInstance()->currentRoute['name'] = $r;
 
             try{
-                self::getInstance()->checkMethod($route, $_SERVER['REQUEST_METHOD']);
+                self::getInstance()->checkMethod($route, $requestMethod);
                 self::getInstance()->checkData($route, (new Uri($_SERVER['REQUEST_URI']))->getPath());
                 return self::getInstance();
             }catch(\Exception $er){
