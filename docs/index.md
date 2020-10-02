@@ -196,7 +196,7 @@ Router::group('/foo', function(){
 });
 ```
 
-### groupMiddleware
+### groupMiddlewares
 #### Defines middleware for all group members
 ```php
 /**
@@ -205,7 +205,7 @@ Router::group('/foo', function(){
  */
 Router::group('/foo', function(){
     //
-})->groupMiddleware([
+})->groupMiddlewares([
     'Authorization'
 ]);
 ```
