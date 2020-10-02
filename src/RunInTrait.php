@@ -47,34 +47,34 @@ trait RunInTrait
 
     public static function before($closure): RouterInterface
     {
-        return self::addInRoute('before',$closure);
+        return self::addInRoute('before', $closure);
     }
 
     public static function after($closure): RouterInterface
     {
-        return self::addInRoute('after',$closure);
+        return self::addInRoute('after', $closure);
     }
 
-    public static function beforeAll($closure, $excepts): RouterInterface
+    public static function beforeAll($closure, ?array $excepts = null): RouterInterface
     {
-        self::getInstance()->setState('before', (is_array($excepts)) ? $excepts : [ $excepts ] ,true);
+        self::getInstance()->setState('before', (is_array($excepts)) ? $excepts : [] ,true);
         self::getInstance()->setState('before', $closure, false);
         return self::getInstance();
     }
 
-    public static function afterAll($closure, $excepts): RouterInterface
+    public static function afterAll($closure, ?array $excepts = null): RouterInterface
     {
-        self::getInstance()->setState('after', (is_array($excepts)) ? $excepts : [ $excepts ] ,true);
+        self::getInstance()->setState('after', (is_array($excepts)) ? $excepts : [] ,true);
         self::getInstance()->setState('after', $closure, false);
         return self::getInstance();
     }
 
-    public static function beforeGroup($closure, $excepts): RouterInterface
+    public static function beforeGroup($closure, ?array $excepts = null): RouterInterface
     {
         return self::addInRoutes('before', $closure, $excepts);
     }
 
-    public static function afterGroup($closure, $excepts): RouterInterface
+    public static function afterGroup($closure, ?array $excepts = null): RouterInterface
     {
         return self::addInRoutes('after', $closure, $excepts);
     }
@@ -90,14 +90,14 @@ trait RunInTrait
         return true;
     }
 
-    private static function addInRoutes(string $state, $closure, $excepts): RouterInterface
+    private static function addInRoutes(string $state, $closure, ?array $excepts = null): RouterInterface
     {
         self::getInstance()->isInPseudGroup();
-        $excepts = (is_array($excepts)) ? $excepts : [ $excepts ];
+        $excepts = (is_array($excepts)) ? $excepts : [];
         $group = self::getInstance()->inSave()['group'];
 
         foreach(self::getInstance()->getRoutes() as $r => $route){
-            if($route['group'] === $group && !in_array($r,$excepts)){
+            if($route['group'] === $group && !in_array($r, $excepts)){
                 self::getInstance()->getRoutes()[$r][$state] = (is_null($route[$state])) ? [ $closure ] : array_merge($route[$state], [ $closure ]); 
             }
         }

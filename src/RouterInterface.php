@@ -83,12 +83,12 @@ interface RouterInterface extends MiddlewareInterface
     /**
      * @return self
      */
-    public static function afterGroup($closure, $excepts): RouterInterface;
+    public static function afterGroup($closure, ?array $excepts = null): RouterInterface;
 
     /**
      * @return self
      */
-    public static function beforeGroup($closure, $excepts): RouterInterface;
+    public static function beforeGroup($closure, ?array $excepts = null): RouterInterface;
 
     /**
      * @return self
@@ -98,12 +98,12 @@ interface RouterInterface extends MiddlewareInterface
     /**
      * @return self
      */
-    public static function beforeAll($closure, $excepts): RouterInterface;
+    public static function beforeAll($closure, ?array $excepts = null): RouterInterface;
 
     /**
      * @return self
      */
-    public static function afterAll($closure, $excepts): RouterInterface;
+    public static function afterAll($closure, ?array $excepts = null): RouterInterface;
 
     /**
      * @return self
@@ -113,12 +113,12 @@ interface RouterInterface extends MiddlewareInterface
     /**
      * @return self
      */
-    public static function groupWhere(array $where, array $excepts): RouterInterface;
+    public static function groupWhere(array $where, ?array $excepts = null): RouterInterface;
 
     /**
      * @return self
      */
-    public static function groupMiddlewares(array $middlewares, array $excepts): RouterInterface;
+    public static function groupMiddlewares(array $middlewares, ?array $excepts = null): RouterInterface;
 
     /**
      * @return self

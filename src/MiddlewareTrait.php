@@ -44,8 +44,9 @@ trait MiddlewareTrait
         return self::getInstance();
     }
 
-    public static function groupMiddlewares(array $middlewares, array $excepts): RouterInterface
+    public static function groupMiddlewares(array $middlewares, ?array $excepts = null): RouterInterface
     {
+        $excepts = (is_array($excepts)) ? $excepts : [];
         $group = self::getInstance()->inSave()['group'];
         foreach(self::getInstance()->getRoutes() as $r => $route){
             if($route['group'] !== $group || in_array($route['name'], $excepts)){

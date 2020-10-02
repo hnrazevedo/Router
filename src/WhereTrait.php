@@ -18,8 +18,10 @@ trait WhereTrait
         return self::getInstance();
     }
 
-    public static function groupWhere(array $wheres, array $excepts): Router
+    public static function groupWhere(array $wheres, ?array $excepts = null): Router
     {
+        $excepts = (is_array($excepts)) ? $excepts : [];
+        
         $group = self::getInstance()->inSave()['group'];
         foreach(self::getInstance()->getRoutes() as $r => $route){
             if($route['group'] !== $group || in_array($route['name'], $excepts)){
