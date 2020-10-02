@@ -23,7 +23,7 @@ O Router é um simples abstrator de URL amigável. Ele pode ser utilizada de man
 Router is available via composer.json:
 
 ```bash 
-"hnrazevedo/router": "^2.0"
+"hnrazevedo/router": "^2.1"
 ```
 
 or in at terminal

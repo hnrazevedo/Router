@@ -23,7 +23,7 @@ O Router é um simples abstrator de URL amigável. Ele pode ser utilizada de man
 Router is available via composer.json:
 
 ```bash 
-"hnrazevedo/router": "^2.0"
+"hnrazevedo/router": "^2.1"
 ```
 
 or in at terminal
@@ -160,13 +160,13 @@ Router::get('/bar/foo','bar@foo')
 ```php
 /**
  * @param \Closure|string $action
- * @param array $excepts
+ * @param ?array $excepts
  */
-Router::beforeAll('foo@bar',[]);
+Router::beforeAll('foo@bar');
 Router::beforeAll('foo@bar',['Except_route','Outer_route']);
 Router::beforeAll(function(){
           //
-      },[]);
+      });
 ```
 
 ### after All
@@ -175,13 +175,13 @@ Router::beforeAll(function(){
 ```php
 /**
  * @param \Closure|string $action
- * @param array $excepts
+ * @param ?array $excepts
  */
-Router::afterAll('bar@foo',[]);
+Router::afterAll('bar@foo');
 Router::afterAll('bar@foo',['Except_route','Outer_route']);
 Router::afterAll(function(){
           //
-      },[]);
+      });
 ```
 
 ### group
@@ -201,13 +201,13 @@ Router::group('/foo', function(){
 ```php
 /**
  * @param array $middlewares
- * @param array $excepts
+ * @param ?array $excepts
  */
 Router::group('/foo', function(){
     //
 })->groupMiddleware([
     'Authorization'
-],[]);
+]);
 ```
 
 
@@ -216,23 +216,23 @@ Router::group('/foo', function(){
 ```php
 /**
  * @param \Closure|string $action
- * @param array $excepts
+ * @param ?array $excepts
  */
 Router::group('/foo', function(){
     Router::post('/bar','foo@bar');
 })->beforeGroup(function(){
     //
-},[]);
+});
 
 /**
  * @param \Closure|string $action
- * @param array $excepts
+ * @param ?array $excepts
  */
 Router::group('/foo', function(){
     Router::post('/bar','foo@bar');
 })->afterGroup(function(){
     //
-},[]);
+});
 
 ```
 
@@ -313,11 +313,11 @@ $action = Router::currentRouteAction();
 /* Load the route via the URL accessed on the Router object */
 Router::load();
 /* Load the route via the name passed to the Router object */
-Router::load('index');
+Router::load('bar');
 
 /* After loading the route it is necessary to fire it */
 /* NOTE: After loading the route, if any dispatch function name is passed, it will be ignored. */
-Router::load('index')->run();
+Router::load('foo')->run();
 
 Router::load();
 $currentRouter = Router::current();
@@ -331,7 +331,7 @@ Router::run();
 /* Trigger route via URL accessed */
 Router::run();
 /* Trigger route by the given name */
-Router::run('index');
+Router::run('baz');
 ```
 
 ### Definition order
