@@ -17,6 +17,9 @@ trait RunInTrait
 
     protected function getState(string $state, bool $except = false)
     {
+        $this->beforeAll = (!isset($this->beforeAll)) ? function() {} : $this->beforeAll;
+        $this->afterAll = (!isset($this->afterAll)) ? function() {} : $this->afterAll;
+        
         if($state === 'before'){
             return ($except) ? $this->beforeExcepts : $this->beforeAll;
         }
