@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace HnrAzevedo\Router;
 
 use HnrAzevedo\Http\Uri;
+use Opis\Closure\SerializableClosure;
 
 trait DefinitionsTrait
 {
@@ -51,6 +52,8 @@ trait DefinitionsTrait
         return self::set('*',$uri,$closure);
     }
 
+    private static $count = 0;
+
     private static function set(string $method, string $uri, $closure): RouterInterface
     {   
         $uri = (substr($uri,0,1) !=='/' and strlen($uri) > 0) ? "/{$uri}" : $uri;
@@ -66,8 +69,8 @@ trait DefinitionsTrait
         }
 
         $routes[$index] = [
-			'uri' => new Uri(self::getInstance()->getHost().self::getInstance()->getPrefix().$uri),
-			'action' => $closure,
+			'uri' => serialize(new Uri(self::getInstance()->getHost().self::getInstance()->getPrefix().$uri)),
+			'action' => (is_callable($closure)) ? serialize(new SerializableClosure($closure)) : serialize($closure),
 			'method' => strtoupper($method),
             'middlewares' => [],
             'where' => [],

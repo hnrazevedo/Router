@@ -95,7 +95,8 @@ final class Router implements RouterInterface
         self::getInstance()->executeBefore();
         
         try{
-            self::getInstance()->executeRouteAction(self::getInstance()->current()['action']);
+            $action = unserialize(self::getInstance()->current()['action']);
+            self::getInstance()->executeRouteAction( (is_string($action)) ? $action : $action->getClosure()  );
         }catch(\Exception $er){
             self::getInstance()->error = $er;
         }
@@ -119,6 +120,15 @@ final class Router implements RouterInterface
         $this->hasRouteName($name);
         $this->currentRoute = $this->getRoutes()[$name];
         return $this;
+    }
+
+    public static function routes(?array $routes = null): array
+    {
+        if(null !== $routes){
+            self::getInstance()->setRoutes($routes);
+            self::getInstance()->sortRoutes();
+        }
+        return self::getInstance()->routes;
     }
    
 }

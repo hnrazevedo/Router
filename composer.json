@@ -10,6 +10,7 @@
     ],
     "require": {
         "php": ">=7.4",
+        "opis/closure": "^3.5@dev",
         "hnrazevedo/http": "dev-master"
     },
     "minimum-stability":"dev",

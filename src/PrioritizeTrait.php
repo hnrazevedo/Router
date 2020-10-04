@@ -7,15 +7,29 @@ namespace HnrAzevedo\Router;
 trait PrioritizeTrait
 {
     use Helper;
-    
-    protected function sortRoutes(): void
+
+    protected bool $sorted = false;
+
+    protected function sorted(?bool $sorted = null): bool
     {
+        if(null !== $sorted){
+            $this->sorted = $sorted;
+        }
+        return $this->sorted;
+    }
+    
+    protected function sortRoutes(): bool
+    {
+        if($this->sorted()){
+            return true;
+        }
+
         $staticRoutes = [];
         $paramRoutes = [];
 
         foreach($this->getRoutes() as $r => $route){
 
-            $path = urldecode($route['uri']->getPath());
+            $path = urldecode(unserialize($route['uri'])->getPath());
 
             if(strstr($path,'{')){
                 $paramRoutes[$this->getKeyArray(substr_count($path,'/') + substr_count($path,'{'),$paramRoutes)] = $route;
@@ -29,6 +43,7 @@ trait PrioritizeTrait
         rsort($staticRoutes);
 
         $this->orderRoutes(array_merge($staticRoutes,$paramRoutes));
+        return $this->sorted(true);
     }
 
     private function getKeyArray(int $index, array $array): int

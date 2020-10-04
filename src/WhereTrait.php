@@ -37,13 +37,13 @@ trait WhereTrait
 
     protected function checkData(array $route, string $uriPath): void
     {
-        $this->checkCount($route['uri']->getPath(), $uriPath);
+        $this->checkCount(unserialize($route['uri'])->getPath(), $uriPath);
     
         $this->parameters = [];
 
         $uriPath .= (substr($uriPath, strlen($uriPath)-1) !== '/') ? '/' : '';
 
-        $routePath = explode('/', urldecode($route['uri']->getPath()));
+        $routePath = explode('/', urldecode(unserialize($route['uri'])->getPath()));
         unset($routePath[0]);
         $uriPath = explode('/', urldecode($uriPath));
         unset($uriPath[0]);
