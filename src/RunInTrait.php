@@ -163,7 +163,7 @@ trait RunInTrait
 
     private function checkControllerMeth(string $controllerMeth): void
     {
-        $routeURI = str_replace(['{:','{','}'],'',urldecode($this->current()['uri']->getPath()));
+        $routeURI = str_replace(['{:','{','}'],'',urldecode(unserialize($this->current()['uri'])->getPath()));
 
         $controller = (string) explode('@',$controllerMeth)[0];
         $method = (string) explode('@',$controllerMeth)[1];

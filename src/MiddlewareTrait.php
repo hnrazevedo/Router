@@ -70,7 +70,7 @@ trait MiddlewareTrait
     {
         $factory = new Factory();
 
-        $this->serverRequest = (!isset($this->serverRequest)) ? $factory->createServerRequest($_SERVER['REQUEST_METHOD'], $this->current()['uri'],['route' => $this->current()]) : $this->serverRequest;
+        $this->serverRequest = (!isset($this->serverRequest)) ? $factory->createServerRequest($_SERVER['REQUEST_METHOD'], unserialize($this->current()['uri']),['route' => $this->current()]) : $this->serverRequest;
         
         foreach ($this->current()['middlewares'] as $middleware){
             $this->currentMiddlewares[] = (class_exists($middleware)) ? new $middleware() : new $this->globalMiddlewares[$middleware]();
