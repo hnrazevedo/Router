@@ -20,15 +20,17 @@ trait MiddlewareTrait
     protected ServerRequest $serverRequest;
     protected array $currentMiddlewares = [];
 
-    public static function globalMiddlewares(array $middlewares): RouterInterface
+    public static function globalMiddlewares(?array $middlewares = null): array
     {
-        foreach($middlewares as $middleware){
-            if(!class_exists($middleware)){
-                throw new \RuntimeException("Middleware class {$middleware} not exists");
+        if(null !== $middlewares){
+            foreach($middlewares as $middleware){
+                if(!class_exists($middleware)){
+                    throw new \RuntimeException("Middleware class {$middleware} not exists");
+                }
             }
+            self::getInstance()->setGlobalMiddlewares($middlewares);
         }
-        self::getInstance()->setGlobalMiddlewares($middlewares);
-        return self::getInstance();
+        return self::getInstance()->globalMiddlewares;
     }
 
     protected function setGlobalMiddlewares(array $middlewares): void

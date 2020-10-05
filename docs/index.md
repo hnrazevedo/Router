@@ -15,6 +15,7 @@ O Router é um simples abstrator de URL amigável. Ele pode ser utilizada de man
 ## Highlights
 
 - Easy to set up (Fácil de configurar)
+- Easy information caching (Fácil cacheamento de informações)
 - Follows standard PSR-15 (Segue padrão o PSR-15)
 - Composer ready (Pronto para o composer)
 
@@ -23,7 +24,7 @@ O Router é um simples abstrator de URL amigável. Ele pode ser utilizada de man
 Router is available via composer.json:
 
 ```bash 
-"hnrazevedo/router": "^2.2"
+"hnrazevedo/router": "^2.3"
 ```
 
 or in at terminal
@@ -344,6 +345,34 @@ Router::run();
 Router::run();
 /* Trigger route by the given name */
 Router::run('baz');
+```
+
+### Cache
+```php
+/* Returns the routes already defined for caching */
+$routes = Router::routes();
+/* Pass cached routes to the router */
+Router::routes($routes);
+```
+
+#### Example of caching in SESSION
+```php
+if(!isset($_SESSION['cache']['routes'])){
+    //Import routes
+    $path = BASEPATH.'/../routes';
+
+    foreach (scandir($path) as $routeFile) {
+        if(pathinfo($path.DIRECTORY_SEPARATOR.$routeFile, PATHINFO_EXTENSION) === 'php'){
+            require_once($path. DIRECTORY_SEPARATOR .$routeFile);
+        }
+    }
+
+    $_SESSION['cache']['router']['middlewares'] = Router::globalMiddlewares();
+    $_SESSION['cache']['router']['routes'] = Router::routes();
+}
+    
+Router::routes($_SESSION['cache']['router']['routes']);
+Router::globalMiddlewares($_SESSION['cache']['router']['middlewares']);
 ```
 
 ### Definition order

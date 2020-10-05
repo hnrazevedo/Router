@@ -63,7 +63,7 @@ interface RouterInterface extends MiddlewareInterface
     /**
      * @return self
      */
-    public static function globalMiddlewares(array $middlewares): RouterInterface;
+    public static function globalMiddlewares(?array $middlewares = null): array;
     
     /**
      * @return self
