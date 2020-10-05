@@ -30,7 +30,12 @@ trait MiddlewareTrait
             }
             self::getInstance()->setGlobalMiddlewares($middlewares);
         }
-        return self::getInstance()->globalMiddlewares;
+        return self::getInstance()->getGlobalMiddlewares();
+    }
+
+    protected function getGlobalMiddlewares(): array
+    {
+        return $this->globalMiddlewares;
     }
 
     protected function setGlobalMiddlewares(array $middlewares): void
