@@ -62,13 +62,13 @@ trait DefinitionsTrait
         
         $routes = self::getInstance()->getRoutes();
 
-        $index = sha1(date('d/m/Y H:i:s').count($routes));
+        $index = count($routes);
 
-        while(array_key_exists($index,$routes)){
-            $index = sha1(date('d/m/Y H:i:s').rand(count($routes)));
+        while(array_key_exists($index, $routes)){
+            $index++;
         }
 
-        $routes[$index] = [
+        $routes[strval($index)] = [
 			'uri' => serialize(new Uri(self::getInstance()->getHost().self::getInstance()->getPrefix().$uri)),
 			'action' => (is_callable($closure)) ? serialize(new SerializableClosure($closure)) : serialize($closure),
 			'method' => strtoupper($method),
