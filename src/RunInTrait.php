@@ -101,7 +101,8 @@ trait RunInTrait
 
         foreach(self::getInstance()->getRoutes() as $r => $route){
             if($route['group'] === $group && !in_array($r, $excepts)){
-                self::getInstance()->getRoutes()[$r][$state] = (is_null($route[$state])) ? [ $closure ] : array_merge($route[$state], [ $closure ]); 
+                $route[$state] = (is_null($route[$state])) ? [ $closure ] : array_merge($route[$state], [ $closure ]); 
+                self::getInstance()->updateRoute($route, $r);
             }
         }
 

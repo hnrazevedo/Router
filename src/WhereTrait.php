@@ -29,7 +29,7 @@ trait WhereTrait
             }
 
             $route['where'] = array_merge($route['where'], $wheres);
-            self::getInstance()->updateRoute($route, array_key_last(self::getInstance()->getRoutes()));
+            self::getInstance()->updateRoute($route, $r);
         }
         
         return self::getInstance();
