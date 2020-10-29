@@ -48,8 +48,14 @@ trait CheckTrait
         }
         if(!$hasMethod){
             throw new \Exception('This route is not released for the accessed method');
+        } 
+    }
+
+    protected function throwCallable($value): void
+    {
+        if(is_callable($value)){
+            throw new \Exception('Passing functions as attributes is not allowed');
         }
-        
     }
 
 }

@@ -30,6 +30,20 @@ final class Router implements RouterInterface
         return self::getInstance();
     }
 
+    public static function attribute(string $name, $value = null)
+    {
+        $route = self::getInstance()->inSave();
+
+        if(null === $value){
+            return (isset($route['attributes'][$name])) ? $route['attributes'][$name] : null;
+        }
+
+        self::getInstance()->throwCallable($value);
+        $route['attributes'][$name] = $value;
+        self::getInstance()->updateRoute($route, array_key_last(self::getInstance()->getRoutes()));
+        return self::getInstance();
+    }
+
     public static function group(string $prefix, \Closure $closure): Router
     {
         $id = sha1(date('d/m/Y h:m:i'));

@@ -52,12 +52,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/opis/closure.git",
-                "reference": "66b428029cec9b7f52f47711253626982efe820b"
+                "reference": "c547f8262a5fa9ff507bd06cc394067b83a75085"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/opis/closure/zipball/66b428029cec9b7f52f47711253626982efe820b",
-                "reference": "66b428029cec9b7f52f47711253626982efe820b",
+                "url": "https://api.github.com/repos/opis/closure/zipball/c547f8262a5fa9ff507bd06cc394067b83a75085",
+                "reference": "c547f8262a5fa9ff507bd06cc394067b83a75085",
                 "shasum": ""
             },
             "require": {
@@ -105,7 +105,7 @@
                 "serialization",
                 "serialize"
             ],
-            "time": "2020-10-05T12:49:40+00:00"
+            "time": "2020-10-11T21:42:15+00:00"
         },
         {
             "name": "psr/http-factory",

@@ -76,6 +76,7 @@ trait DefinitionsTrait
             'where' => [],
             'before' => [],
             'after' => [],
+            'attributes' => [],
             'group' => self::getInstance()->getGroup(),
             'response' => null,
             'name' => $index
