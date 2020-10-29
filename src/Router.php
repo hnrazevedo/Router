@@ -30,7 +30,7 @@ final class Router implements RouterInterface
         return self::getInstance();
     }
 
-    public static function attribute(string $name, $value = null)
+    public static function attribute(string $name, $value = null): Router
     {
         $route = self::getInstance()->inSave();
 
@@ -41,6 +41,20 @@ final class Router implements RouterInterface
         self::getInstance()->throwCallable($value);
         $route['attributes'][$name] = $value;
         self::getInstance()->updateRoute($route, array_key_last(self::getInstance()->getRoutes()));
+        return self::getInstance();
+    }
+
+    public static function groupAttribute(string $name, $value = null, ?array $excepts = []): Router
+    {
+        $group = self::getInstance()->inSave()['group'];
+        foreach(self::getInstance()->getRoutes() as $r => $route){
+            if($route['group'] !== $group || in_array($route['name'], $excepts)){
+                continue;
+            }
+
+            $route['attributes'] = array_merge([$name => $value], $route['attributes']);
+            self::getInstance()->updateRoute($route, $r);
+        }
         return self::getInstance();
     }
 

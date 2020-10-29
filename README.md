@@ -143,6 +143,24 @@ Router::get('/foo','foo\bar\User@method')->middleware([
 Router::get('/','foo@bar')->name('index');
 ```
 
+### attribute
+#### Defines attributes to route, to be used dynamically
+```php
+/**
+ * @param string $name
+ * @param $value
+ */
+Router::get('/','foo@bar')->attribute('permission','permissionName');
+```
+#### Returning an attribute
+```php
+/**
+ * @param string $name
+ * @param $value
+ */
+$permission = Router::current()['attributes']['permission'];
+```
+
 ### before
 #### Runs before starting the work of the accessed route
 ```php
@@ -207,6 +225,18 @@ Router::afterAll(function(){
 Router::group('/foo', function(){
     Router::post('/bar','foo@bar');
 });
+```
+### groupAttribute
+#### Defines attributes on all routes in the group
+#### NOTE:If the attribute has already been defined directly on the route, it will be disregarded here
+```php
+/**
+ * @param string $name
+ * @param $value
+ */
+Router::group('/foo', function(){
+    Router::post('/bar','foo@bar');
+})->groupAttribute('permission','permissionName');
 ```
 
 ### groupMiddlewares
