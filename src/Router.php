@@ -30,7 +30,7 @@ final class Router implements RouterInterface
         return self::getInstance();
     }
 
-    public static function attribute(string $name, $value = null): Router
+    public static function attribute(string $name, $value = null)
     {
         $route = self::getInstance()->inSave();
 
