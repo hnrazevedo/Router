@@ -89,12 +89,12 @@ Na utilização como middleware, é retornado uma resposta 404
 
 #### Ajax
 
-#### To use the Ajax call, it is necessary to define REQUEST_METHOD as AJAX:
+#### To use the Ajax call, it is necessary to define _METHOD as AJAX:
 
-Para utilizar a chamada Ajax, é necessário a definição do REQUEST_METHOD como AJAX:
+Para utilizar a chamada Ajax, é necessário a definição do _METHOD como AJAX:
 ```html
 <form>
-    <input type="hidden" name="REQUEST_METHOD" value="AJAX" />
+    <input type="hidden" name="_METHOD" value="AJAX" />
     ...
 </form>
 ```
