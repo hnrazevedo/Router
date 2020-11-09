@@ -301,11 +301,11 @@ Router::get('/{param}/{param2}', function($param, $param2){
 
 ## Optional parameters
 ```php
-Router::get('/foo/{?id}','foo@bar');
+Router::get('/foo/{:id}','foo@bar');
 
-Router::get('/foo/{?any}/{?id}','foo@baz');
+Router::get('/foo/{:any}/{:id}','foo@baz');
 
-Router::get('/user/{?id}/{text}','foo@bat');
+Router::get('/user/{:id}/{text}','foo@bat');
 ```
 
 ### Regular Expression Constraints
