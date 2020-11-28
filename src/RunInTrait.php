@@ -85,7 +85,7 @@ trait RunInTrait
     protected function executeRouteAction($action): bool
     {
         if(is_callable($action)){        
-            call_user_func_array($action, $_REQUEST);
+            call_user_func_array($action, array_values($_REQUEST));
             return true;
         }
 
@@ -159,7 +159,7 @@ trait RunInTrait
 
         $this->checkControllerMeth($controllerMeth);
 
-        call_user_func_array([(new $controller()),$method], $_REQUEST);
+        call_user_func_array([(new $controller()),$method], array_values($_REQUEST));
     }
 
     private function checkControllerMeth(string $controllerMeth): void
