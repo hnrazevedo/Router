@@ -88,7 +88,7 @@ final class Router implements RouterInterface
 
         self::getInstance()->sortRoutes();
 
-        $requestMethod = (isset($_REQUEST['_METHOD'])) ? $_REQUEST['_METHOD'] : $_SERVER['_METHOD'];
+        $requestMethod = (isset($_REQUEST['_METHOD'])) ? $_REQUEST['_METHOD'] : $_SERVER['REQUEST_METHOD'];
 
         foreach(self::getInstance()->getRoutes() as $r => $route){
             self::getInstance()->currentRoute = $route;
