@@ -17,10 +17,12 @@ trait RunInTrait
 
     protected function getState(string $state, bool $except = false)
     {
-        $this->beforeAll = (!isset($this->beforeAll)) ? function() {} : $this->beforeAll;
-        $this->afterAll = (!isset($this->afterAll)) ? function() {} : $this->afterAll;
+        $this->beforeAll = (!isset($this->beforeAll)) ? function () {
+        } : $this->beforeAll;
+        $this->afterAll = (!isset($this->afterAll)) ? function () {
+        } : $this->afterAll;
         
-        if($state === 'before'){
+        if($state === 'before') {
             return ($except) ? $this->beforeExcepts : $this->beforeAll;
         }
 
@@ -29,8 +31,8 @@ trait RunInTrait
 
     protected function setState(string $state, $settable, bool $except = false): bool
     {
-        if($state === 'before'){
-            if($except){
+        if($state === 'before') {
+            if($except) {
                 $this->beforeExcepts = $settable;
                 return true;
             }
@@ -39,7 +41,7 @@ trait RunInTrait
             return true;
         }
 
-        if($except){
+        if($except) {
             $this->afterExcepts = $settable;
             return true;
         }
@@ -60,14 +62,14 @@ trait RunInTrait
 
     public static function beforeAll($closure, ?array $excepts = null): RouterInterface
     {
-        self::getInstance()->setState('before', (is_array($excepts)) ? $excepts : [] ,true);
+        self::getInstance()->setState('before', (is_array($excepts)) ? $excepts : [], true);
         self::getInstance()->setState('before', $closure, false);
         return self::getInstance();
     }
 
     public static function afterAll($closure, ?array $excepts = null): RouterInterface
     {
-        self::getInstance()->setState('after', (is_array($excepts)) ? $excepts : [] ,true);
+        self::getInstance()->setState('after', (is_array($excepts)) ? $excepts : [], true);
         self::getInstance()->setState('after', $closure, false);
         return self::getInstance();
     }
@@ -84,11 +86,11 @@ trait RunInTrait
 
     protected function executeRouteAction($action): bool
     {
-        if(is_callable($action)){ 
+        if(is_callable($action)) { 
             
             $params = [];
             $closure = (get_class($action) !== 'Closure') ? $action->getClosure() : $action;
-            $ReflectionMethod =  new \ReflectionFunction ($closure);
+            $ReflectionMethod =  new \ReflectionFunction($closure);
 
             foreach($ReflectionMethod->getParameters() as $param){
                 if(!isset($_REQUEST[$param->name])) continue;
@@ -110,7 +112,7 @@ trait RunInTrait
         $group = self::getInstance()->inSave()['group'];
 
         foreach(self::getInstance()->getRoutes() as $r => $route){
-            if($route['group'] === $group && !in_array($r, $excepts)){
+            if($route['group'] === $group && !in_array($r, $excepts)) {
                 $route[$state] = (is_null($route[$state])) ? [ $closure ] : array_merge($route[$state], [ $closure ]); 
                 self::getInstance()->updateRoute($route, $r);
             }
@@ -123,13 +125,13 @@ trait RunInTrait
     {
         $route = self::getInstance()->inSave();
         $route[$state] = (!is_null($route[$state])) ? [ $closure ] : array_merge($route[$state], [ $closure ]);
-        self::updateRoute($route,array_key_last(self::getInstance()->getRoutes()));
+        self::updateRoute($route, array_key_last(self::getInstance()->getRoutes()));
         return self::getInstance();
     }
 
     protected function executeBefore(): void
     {
-        if(!in_array($this->currentName(), (array) $this->getState('before', true))){
+        if(!in_array($this->currentName(), (array) $this->getState('before', true))) {
             ($this->getState('before', false))();
         }
 
@@ -140,7 +142,7 @@ trait RunInTrait
     {
         $this->executeState('after');
 
-        if(!in_array($this->currentName(), (array) $this->getState('after', true))){
+        if(!in_array($this->currentName(), (array) $this->getState('after', true))) {
             ($this->getState('after', false))();
         }
     }
@@ -148,7 +150,7 @@ trait RunInTrait
     private function executeState(string $stage): void
     {
         foreach($this->current()[$stage] as $state){
-            if(is_callable($state)){
+            if(is_callable($state)) {
                 $state();
                 continue;
             }
@@ -159,13 +161,13 @@ trait RunInTrait
 
     private function executeController(string $controllerMeth): void
     {
-        if(count(explode('@',$controllerMeth)) !== 2){
+        if(count(explode('@', $controllerMeth)) !== 2) {
             $path = urldecode(unserialize($this->current()['uri'])->getPath());
             throw new \RuntimeException("Misconfigured route action ({$path})");
         }
 
-        $controller = (string) explode('@',$controllerMeth)[0];
-        $method = (string) explode('@',$controllerMeth)[1];
+        $controller = (string) explode('@', $controllerMeth)[0];
+        $method = (string) explode('@', $controllerMeth)[1];
 
         $this->checkControllerMeth($controllerMeth);
 
@@ -183,16 +185,16 @@ trait RunInTrait
 
     private function checkControllerMeth(string $controllerMeth): void
     {
-        $routeURI = str_replace(['{?','{','}'],'',urldecode(unserialize($this->current()['uri'])->getPath()));
+        $routeURI = str_replace(['{?','{','}'], '', urldecode(unserialize($this->current()['uri'])->getPath()));
 
-        $controller = (string) explode('@',$controllerMeth)[0];
-        $method = (string) explode('@',$controllerMeth)[1];
+        $controller = (string) explode('@', $controllerMeth)[0];
+        $method = (string) explode('@', $controllerMeth)[1];
 
-        if(!class_exists($controller)){
+        if(!class_exists($controller)) {
             throw new \RuntimeException("Controller not found in route URI {$routeURI}");
         }
 
-        if(!method_exists($controller, $method)){
+        if(!method_exists($controller, $method)) {
             throw new \RuntimeException("Method {$method} not found in controller {$controller} in route URI {$routeURI}");
         }
         

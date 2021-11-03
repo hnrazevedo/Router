@@ -13,32 +13,32 @@ trait DefinitionsTrait
     
     public static function get(string $uri, $closure): RouterInterface
     {
-        return self::set('get',$uri,$closure);
+        return self::set('get', $uri, $closure);
     }
 
     public static function post(string $uri, $closure): RouterInterface
     {
-        return self::set('post',$uri,$closure);
+        return self::set('post', $uri, $closure);
     }
 
     public static function ajax(string $uri, $closure): RouterInterface
     {
-        return self::set('ajax',$uri,$closure);
+        return self::set('ajax', $uri, $closure);
     }
 
     public static function delete(string $uri, $closure): RouterInterface
     {
-        return self::set('delete',$uri,$closure);
+        return self::set('delete', $uri, $closure);
     }
 
     public static function put(string $uri, $closure): RouterInterface
     {
-        return self::set('put',$uri,$closure);
+        return self::set('put', $uri, $closure);
     }
 
     public static function patch(string $uri, $closure): RouterInterface
     {
-        return self::set('patch',$uri,$closure);
+        return self::set('patch', $uri, $closure);
     }
 
     public static function match(string $method, string $uri, $closure): RouterInterface
@@ -49,16 +49,16 @@ trait DefinitionsTrait
 
     public static function any(string $uri, $closure): RouterInterface
     {
-        return self::set('*',$uri,$closure);
+        return self::set('*', $uri, $closure);
     }
 
     private static $count = 0;
 
     private static function set(string $method, string $uri, $closure): RouterInterface
     {   
-        $uri = (substr($uri,0,1) !=='/' and strlen($uri) > 0) ? "/{$uri}" : $uri;
+        $uri = (substr($uri, 0, 1) !=='/' and strlen($uri) > 0) ? "/{$uri}" : $uri;
         
-        self::checkDuplicity($uri,$method);
+        self::checkDuplicity($uri, $method);
         
         $routes = self::getInstance()->getRoutes();
 
@@ -69,9 +69,9 @@ trait DefinitionsTrait
         }
 
         $routes[strval($index)] = [
-			'uri' => serialize(new Uri(self::getInstance()->getHost().self::getInstance()->getPrefix().$uri)),
-			'action' => (is_callable($closure)) ? serialize(new SerializableClosure($closure)) : serialize($closure),
-			'method' => strtoupper($method),
+        'uri' => serialize(new Uri(self::getInstance()->getHost().self::getInstance()->getPrefix().$uri)),
+        'action' => (is_callable($closure)) ? serialize(new SerializableClosure($closure)) : serialize($closure),
+        'method' => strtoupper($method),
             'middlewares' => [],
             'where' => [],
             'before' => [],
@@ -83,14 +83,14 @@ trait DefinitionsTrait
         ];
 
         self::getInstance()->setRoutes($routes);
-        	
+            
         return self::getInstance();
     }
 
     private static function checkDuplicity(string $uri, string $method): void
     {
         foreach(self::getInstance()->getRoutes() as $route){
-    		if( md5(strtoupper(unserialize($route['uri'])->getPath().$route['method'])) === md5(strtoupper($uri.$method)) ){
+            if(md5(strtoupper(unserialize($route['uri'])->getPath().$route['method'])) === md5(strtoupper($uri.$method)) ) {
                 throw new \RuntimeException("There is already a route with the URI {$uri} and with the {$method} METHOD configured.");
             }
         }

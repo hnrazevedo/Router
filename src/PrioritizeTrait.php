@@ -12,7 +12,7 @@ trait PrioritizeTrait
 
     protected function sorted(?bool $sorted = null): bool
     {
-        if(null !== $sorted){
+        if(null !== $sorted) {
             $this->sorted = $sorted;
         }
         return $this->sorted;
@@ -20,7 +20,7 @@ trait PrioritizeTrait
     
     protected function sortRoutes(): bool
     {
-        if($this->sorted()){
+        if($this->sorted()) {
             return true;
         }
 
@@ -31,24 +31,24 @@ trait PrioritizeTrait
 
             $path = urldecode(unserialize($route['uri'])->getPath());
 
-            if(strstr($path,'{')){
-                $paramRoutes[$this->getKeyArray(substr_count($path,'/') + substr_count($path,'{'),$paramRoutes)] = $route;
+            if(strstr($path, '{')) {
+                $paramRoutes[$this->getKeyArray(substr_count($path, '/') + substr_count($path, '{'), $paramRoutes)] = $route;
                 continue;    
             }
 
-            $staticRoutes[$this->getKeyArray(substr_count($path,'/'),$staticRoutes)] = $route;
+            $staticRoutes[$this->getKeyArray(substr_count($path, '/'), $staticRoutes)] = $route;
         }
 
         rsort($paramRoutes);
         rsort($staticRoutes);
 
-        $this->orderRoutes(array_merge($staticRoutes,$paramRoutes));
+        $this->orderRoutes(array_merge($staticRoutes, $paramRoutes));
         return $this->sorted(true);
     }
 
     private function getKeyArray(int $index, array $array): int
     {
-        while(array_key_exists($index,$array)){
+        while(array_key_exists($index, $array)){
             $index++;
         }
         return $index;
@@ -58,7 +58,7 @@ trait PrioritizeTrait
     {
         $kRoutes = $routes;
         foreach($routes as $r => $route){
-            if(array_key_exists('name',$route)){
+            if(array_key_exists('name', $route)) {
                 unset($kRoutes[$r]);
                 $kRoutes["'{$route['name']}'"] = $route;
             }

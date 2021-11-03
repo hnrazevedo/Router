@@ -42,7 +42,7 @@ trait AttributeTrait
                 $this->checkArgs($attr->getArguments());
                 
                 self::set(
-                    strtolower(implode('|',$args['methods'])),
+                    strtolower(implode('|', $args['methods'])),
                     $args['uri'],
                     $method->class.'@'.$method->name
                 );
@@ -61,7 +61,7 @@ trait AttributeTrait
 
     private function checkArgs(array $args): self
     {
-        if(!array_key_exists('uri',$args) || !array_key_exists('methods',$args)){
+        if(!array_key_exists('uri', $args) || !array_key_exists('methods', $args)) {
             throw new Exception('Misconfigured route attribute');
         }
         return $this;
@@ -69,7 +69,7 @@ trait AttributeTrait
 
     private function attrName(array $attr): self
     {
-        if(array_key_exists('name',$attr)){
+        if(array_key_exists('name', $attr)) {
             $this->name($attr['name']);
         }
         return $this;
@@ -77,7 +77,7 @@ trait AttributeTrait
 
     private function attrBefore(array $attr): self
     {
-        if(array_key_exists('before',$attr)){
+        if(array_key_exists('before', $attr)) {
             $this->before($attr['before']);
         }
         return $this;
@@ -85,7 +85,7 @@ trait AttributeTrait
 
     private function attrAfter(array $attr): self
     {
-        if(array_key_exists('after',$attr)){
+        if(array_key_exists('after', $attr)) {
             $this->after($attr['after']);
         }
         return $this;
@@ -93,7 +93,7 @@ trait AttributeTrait
 
     private function attrAttributes(array $attr): self
     {
-        if(array_key_exists('attributes',$attr)){
+        if(array_key_exists('attributes', $attr)) {
             foreach($attr['attributes'] as $attribute){
                 $this->attribute($attribute[0], $attribute[1]);
             }
@@ -103,7 +103,7 @@ trait AttributeTrait
 
     private function attrWhere(array $attr): self
     {
-        if(array_key_exists('where',$attr)){
+        if(array_key_exists('where', $attr)) {
             $this->where($attr['where']);
         }
         return $this;
@@ -111,7 +111,7 @@ trait AttributeTrait
 
     private function attrMiddleware(array $attr): self
     {
-        if(array_key_exists('middleware',$attr)){
+        if(array_key_exists('middleware', $attr)) {
             $this->middleware($attr['middleware']);
         }
         return $this;

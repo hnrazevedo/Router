@@ -5,4 +5,4 @@ $_SERVER['REQUEST_URI'] = '/fooo/teste11';
 
 //require "DefaultUseExample.php";
 //require "MiddlewareExample.php";
-//require "AttributeExample.php";
+require "AttributeExample.php";

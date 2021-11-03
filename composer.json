@@ -11,7 +11,8 @@
     "require": {
         "php": ">=8.0",
         "opis/closure": "^3.5@dev",
-        "hnrazevedo/http": "dev-master"
+        "hnrazevedo/http": "dev-master",
+        "squizlabs/php_codesniffer": "4.0.x-dev"
     },
     "minimum-stability":"dev",
     "license":"MIT",

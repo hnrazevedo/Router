@@ -35,7 +35,7 @@ final class Router implements RouterInterface
     {
         $route = self::getInstance()->inSave();
 
-        if(null === $value){
+        if(null === $value) {
             return (isset($route['attributes'][$name])) ? $route['attributes'][$name] : null;
         }
 
@@ -49,7 +49,7 @@ final class Router implements RouterInterface
     {
         $group = self::getInstance()->inSave()['group'];
         foreach(self::getInstance()->getRoutes() as $r => $route){
-            if($route['group'] !== $group || in_array($route['name'], $excepts)){
+            if($route['group'] !== $group || in_array($route['name'], $excepts)) {
                 continue;
             }
 
@@ -83,7 +83,7 @@ final class Router implements RouterInterface
     {
         self::getInstance()->loaded = true;
 
-        if(null !== $name){
+        if(null !== $name) {
             return self::getInstance()->loadByName($name);
         }
 
@@ -113,7 +113,7 @@ final class Router implements RouterInterface
 
     public static function run(?string $name = null): RouterInterface
     {
-        if(!self::getInstance()->loaded){
+        if(!self::getInstance()->loaded) {
             self::getInstance()->load($name);
         }
 
@@ -125,7 +125,7 @@ final class Router implements RouterInterface
         
         try{
             $action = unserialize(self::getInstance()->current()['action']);
-            self::getInstance()->executeRouteAction( (is_string($action)) ? $action : $action->getClosure()  );
+            self::getInstance()->executeRouteAction((is_string($action)) ? $action : $action->getClosure());
         }catch(\Exception $er){
             self::getInstance()->error = $er;
         }
@@ -139,7 +139,7 @@ final class Router implements RouterInterface
 
     private function checkError(): void
     {
-        if(isset($this->error)){
+        if(isset($this->error)) {
             throw $this->error;
         }
     }
@@ -153,7 +153,7 @@ final class Router implements RouterInterface
 
     public static function routes(?array $routes = null): array
     {
-        if(null !== $routes){
+        if(null !== $routes) {
             self::getInstance()->setRoutes($routes);
             self::getInstance()->sortRoutes();
         }

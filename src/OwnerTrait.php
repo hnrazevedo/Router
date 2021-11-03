@@ -20,7 +20,7 @@ trait OwnerTrait
     {
         $this->hasRouteName($name);
 
-        if(!$this->loaded()){
+        if(!$this->loaded()) {
             $this->loadIn($name);
         }
         
@@ -29,7 +29,7 @@ trait OwnerTrait
 
     public function hasCurrentRoute(): void
     {
-        if(!isset($this->currentRoute)){
+        if(!isset($this->currentRoute)) {
             throw new \RuntimeException('Route not yet loaded');
         }
     }
