@@ -24,7 +24,8 @@ O Router é um simples abstrator de URL amigável. Ele pode ser utilizada de man
 Router is available via composer.json:
 
 ```bash 
-"hnrazevedo/router": "^2.4"
+"hnrazevedo/router": "^2.4" # PHP 7.4
+"hnrazevedo/router": "^3.0" # PHP 8.0
 ```
 
 or in at terminal
