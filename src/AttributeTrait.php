@@ -8,18 +8,28 @@ use ReflectionObject, ReflectionMethod, Exception;
 
 trait AttributeTrait
 {
-    use Helper;
+    use Helper, DefinitionsTrait;
 
     protected array $pipeline = [];
 
+    protected function getPipeline(): array
+    {
+        return $this->pipeline;
+    }
+
+    protected function setPipeline(array $pipe): void
+    {
+        $this->pipeline = $pipe;
+    }
+
     public static function pipeline(array $pline): void
     {
-        self::getInstance()->pipeline = $pline;
+        self::getInstance()->setPipeline($pline);
     }
 
     public static function loadPipeline(): void
     {
-        foreach(self::getInstance()->pipeline as $line){
+        foreach(self::getInstance()->getPipeline() as $line){
             self::getInstance()->loadLine(new ReflectionObject(new $line()));
         }
     }

@@ -12,8 +12,8 @@ class RouteAttribute
         private array $methods,
         private string $name,
         private ?array $where,
-        private ?string|Closure $after,
-        private ?string|Closure $before,
+        private ?string|?\Closure $after,
+        private ?string|?\Closure $before,
         private ?array $attributes,
         private ?array $middleware
     ) {
