@@ -77,7 +77,9 @@ trait MiddlewareTrait
     {
         $factory = new Factory();
 
-        $this->serverRequest = (!isset($this->serverRequest)) ? $factory->createServerRequest($_SERVER['REQUEST_METHOD'], unserialize($this->current()['uri']),['route' => $this->current()]) : $this->serverRequest;
+        $requestMethod = (isset($_REQUEST['REQUEST_METHOD'])) ? $_REQUEST['REQUEST_METHOD'] : $_SERVER['REQUEST_METHOD'];
+
+        $this->serverRequest = (!isset($this->serverRequest)) ? $factory->createServerRequest($requestMethod, unserialize($this->current()['uri']),['route' => $this->current()]) : $this->serverRequest;
         
         foreach ($this->current()['middlewares'] as $middleware){
             $this->currentMiddlewares[] = (class_exists($middleware)) ? new $middleware() : new $this->globalMiddlewares[$middleware]();
@@ -100,9 +102,10 @@ trait MiddlewareTrait
 
         $route = $this->getInstance()->current();
         if(!empty($route)){
+
             $route['action'] = function(){
                 $this->getInstance()->executeBefore();
-                $this->getInstance()->executeRouteAction($this->getInstance()->current()['action']);
+                $this->getInstance()->executeRouteAction(unserialize($this->getInstance()->current()['action']));
                 $this->getInstance()->executeAfter();
             };
         }

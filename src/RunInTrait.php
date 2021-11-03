@@ -150,7 +150,7 @@ trait RunInTrait
     private function executeController(string $controllerMeth): void
     {
         if(count(explode('@',$controllerMeth)) !== 2){
-            $path = urldecode($this->current()['uri']->getPath());
+            $path = urldecode(unserialize($this->current()['uri'])->getPath());
             throw new \RuntimeException("Misconfigured route action ({$path})");
         }
 
@@ -164,7 +164,7 @@ trait RunInTrait
 
     private function checkControllerMeth(string $controllerMeth): void
     {
-        $routeURI = str_replace(['{:','{','}'],'',urldecode(unserialize($this->current()['uri'])->getPath()));
+        $routeURI = str_replace(['{?','{','}'],'',urldecode(unserialize($this->current()['uri'])->getPath()));
 
         $controller = (string) explode('@',$controllerMeth)[0];
         $method = (string) explode('@',$controllerMeth)[1];

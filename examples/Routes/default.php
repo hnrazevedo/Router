@@ -7,13 +7,14 @@ use HnrAzevedo\Router\Router;
 /**
  * Defines a route for the GET method
  */
-Router::get('/foo','\HnrAzevedo\Router\Examples\Controller@method');
+Router::get('/foo','HnrAzevedo\Router\Example\Controllers\Controller@method');
 
 /**
  * Defines a route to the GET method with an anonymous function
  */
 Router::get('/bar', function(){
     //
+    echo '/bar executed!';
 });
 
 /**
@@ -108,7 +109,7 @@ Router::get('/passingParameters/{param}', function($param){
 /**
  * Example of setting an optional parameter
  */
-Router::get('/passingParameters/{:optionalParam}', function($optionalParam){
+Router::get('/passingParameters/{?optionalParam}', function($optionalParam){
     echo $optionalParam;
 });
 
@@ -168,7 +169,7 @@ Router::globalMiddlewares([
 /**
  * Defining route middleware - implements Psr\Http\Server\MiddlewareInterface
  */
-Router::get('/passingParameters/{:optionalParam}', function($optionalParam = null){
+Router::get('/passingParameters/{?optionalParam}', function($optionalParam = null){
     echo $optionalParam;
 })->middleware([
     HnrAzevedo\Router\Example\Middleware\Auth::class

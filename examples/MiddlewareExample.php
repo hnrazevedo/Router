@@ -15,7 +15,9 @@ use HnrAzevedo\Router\Router;
 use Psr\Http\Server\MiddlewareInterface;
 
 try{
-    $serverRequest = (new Factory())->createServerRequest($_SERVER['REQUEST_METHOD'], new Uri($_SERVER['REQUEST_URI']));
+    $requestMethod = (isset($_REQUEST['REQUEST_METHOD'])) ? $_REQUEST['REQUEST_METHOD'] : $_SERVER['REQUEST_METHOD'];
+
+    $serverRequest = (new Factory())->createServerRequest($requestMethod, new Uri($_SERVER['REQUEST_URI']));
 
     class App implements MiddlewareInterface{
         public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
