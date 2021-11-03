@@ -90,7 +90,7 @@ trait DefinitionsTrait
     private static function checkDuplicity(string $uri, string $method): void
     {
         foreach(self::getInstance()->getRoutes() as $route){
-    		if( md5($route['uri'].$route['method']) === md5($uri.$method) ){
+    		if( md5(strtoupper(unserialize($route['uri'])->getPath().$route['method'])) === md5(strtoupper($uri.$method)) ){
                 throw new \RuntimeException("There is already a route with the URI {$uri} and with the {$method} METHOD configured.");
             }
         }

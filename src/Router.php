@@ -15,7 +15,8 @@ final class Router implements RouterInterface
         MiddlewareTrait, 
         WhereTrait,
         PrioritizeTrait,
-        CurrentTrait;
+        CurrentTrait,
+        AttributeTrait;
 
     private array $groupsName = [];
     private ?\Exception $error = null;

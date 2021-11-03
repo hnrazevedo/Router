@@ -84,8 +84,18 @@ trait RunInTrait
 
     protected function executeRouteAction($action): bool
     {
-        if(is_callable($action)){        
-            call_user_func_array($action, array_values($_REQUEST));
+        if(is_callable($action)){ 
+            
+            $params = [];
+            $closure = (get_class($action) !== 'Closure') ? $action->getClosure() : $action;
+            $ReflectionMethod =  new \ReflectionFunction ($closure);
+
+            foreach($ReflectionMethod->getParameters() as $param){
+                if(!isset($_REQUEST[$param->name])) continue;
+                $params[$param->name] = $_REQUEST[$param->name];
+            }
+            
+            call_user_func_array($closure, $params);
             return true;
         }
 
@@ -159,7 +169,16 @@ trait RunInTrait
 
         $this->checkControllerMeth($controllerMeth);
 
-        call_user_func_array([(new $controller()),$method], array_values($_REQUEST));
+        $params = [];
+
+        $ReflectionMethod =  new \ReflectionMethod(new $controller(), $method);
+
+        foreach($ReflectionMethod->getParameters() as $param){
+            if(!isset($_REQUEST[$param->name])) continue;
+            $params[$param->name] = $_REQUEST[$param->name];
+        }
+
+        call_user_func_array([(new $controller()),$method], $params);
     }
 
     private function checkControllerMeth(string $controllerMeth): void
