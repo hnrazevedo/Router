@@ -80,7 +80,7 @@ trait AttributeTrait
     private function attrName(array $attr): self
     {
         if(array_key_exists('name', $attr)) {
-            $this->name($attr['name']);
+            self::getInstance()->name($attr['name']);
         }
         return $this;
     }
@@ -88,7 +88,7 @@ trait AttributeTrait
     private function attrBefore(array $attr): self
     {
         if(array_key_exists('before', $attr)) {
-            $this->before($attr['before']);
+            self::getInstance()->before($attr['before']);
         }
         return $this;
     }
@@ -96,7 +96,7 @@ trait AttributeTrait
     private function attrAfter(array $attr): self
     {
         if(array_key_exists('after', $attr)) {
-            $this->after($attr['after']);
+            self::getInstance()->after($attr['after']);
         }
         return $this;
     }
@@ -105,7 +105,7 @@ trait AttributeTrait
     {
         if(array_key_exists('attributes', $attr)) {
             foreach($attr['attributes'] as $attribute){
-                $this->attribute($attribute[0], $attribute[1]);
+                self::getInstance()->attribute($attribute[0], $attribute[1]);
             }
         }
         return $this;
@@ -114,7 +114,7 @@ trait AttributeTrait
     private function attrWhere(array $attr): self
     {
         if(array_key_exists('where', $attr)) {
-            $this->where($attr['where']);
+            self::getInstance()->where($attr['where']);
         }
         return $this;
     }
@@ -122,7 +122,7 @@ trait AttributeTrait
     private function attrMiddleware(array $attr): self
     {
         if(array_key_exists('middleware', $attr)) {
-            $this->middleware($attr['middleware']);
+            self::getInstance()->middleware($attr['middleware']);
         }
         return $this;
     }

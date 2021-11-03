@@ -16,8 +16,5 @@ class RouteAttribute
         private ?string|?\Closure $before,
         private ?array $attributes,
         private ?array $middleware
-    ) {
-        echo 1;
-
-    }
+    ) {}
 }
