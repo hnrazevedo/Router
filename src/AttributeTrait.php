@@ -29,8 +29,23 @@ trait AttributeTrait
 
     public static function loadPipeline(): void
     {
-        foreach(self::getInstance()->getPipeline() as $line){
-            self::getInstance()->loadLine(new ReflectionObject(new $line()));
+        foreach(self::getInstance()->getPipeline() as $path){
+
+            if(!is_dir($path)){
+                self::getInstance()->loadLine(new ReflectionObject(new $path()));
+                continue;
+            };
+
+            foreach (scandir($path) as $routeFile) {
+                if(pathinfo($path . DIRECTORY_SEPARATOR . $routeFile, PATHINFO_EXTENSION) === 'php'){
+
+                    require_once($path . DIRECTORY_SEPARATOR . $routeFile);
+
+                    $classes = get_declared_classes();
+                    $className = end($classes);
+                    self::getInstance()->loadLine(new ReflectionObject(new $className()));
+                }
+            }
         }
     }
 

@@ -181,14 +181,19 @@ class ControllerAttribute{
 
 #### It is necessary to load the classes with routes in the same way as the route declaration files, it is interesting for both methods that the loading is done directly by composer.
 
+#### Loading can be done directly with a class or with the directory.
+
 É necessário fazer o carregamento das classes com rotas da mesma forma que os arquivos de declarações de rota, é interessante para ambos os métodos, que o carregamento seja feito diretamente pelo composer.
+
+O carregamento pode ser feito diretamente com uma class ou com o diretório
 
 ```php
 # Pipeline declaration
 use HnrAzevedo\Router\Router;
 
 Router::pipeline([
-    HnrAzevedo\Router\Example\Controllers\ControllerAttribute::class
+    HnrAzevedo\Router\Example\Controllers\ControllerAttribute::class,
+    'examples\Controllers'
 ]);
 ```
 
