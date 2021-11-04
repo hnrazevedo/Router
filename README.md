@@ -109,16 +109,49 @@ Para utilizar a chamada Ajax, é necessário a definição do REQUEST_METHOD com
 
 
 ### Router Attributes
+
+#### Attribute routing works the same as role routing, with just a few caveats:
+#### - Groups are not supported;
+#### - Pre and post functions do not support anonymous functions;
+#### - You must declare the classes with routes in a pipeline and load it with the router.
+
+#### Both means of declaring routes can be used together.
+
+O roteamento por atributo funciona da mesma forma que o roteamento por função, apenas com algumas resalvas:
+
+- Não há suporte para grupos; 
+- As funções anteriores e posteriores não tem suporte à funções anônimas;
+- Deve-se declarar as classes com rotas em uma pipeline e carrega-la com o roteador.
+
+Ambos os meios de declaração de rotas podem ser usados em conjunto.
+
+```php
+use HnrAzevedo\Router\Route;
+
+/**
+ * @param string $uri
+ * @param ?array $methods
+ * @param ?string $name
+ * @param ?string $before
+ * @param ?string $after
+ * @param ?array $middleware
+ * @param ?array $attributes
+ * @param ?array $where
+ */
+#[Route('/path', name:'routeName')]
+```
+
+Example:
+
 ```php
 # Controller File
-use HnrAzevedo\Router\RouteAttribute;
+use HnrAzevedo\Router\Route;
 
 class ControllerAttribute{
 
-    #[RouteAttribute(
+    #[Route(
         uri:'/user/{id}',
         methods:['GET'],
-        /* Optional */
         name:'routeName',
         before:'Namespace\Controller@methodBefore',
         middleware:[],
@@ -143,9 +176,22 @@ class ControllerAttribute{
     {
         echo PHP_EOL.'methodAfter';
     }
-
 }
 ```
+
+#### It is necessary to load the classes with routes in the same way as the route declaration files, it is interesting for both methods that the loading is done directly by composer.
+
+É necessário fazer o carregamento das classes com rotas da mesma forma que os arquivos de declarações de rota, é interessante para ambos os métodos, que o carregamento seja feito diretamente pelo composer.
+
+```php
+# Pipeline declaration
+use HnrAzevedo\Router\Router;
+
+Router::pipeline([
+    HnrAzevedo\Router\Example\Controllers\ControllerAttribute::class
+]);
+```
+
 
 ### Router methods
 

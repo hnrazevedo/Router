@@ -3,5 +3,5 @@
 use HnrAzevedo\Router\Router;
 
 Router::pipeline([
-    'HnrAzevedo\Router\Example\Controllers\ControllerAttribute'
+    HnrAzevedo\Router\Example\Controllers\ControllerAttribute::class
 ]);

@@ -87,6 +87,8 @@ final class Router implements RouterInterface
             return self::getInstance()->loadByName($name);
         }
 
+        self::loadPipeline();
+
         self::getInstance()->sortRoutes();
 
         $requestMethod = (isset($_REQUEST['REQUEST_METHOD'])) ? $_REQUEST['REQUEST_METHOD'] : $_SERVER['REQUEST_METHOD'];

@@ -14,8 +14,6 @@ try{
      */
     require __DIR__.'/Routes/Pipeline.php';
 
-    Router::loadPipeline();
-
     Router::defineHost('https://localhost');
     
     Router::run();
