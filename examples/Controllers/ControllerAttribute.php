@@ -2,11 +2,11 @@
 
 namespace HnrAzevedo\Router\Example\Controllers;
 
-use HnrAzevedo\Router\RouteAttribute;
+use HnrAzevedo\Router\Route;
 
 class ControllerAttribute{
 
-    #[RouteAttribute(
+    #[Route(
         uri:'/fooo/{param}',
         methods:['GET'],
         name:'routeExample',

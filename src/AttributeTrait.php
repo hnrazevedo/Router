@@ -45,15 +45,15 @@ trait AttributeTrait
     {
         try{
             foreach ($method->getAttributes() as $attr) {
-                if($attr->getName() != 'HnrAzevedo\Router\RouteAttribute') continue;
+                if($attr->getName() != 'HnrAzevedo\Router\Route') continue;
 
                 $args = $attr->getArguments();
     
                 $this->checkArgs($attr->getArguments());
                 
                 self::set(
-                    strtolower(implode('|', $args['methods'])),
-                    $args['uri'],
+                    (array_key_exists('methods', $args)) ? strtolower(implode('|', $args['methods'])) : 'get',
+                    (array_key_exists('uri', $args)) ? $args['uri'] : $args[0],
                     $method->class.'@'.$method->name
                 );
                 
@@ -71,7 +71,7 @@ trait AttributeTrait
 
     private function checkArgs(array $args): self
     {
-        if(!array_key_exists('uri', $args) || !array_key_exists('methods', $args)) {
+        if(!array_key_exists('uri', $args) && !array_key_exists(0, $args)) {
             throw new Exception('Misconfigured route attribute');
         }
         return $this;

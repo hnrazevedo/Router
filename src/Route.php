@@ -5,7 +5,7 @@ namespace HnrAzevedo\Router;
 use Attribute;
 
 #[Attribute]
-class RouteAttribute
+class Route
 {
     public function __construct(
         private string $uri,
