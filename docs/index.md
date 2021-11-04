@@ -240,7 +240,6 @@ Router::get('/','foo@bar')->attribute('permission','permissionName');
 ```php
 /**
  * @param string $name
- * @param $value
  */
 $permission = Router::getAttribute('attributeName');
 ```
