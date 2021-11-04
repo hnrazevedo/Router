@@ -161,5 +161,15 @@ final class Router implements RouterInterface
         }
         return self::getInstance()->routes;
     }
-   
+
+    public static function getAttribute(string $name): Mixed
+    {
+        return (array_key_exists($name, Router::current()['attributes'])) ? Router::current()['attributes'][$name] : null;
+    }
+
+    public static function getAttributes(): array
+    {
+        return Router::current()['attributes'];
+    }
+
 }

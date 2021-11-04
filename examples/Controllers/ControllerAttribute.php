@@ -12,7 +12,10 @@ class ControllerAttribute{
         name:'routeExample',
         before:'HnrAzevedo\Router\Example\Controllers\ControllerAttribute@methodBefore',
         middleware:[],
-        attributes:[],
+        attributes:[
+            'attributeName'=>'attributeValue',
+            'attributeName0'=>'attributeValue0'
+        ],
         where:[],
         after:'HnrAzevedo\Router\Example\Controllers\ControllerAttribute@methodAfter',
         )]

@@ -104,8 +104,8 @@ trait AttributeTrait
     private function attrAttributes(array $attr): self
     {
         if(array_key_exists('attributes', $attr)) {
-            foreach($attr['attributes'] as $attribute){
-                self::getInstance()->attribute($attribute[0], $attribute[1]);
+            foreach($attr['attributes'] as $attribute => $attrValue){
+                self::getInstance()->attribute($attribute, $attrValue);
             }
         }
         return $this;

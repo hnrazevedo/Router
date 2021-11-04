@@ -149,4 +149,14 @@ interface RouterInterface extends MiddlewareInterface
      * @return self
      */ 
     public static function run(?string $name = null): RouterInterface;
+
+    /**
+     * @return Mixed
+     */ 
+    public static function getAttribute(string $name): Mixed;
+
+    /**
+     * @return array
+     */ 
+    public static function getAttributes(): array;
 }

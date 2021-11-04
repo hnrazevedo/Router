@@ -242,7 +242,11 @@ Router::get('/','foo@bar')->attribute('permission','permissionName');
  * @param string $name
  * @param $value
  */
-$permission = Router::current()['attributes']['permission'];
+$permission = Router::getAttribute('attributeName');
+```
+#### Returning all attributes
+```php
+$permissions = Router::getAttributes();
 ```
 
 ### before
