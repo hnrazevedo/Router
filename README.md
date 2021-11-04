@@ -8,9 +8,9 @@
 [![PHP from Packagist](https://img.shields.io/packagist/php-v/hnrazevedo/Router?style=flat-square)](https://packagist.org/packages/hnrazevedo/Router)
 [![Total Downloads](https://img.shields.io/packagist/dt/hnrazevedo/Router?style=flat-square)](https://packagist.org/packages/hnrazevedo/Router)
 
-##### The Router is a simple friendly URL abstractor. It can be used in an easy and practical way, either individually statically, or together as middleware. Its author is not a professional in the development area, just someone in the area of ​​Technology who is improving his knowledge.
+##### Router is a simple friendly URL abstractor. It can be used in an easy and practical way, either individually in a static way, or together as a middleware and now as an attribute with PHP 8. Its author is not a professional in the development area, just someone in the Technology area who is improving their knowledge.
 
-O Router é um simples abstrator de URL amigável. Ele pode ser utilizada de maneira fácil e pratica, tanto individualmente de forma estática, quanto em conjunto como middleware. Seu autor não é um profissional da área de desenvolvimento, apenas alguem da área de Tecnologia que está aperfeiçoando seus conhecimentos.
+O Router é um simples abstrator de URL amigável. Ele pode ser utilizada de maneira fácil e prática, tanto individualmente de forma estática, quanto em conjunto como middleware e agora como atributo com o PHP 8. Seu autor não é um profissional da área de desenvolvimento, apenas alguem da área de Tecnologia que está aperfeiçoando seus conhecimentos.
 
 ## Highlights
 
@@ -107,6 +107,45 @@ Para utilizar a chamada Ajax, é necessário a definição do REQUEST_METHOD com
 - delete: REST requests
 - patch: REST requests
 
+
+### Router Attributes
+```php
+# Controller File
+use HnrAzevedo\Router\RouteAttribute;
+
+class ControllerAttribute{
+
+    #[RouteAttribute(
+        uri:'/user/{id}',
+        methods:['GET'],
+        /* Optional */
+        name:'routeExample',
+        before:'HnrAzevedo\Router\Example\Controllers\ControllerAttribute@methodBefore',
+        middleware:[],
+        attributes:[
+            'attributeName'=>'attributeValue',
+            'attributeName0'=>'attributeValue0'
+            ],
+        where:['id'=>'[0-9]{1,11}'],
+        after:'HnrAzevedo\Router\Example\Controllers\ControllerAttribute@methodAfter',
+    )]
+    public function method($param)
+    {
+        echo 'Controller@method executed!'.PHP_EOL."Param:{$param}";
+    }
+
+    public function methodBefore(): void
+    {
+        echo 'methodBefore'.PHP_EOL;
+    }
+
+    public function methodAfter(): void
+    {
+        echo PHP_EOL.'methodAfter';
+    }
+
+}
+```
 
 ### Router methods
 
