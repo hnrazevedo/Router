@@ -183,21 +183,4 @@ trait RunInTrait
         call_user_func_array([(new $controller()),$method], $params);
     }
 
-    private function checkControllerMeth(string $controllerMeth): void
-    {
-        $routeURI = str_replace(['{?','{','}'], '', urldecode(unserialize($this->current()['uri'])->getPath()));
-
-        $controller = (string) explode('@', $controllerMeth)[0];
-        $method = (string) explode('@', $controllerMeth)[1];
-
-        if(!class_exists($controller)) {
-            throw new \RuntimeException("Controller not found in route URI {$routeURI}");
-        }
-
-        if(!method_exists($controller, $method)) {
-            throw new \RuntimeException("Method {$method} not found in controller {$controller} in route URI {$routeURI}");
-        }
-        
-    }
-
 }
