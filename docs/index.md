@@ -8,9 +8,9 @@
 [![PHP from Packagist](https://img.shields.io/packagist/php-v/hnrazevedo/Router?style=flat-square)](https://packagist.org/packages/hnrazevedo/Router)
 [![Total Downloads](https://img.shields.io/packagist/dt/hnrazevedo/Router?style=flat-square)](https://packagist.org/packages/hnrazevedo/Router)
 
-##### The Router is a simple friendly URL abstractor. It can be used in an easy and practical way, either individually statically, or together as middleware. Its author is not a professional in the development area, just someone in the area of ​​Technology who is improving his knowledge.
+##### Router is a simple friendly URL abstractor. It can be used in an easy and practical way, either individually in a static way, or together as a middleware and now as an attribute with PHP 8. Its author is not a professional in the development area, just someone in the Technology area who is improving their knowledge.
 
-O Router é um simples abstrator de URL amigável. Ele pode ser utilizada de maneira fácil e pratica, tanto individualmente de forma estática, quanto em conjunto como middleware. Seu autor não é um profissional da área de desenvolvimento, apenas alguem da área de Tecnologia que está aperfeiçoando seus conhecimentos.
+O Router é um simples abstrator de URL amigável. Ele pode ser utilizada de maneira fácil e prática, tanto individualmente de forma estática, quanto em conjunto como middleware e agora como atributo com o PHP 8. Seu autor não é um profissional da área de desenvolvimento, apenas alguem da área de Tecnologia que está aperfeiçoando seus conhecimentos.
 
 ## Highlights
 
@@ -24,7 +24,8 @@ O Router é um simples abstrator de URL amigável. Ele pode ser utilizada de man
 Router is available via composer.json:
 
 ```bash 
-"hnrazevedo/router": "^3.0"
+"hnrazevedo/router": "^2.4" # PHP <= 7.4
+"hnrazevedo/router": "^3.0" # PHP >= 8.0
 ```
 
 or in at terminal
@@ -106,6 +107,89 @@ Para utilizar a chamada Ajax, é necessário a definição do REQUEST_METHOD com
 - delete: REST requests
 - patch: REST requests
 
+### Router Attributes
+
+#### Attribute routing works the same as role routing, with just a few caveats:
+- Groups are not supported;
+- Pre and post functions do not support anonymous functions;
+- You must declare the classes with routes in a pipeline and load it with the router.
+
+#### Both means of declaring routes can be used together.
+
+O roteamento por atributo funciona da mesma forma que o roteamento por função, apenas com algumas resalvas:
+
+- Não há suporte para grupos; 
+- As funções anteriores e posteriores não tem suporte à funções anônimas;
+- Deve-se declarar as classes com rotas em uma pipeline e carrega-la com o roteador.
+
+Ambos os meios de declaração de rotas podem ser usados em conjunto.
+
+```php
+use HnrAzevedo\Router\Route;
+
+/**
+ * @param string $uri
+ * @param ?array $methods
+ * @param ?string $name
+ * @param ?string $before
+ * @param ?string $after
+ * @param ?array $middleware
+ * @param ?array $attributes
+ * @param ?array $where
+ */
+#[Route('/path', name:'routeName')]
+```
+
+Example:
+
+```php
+# Controller File
+use HnrAzevedo\Router\Route;
+
+class ControllerAttribute{
+
+    #[Route(
+        '/user/{id}',
+        methods:['GET'],
+        name:'routeName',
+        before:'Namespace\Controller@methodBefore',
+        middleware:[],
+        attributes:[
+            'attributeName'=>'attributeValue',
+            'attributeName0'=>'attributeValue0'
+            ],
+        where:['id'=>'[0-9]{1,11}'],
+        after:'Namespace\Controller@methodAfter',
+    )]
+    public function method($param)
+    {
+        echo 'Controller@method executed!'.PHP_EOL."Param:{$param}";
+    }
+
+    public function methodBefore(): void
+    {
+        echo 'methodBefore'.PHP_EOL;
+    }
+
+    public function methodAfter(): void
+    {
+        echo PHP_EOL.'methodAfter';
+    }
+}
+```
+
+#### It is necessary to load the classes with routes in the same way as the route declaration files, it is interesting for both methods that the loading is done directly by composer.
+
+É necessário fazer o carregamento das classes com rotas da mesma forma que os arquivos de declarações de rota, é interessante para ambos os métodos, que o carregamento seja feito diretamente pelo composer.
+
+```php
+# Pipeline declaration
+use HnrAzevedo\Router\Router;
+
+Router::pipeline([
+    HnrAzevedo\Router\Example\Controllers\ControllerAttribute::class
+]);
+```
 
 ### Router methods
 

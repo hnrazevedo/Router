@@ -111,9 +111,9 @@ Para utilizar a chamada Ajax, é necessário a definição do REQUEST_METHOD com
 ### Router Attributes
 
 #### Attribute routing works the same as role routing, with just a few caveats:
-#### - Groups are not supported;
-#### - Pre and post functions do not support anonymous functions;
-#### - You must declare the classes with routes in a pipeline and load it with the router.
+- Groups are not supported;
+- Pre and post functions do not support anonymous functions;
+- You must declare the classes with routes in a pipeline and load it with the router.
 
 #### Both means of declaring routes can be used together.
 
@@ -150,7 +150,7 @@ use HnrAzevedo\Router\Route;
 class ControllerAttribute{
 
     #[Route(
-        uri:'/user/{id}',
+        '/user/{id}',
         methods:['GET'],
         name:'routeName',
         before:'Namespace\Controller@methodBefore',
